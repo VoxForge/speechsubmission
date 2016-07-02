@@ -1,0 +1,7 @@
+Manifest-Version: 0.1
+Permissions: all-permissions
+Codebase: *.voxforge.org *.voxforge1.org 
+Application-Name: VoxForge Java Version App
+Application-Library-Allowable-Codebase: *.voxforge.org *.voxforge1.org
+Trusted-Only: true
+Sealed: true

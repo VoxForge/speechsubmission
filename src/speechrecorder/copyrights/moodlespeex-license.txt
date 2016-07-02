@@ -1,0 +1,268 @@
+
+   MoodleSpeex - free voice tools for Moodle using JSpeex
+      (c) Dan Stowell 2006.
+      Released under the GNU Public Licence (GPL).
+ 
+   This Moodle plugin incorporates open-source 
+   Java code from other projects:
+    - JSpeex player/recorder, (c) Wimba S.A.
+    - Postlet HTTP uploader,  (c) Simon Rycroft
+    - JavaSoundDemo,          (c) Sun Microsystems
+   Please see the licences stored in the "copyrights" folder for more details.
+
+
+
+-------------------
+SYSTEM REQUIREMENTS
+-------------------
+
+The speex tools are Java applets running in a teacher/student's web browser.
+This means that Java (1.4 or later) MUST be installed on a computer in order
+to be able to record/play the speech messages. Javascript is also used for
+applet/browser communication.
+
+There are NO special requirements for the Moodle webserver.
+
+The applets have been tested to work with the main types of computer and web 
+browser. Notes re browser support:
+
+ - Mac OSX:
+     - The following browsers reportedly work fine for using the applets:
+         - Firefox 1.5
+         - Safari 2.0.4
+         - Camino 1.0.2
+     - Opera 9.0 has a problem in the cookie-passing which prevents 
+         successful interaction between Moodle and the applets. This prevents
+         both upload and playback.
+
+ - Windows PC:
+     - Works fine in Firefox 1.5
+     - Works fine in Internet Explorer. But note that IE has a slightly annoying 
+         feature that means you have to click once on the applet before it'll 
+         respond, giving the impression that the first time you click on the 
+         play button nothing happens!  
+         The player applet may also be unable to play back more than once,
+         depending on system setup.
+
+ - Linux (Ubuntu 6.06):
+     - Works fine in Firefox 1.5. However, the official Sun Java plugin must be 
+         installed. (The "Kaffe" open-source alternative plugin has been tested 
+         and did NOT work.) To install the Sun Java plugin:
+           1. Open the package manager (menu Applications > Add/Remove)
+           2. Click "Advanced" to switch to the more advanced manager.
+           3. Open the menu item Settings > Repositories and ensure that 
+                "Multiverse" is enabled (you may need to click on "Edit").
+           4. Find the package named "sun-java5-plugin" and select to install 
+                it. (It may also install one or two other sun packages.)
+
+The applets might not necessarily work in all browsers/systems, so it is 
+worth ensuring that your students/staff are able to use the applets before 
+relying on them to any extent.
+
+
+
+---------------
+TECHNOLOGY NOTE
+---------------
+
+These tools do not enable any fancy live voice interaction - the interaction is 
+mediated by simple upload/download of audio files, rather than VoIP or any such 
+technology. This means that (for example) uploading of audio messages is 
+possible, but live two-way conferencing (like a telephone conversation) is 
+basically impossible without major development work.
+
+The file format used by these tools is "Ogg Speex", an open format. Open formats
+are good because people can develop applications that use them (such as these 
+applets) without having to pay licensing fees. It also makes it more likely 
+that the .spx files that these tools create are interoperable, and (for example)
+can be played in free media-playing software such as VLC.
+
+
+
+------------
+INSTALLATION
+------------
+
+1) Moodlespeex files
+
+The files in the "moodle" folder of this distribution can 
+simply be dropped into place in the corresponding location 
+in your Moodle installation.
+
+moodle/lib/speex/*
+moodle/filter/speexplayer/*
+
+The items that are NOT in the "moodle" folder are not 
+required on the Moodle server.
+
+
+2) Modifications to Moodle files
+
+You also need to make changes to some of the core Moodle files - to help with 
+this please refer to the "moodlepatches" folder which contains output 
+produced using "cvs diff -c" against core moodle code.
+"cvsdiff_moodle-mod-forum.txt" is a diff of files in moodle/mod/forum.
+"cvsdiff_moodle-files.txt" is a diff of files in moodle/files.
+
+To apply these patches on Mac OSX, Linux, or Unix:
+
+ * Open a terminal window on your Moodle server (or on a local copy of the 
+     files) and move to the mod/forum directory. Then feed the patch file to 
+     the "patch" command. The exact command will vary according to where 
+     your files are, but for example:
+     
+     cd /var/www/htdocs/moodle/mod/forum
+     patch < ~/Desktop/moodlespeex/moodlepatches/cvsdiff_moodle-mod-forum.txt
+
+ * Do the same for the second patch file:
+
+     cd /var/www/htdocs/moodle/files
+     patch < ~/Desktop/moodlespeex/moodlepatches/cvsdiff_moodle-files.txt
+
+The patch command will tell you if it encounters a problem (it will say that it 
+failed to apply one or more chunks). If not, everything should be OK.
+
+
+3) Modifications to Moodle database
+
+Moodle's "forum" table needs an extra field to store whether audio 
+messaging is active. The following SQL will add the column to a MySQL 
+Moodle database (please remember to change the table prefix):
+
+ALTER TABLE `mdl_forum` ADD `speex` ENUM( 'off', 'on', 'default' ) NOT NULL DEFAULT 'off';
+
+
+4) Activation
+
+Visit your Moodle's Admin->Filters page and activate the "speexplayer" filter.
+
+
+
+-----
+USAGE
+-----
+
+1. To listen to an audio message in Moodle:
+
+The "Speex player" filter should be simple to use: wherever
+there is a link to an .spx file, an applet should appear
+allowing the user to listen to the audio. The filter can 
+be activated/deactivated by the administrator.
+
+
+2: To record a voice message into Moodle:
+
+The "Speex recorder" applet can appear in various contexts. 
+For example, if it is enabled for a given forum, when you
+post a new message or a reply you will see a drop-down menu
+labelled "Post mode: text" which you can change to "audio".
+This should take you to a page displaying the recorder applet.
+
+NOTE: By default, audio mode is DISABLED for your Moodle forums.
+To activate it, choose "Update this forum" and you should find a
+new option allowing you to activate audio messaging mode.
+
+When the applet appears:
+
+ * Make sure your computer's microphone is set up.
+ * Click on "Record" and then start speaking.
+ * Click on "Stop" when you have finished speaking.
+ * You can use the "Play" button to listen back to your message.
+ * If you want to re-record your message, you can do.
+ * When you are happy with the message, click on "Upload".
+      There will be a delay as the sound is compressed and
+      then uploaded, and you will be 
+	  returned to the main screen you came from.
+ * You may wish to double-check that your sound file has 
+      recorded properly by using the "Speex player" to
+	  listen back to it. This will be a compressed file, so
+	  the sound will usually be poorer-quality than you 
+	  originally heard.
+
+
+3: To use Speex (.spx) files after you download them to your
+computer:
+
+The "standard" media players (Windows Media Player,
+iTunes) fail to support open formats such as Speex. I highly 
+recommend the VLC player as a general-purpose alternative to
+these programs:
+http://www.videolan.org/vlc/
+
+VLC can also be used to convert to WAV or MP3 format if desired.
+
+
+
+-------------------
+INFO FOR DEVELOPERS
+-------------------
+
+The Java source code is contained in the "java/src" folder.
+I use Apache ant to compile and build the distribution, and
+have included the ant "build.xml" file so that you can do the
+same.
+
+In order to compile and run the applets, you will also need
+to "sign" the JAR file with a digital signature - look in 
+the Java jarsigner documentation for more info about this 
+process.
+
+
+
+-------------------------------
+FERVENTLY ANTICIPATED QUESTIONS
+-------------------------------
+
+Q: What is the connection between this software and 
+Horizon Wimba's Voice Tools?
+
+A: This free software package is not produced by Horizon Wimba,
+but it uses some underlying open-source Java code developed 
+by Wimba. The Java audio encoder/decoder is probably the 
+same or similar to the algorithm used in Wimba's software.
+However, nothing about the behaviour/quality/functionality 
+of this package should be used to infer anything about the 
+behaviour/quality/functionality of Wimba's tools! The tools
+produced by Wimba are likely to differ significantly. This 
+project is (currently) only aimed at providing a relatively 
+basic voice functionality.
+
+
+Q: Can I download Speex messages to my portable media player 
+and listen to them later?
+
+A: It's unlikely, because many of the main brands (inc Apple's 
+iPods) do NOT support Speex .spx files. There are some 
+portable players that do, but you'll find that they're in 
+a minority.
+
+
+Q: Can I use these tools for podcasting?
+
+A: Probably not, for the reasons described above - many users
+will be unable to play the files on their media players.
+
+
+Q: Can these tools be adapted to record MP3 instead of Speex?
+
+A: No. MP3 is not a free format - developers must pay money to
+develop software using MP3 - so it is unsuitable for open-source
+projects. (Besides, MP3 is not designed to be well-suited for 
+voice compression, whereas Speex is specially designed for that
+purpose.)
+
+
+-------
+SUPPORT
+-------
+
+As with many freely-provided Moodle add-ins, support
+can not be guaranteed, but there are pretty much always 
+friendly people in the moodle.org forums who can offer 
+advice.
+
+Please do not ask about how to make it record .MP3 files 
+rather than .SPX files! There's a serious licencing problem
+with recording MP3 in open-source software. Besides which, 
+Speex is much better for voice applications.
+
