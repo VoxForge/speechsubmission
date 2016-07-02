@@ -1291,6 +1291,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	            e.printStackTrace();
 	            System.out.println("Error: cant copy zip file to target folder" + e.getMessage());
 	        }
+
 	        setProgress((int)targetFile.length());
 	        return;
         }
@@ -1543,7 +1544,6 @@ public class CapturePlayback extends JPanel implements ActionListener {
         }
     } // End class SamplingGraph
 
-    // Methods called by the "postlet" UploadManager and UploadThread
  	public synchronized void setProgress(int a) {
          sentBytes += a;
          progBar.setValue(sentBytes);
@@ -1552,8 +1552,8 @@ public class CapturePlayback extends JPanel implements ActionListener {
            	progBar.setString(uploadCompletedMessageLabel);
             progBar.setIndeterminate(false);
             System.err.println("Finished! submission saved");
-            	 // Reset the applet
-            	 progBar.setValue(0);
+            // Reset the applet
+            progBar.setValue(0);
          } 
          else 
          {
