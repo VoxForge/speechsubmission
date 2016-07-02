@@ -47,21 +47,8 @@ public class RecorderApplication extends JFrame {
 	}
     
     public void init() {
-    //    applet = this;
-        // At this point grab all our parameters
-        //getParameters();
-        try   
-        {
-        	endPageURL = new URL("www.voxforge.org");
-        	helpPageURL = new URL("www.voxforge.org");
-        	destinationURL = new URL("www.voxforge.org");
-        } 
-        catch (Exception e) 
-        {
-        	System.err.println("bad URL" + e);
-        }
         getContentPane().add("Center", 
-              theRecorder = new CapturePlayback( language, destinationURL, endPageURL, helpPageURL, cookie));
+              theRecorder = new CapturePlayback( language, "/home/kmaclean/temp/", cookie));
     }
 
     public void start() {

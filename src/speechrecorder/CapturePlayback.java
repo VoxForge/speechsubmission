@@ -122,9 +122,6 @@ public class CapturePlayback extends JPanel implements ActionListener {
 
     Capture capture = new Capture();
     Playback playback = new Playback();
-    // !!!!!!
-    //ConvertAndUpload convertAndUpload = new ConvertAndUpload();
-    // !!!!!!   
     CapturePlayback capturePlayback; // Needed for referencing within the inner classes
 
     AudioInputStream audioInputStream;
@@ -182,9 +179,6 @@ public class CapturePlayback extends JPanel implements ActionListener {
 
     String [] promptA = new String [numberofPrompts];
     String [] promptidA = new String [numberofPrompts];
- 
-//  required for the PHP uploader to work properly
-    String fileFieldName = "userfile"; 
     
 //  ############ Localized Fields ####################################   
     JTextField usernameTextField;  
@@ -240,9 +234,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
 //  ############ Localized Fields ####################################   
     private Boolean leftToRight; // direction of text
     
-    URL endPageURL;
-    URL helpPageURL;
-    URL destinationURL;
+    String targetDirectory;
     String language;
     String endpage;
     String helppage;
@@ -253,17 +245,17 @@ public class CapturePlayback extends JPanel implements ActionListener {
   
 	String tempdir = getTempDir();
 
-	// !!!!!!
 	ConvertAndUpload convertAndUpload; 
-	// !!!!!!
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public CapturePlayback(String lang, URL destinationURL, 
-	        URL endPageURL, URL helpPageURL, String cookie) {    	
+	public CapturePlayback(String lang, String targetDirectory, String cookie) {    	
 	//  ############ Localized Fields ####################################
 		// !!!!!!
 		this.language = lang;
 		//this.language = "FA"; // for testing 
 		// !!!!!!
+
+		this.targetDirectory = targetDirectory;
 		
 	    LabelLocalizer labels = new LabelLocalizer(this.language);
 	    usernamePanelLabel = labels.getUsernamePanelLabel();
@@ -272,27 +264,12 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	    copyrightName = labels.getCopyrightName();
 	    gplAccepted = labels.getGplAccepted();
 
-		// !!!!!!
 		Calendar cal = Calendar.getInstance();
-		//if (this.language.equals("EN") )
-		//{
-		//	licenseNotice = "Copyright " + cal.get(Calendar.YEAR) + " " + copyrightName + System.getProperty("line.separator") 
-		//			+ System.getProperty("line.separator") 
-		//			+ License.getEN_BlanklicenseNotice();
-		//	vflicense = License.getEN_VFLicense();
-		//	//System.err.println("!!!!!! EN licenseNotice:[" + licenseNotice + "] !!!!!!"); // debug
-		//}
-		//else
-		//{
 		licenseNotice = "Copyright " + cal.get(Calendar.YEAR) + " " + copyrightName + System.getProperty("line.separator") 
 				+ System.getProperty("line.separator") 
 				+ License.getBlanklicenseNotice();				
 		vflicense = License.getVFLicense();	 		
-		//.err.println("!!!!!! NOT-EN licenseNotice:[" + licenseNotice + "] !!!!!!"); // debug
-		//}
-		//System.err.println("!!!!!! CapturePlayback Language:[" + this.language + "] !!!!!!"); // debug
 		convertAndUpload = new ConvertAndUpload();
-		// !!!!!!	    
 	    
 	    pleaseSelect = labels.getPleaseSelect();
 	    notApplicable = labels.getNotApplicable();
@@ -345,9 +322,6 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	    	// System.err.println("Prompts:" + this.promptidA[i] + ":"+ this.promptA [i]);
 	    }
 	   
-	    this.destinationURL = destinationURL;
-	    this.endPageURL = endPageURL;
-	    this.helpPageURL = helpPageURL;
 	    this.cookie = cookie;
 	    
 	    capturePlayback = this;
@@ -745,14 +719,11 @@ public class CapturePlayback extends JPanel implements ActionListener {
 
 					saveSettings();
         	
-           convertAndUpload.start();
+           convertAndUpload.start(targetDirectory);
         }
 //      ################### More Information #######################################     
         else if (obj.equals(moreInfoB)) {
-        	 // !!!!!!
-             //JTextArea textArea = new JTextArea(license);
          	 JTextArea textArea = new JTextArea(License.getLicense());
-             // !!!!!!
              textArea.setLineWrap(true);
              textArea.setWrapStyleWord(true);
              JScrollPane areaScrollPane = new JScrollPane(textArea);
@@ -765,10 +736,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
         }
 //      ################### About ####################################### 
         else if (obj.equals(aboutB)) {
-            // !!!!!!
-            //JTextArea textArea = new JTextArea(VFlicense);
         	JTextArea textArea = new JTextArea(vflicense);
-            // !!!!!!
             textArea.setLineWrap(true);
             textArea.setWrapStyleWord(true);
             JScrollPane areaScrollPane = new JScrollPane(textArea);
@@ -1185,15 +1153,17 @@ public class CapturePlayback extends JPanel implements ActionListener {
     /** 
      * uploads the file
      */
-    class ConvertAndUpload implements Runnable {
+    class ConvertAndUpload  implements Runnable {
 
         Thread thread;
-    		
-        public void start() {
+        String targetDirectory;
+        
+        public void start(String targetDirectory) {
             errStr = null;
             thread = new Thread(this);
             thread.setName("ConvertAndUpload");
     		System.err.println("=== Upload ===");
+    		this.targetDirectory = targetDirectory;
             thread.start();
         }
 
@@ -1209,13 +1179,6 @@ public class CapturePlayback extends JPanel implements ActionListener {
             progBar.setIndeterminate(false);
             progBar.setMinimum(0);
             sentBytes = 0;
-			try {
-				destinationURL = new URL(destinationURL.toString());	  
-			}catch(Exception err){
-			    System.err.println(err);
-			}
-			System.err.println("Destination URL is " + destinationURL);
-			
 
 			//############ audio files ####################################
 			File[] files = new File[numberofPrompts + 4];
@@ -1324,15 +1287,15 @@ public class CapturePlayback extends JPanel implements ActionListener {
 			totalBytes = ((int)archiveFile.length()) ; 
 			progBar.setMaximum((int)archiveFile.length());
 
-			String targetfileName = "/home/kmaclean/temp/" + language + "-" + userName + "-" + date + "-" + randomID + ".zip";
-			File targetFile = new File(targetfileName);
+			File targetFile = new File(this.targetDirectory + language + "-" + userName + "-" + date + "-" + randomID + ".zip");
 	        try {
 	        	copyFile(archiveFile, targetFile);
-				System.err.println("target file location:" + targetfileName);
+				System.err.println("target file location:" + targetFile);
+				return;
 	        }
 	        catch (Exception e) {
 	            e.printStackTrace();
-	            System.out.println("Error: cant copy tar file to target folder" + e.getMessage());
+	            System.out.println("Error: cant copy zip file to target folder" + e.getMessage());
 	            return;
 	        }
 			//############ Upload #################################### 
@@ -1599,41 +1562,6 @@ public class CapturePlayback extends JPanel implements ActionListener {
         }
     } // End class SamplingGraph
 
-
-
-    // Methods called by the "postlet" UploadManager and UploadThread
-	public synchronized void setProgress(int a) {
-        sentBytes += a;
-        progBar.setValue(sentBytes);
-        if (sentBytes == totalBytes){
-            //DEL progCompletion.setText(pLabels.getLabel(2));
-            if (endPageURL != null){
-            	progBar.setString(uploadCompletedMessageLabel);
-                progBar.setIndeterminate(false);
-                System.err.println("Finished! Sending you on to "+endPageURL);
-                ((JApplet)(getParent().getParent().getParent().getParent())).getAppletContext().showDocument(endPageURL);
-            } else {
-                // Just ignore this error, as it is most likely from the endpage
-                // not being set.
-                // Attempt at calling Javascript after upload is complete.
-            	//FORDEBUG
-                System.err.println("setProgress(): endPageURL is null, so trying to use the javascript hook to end.");
-                JSObject win = JSObject.getWindow((JApplet)getParent());
-                win.eval("postletFinished();");
-            }
-            // Reset the applet
-            progBar.setValue(0);
-          //  if(subject != null) { // Will be non-null if passed in as a param - even if blank
-          //    subjectBox.setEnabled(true);
-          //  }
-        } else {
-        	// !!!!!!
-        	//FORDEBUG
-        	// debug   System.err.println("setProgress(): Not reached end yet. sentBytes="+sentBytes+", totalBytes="+totalBytes);
-        	// !!!!!!
-        }
-     }
-    
     public void saveSettings()
     {	
     	try {
@@ -1708,6 +1636,10 @@ public class CapturePlayback extends JPanel implements ActionListener {
 		return cookie;
 	}
 	
+	/*
+	 * from: http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java 
+	 * see: http://docs.oracle.com/javase/6/docs/api/java/nio/channels/FileChannel.html#transferTo(long,%20long,%20java.nio.channels.WritableByteChannel)
+	 */
 	public static void copyFile(File sourceFile, File destFile) throws IOException {
 	    if(!destFile.exists()) {
 	        destFile.createNewFile();
