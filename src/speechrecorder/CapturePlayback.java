@@ -38,6 +38,7 @@ package speechrecorder;
  * redistribute the Software for such purposes.
  */
 
+import static java.nio.file.StandardCopyOption.*;
 
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -65,6 +66,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.Calendar;
@@ -1274,13 +1278,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			//############ License Notice File ####################################    
 			try {
 				BufferedWriter out_licenseNoticeFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseNoticeFile),"UTF-8"));
-				// !!!!!!
-				//Calendar cal = Calendar.getInstance();
-				//String licenseNotice = "Copyright " + cal.get(Calendar.YEAR) + " " + copyrightName + System.getProperty("line.separator") 
-				//	+ System.getProperty("line.separator") 
-				//	+ licenseObject.getBlanklicenseNotice();
-				//System.err.println("!!!!!!ConvertAndUpload License notice: " + licenseNotice + "\n!!!!!!");		
-				// !!!!!!
 				out_licenseNoticeFile.write(licenseNotice);
 				out_licenseNoticeFile.close();	
 			} catch (IOException e) {
@@ -1313,38 +1310,50 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			Random randomGenerator = new Random();
 			int SMALL_LETTERS_BASE_VALUE = 97;
 			StringBuffer randomID = new StringBuffer("");  // required for jvm 1.4.2
-			// !!!!!!
-			//for ( int i = 0; randomID.length() < 3; i++ )
 			for ( int i = 0; i < 3; i++ )
-			// !!!!!!!
 			{
 			   	int currentValue = randomGenerator.nextInt(26);
 				currentValue += SMALL_LETTERS_BASE_VALUE;//convert to ASCII value for a-z
 				randomID.append((char)currentValue);
 			}
 			
+			String zipfilename = tempdir + language + "-" + userName + "-" + date + "-" + randomID + ".zip";
 			if (userName != null){
-				archiveFile = new File(tempdir + language + "-" + userName + "-" + date + "-" + randomID + ".zip");
+				archiveFile = new File(zipfilename);
 			} else {
-				archiveFile = new File(tempdir + language + "-" + "Anonymous-" + date + "-" + randomID + ".zip");
+				archiveFile = new File(zipfilename);
 			}
 			
 			createZipArchive(archiveFile, files);
 			System.err.println("Archive file location:" + archiveFile);
 			totalBytes = ((int)archiveFile.length()) ; 
 			progBar.setMaximum((int)archiveFile.length());
+
+			String targetfileName = "/home/kmaclean/temp/" + language + "-" + userName + "-" + date + "-" + randomID + ".zip";
+			File targetFile = new File(targetfileName);
+	        try {
+	        	copyFile(archiveFile, targetFile);
+				System.err.println("target file location:" + targetfileName);
+	        }
+	        catch (Exception e) {
+	            e.printStackTrace();
+	            System.out.println("Error: cant copy tar file to target folder" + e.getMessage());
+	            return;
+	        }
 			//############ Upload #################################### 
 			// Upload manager needs an array but JavaUpload.php script can only handle one file at a time
-			File[] archiveFiles = new File[1];
-			archiveFiles[0] = archiveFile;
-            UploadManager u;
-            try {
-                u = new UploadManager(archiveFiles, capturePlayback, destinationURL, 1, fileFieldName);
-            } catch(java.lang.NullPointerException npered){
-            	u = new UploadManager(archiveFiles, capturePlayback, destinationURL, fileFieldName);
-            }
-            System.err.println("Uploading to " + destinationURL);
-            u.start();
+			//File[] archiveFiles = new File[1];
+			//archiveFiles[0] = archiveFile;
+            //UploadManager u;
+            //try {
+            //    u = new UploadManager(archiveFiles, capturePlayback, destinationURL, 1, fileFieldName);
+            //} catch(java.lang.NullPointerException npered){
+            //	u = new UploadManager(archiveFiles, capturePlayback, destinationURL, fileFieldName);
+            //}
+            //System.err.println("Uploading to " + destinationURL);
+            //u.start();
+            
+            
         }
 
         protected void createZipArchive(File archiveFile, File[] tobeZippedFiles) {
@@ -1703,6 +1712,28 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 //		cookie = "" + (String) win.eval("document.cookie");
 		return cookie;
 	}
-  
+	
+	public static void copyFile(File sourceFile, File destFile) throws IOException {
+	    if(!destFile.exists()) {
+	        destFile.createNewFile();
+	    }
+
+	    FileChannel source = null;
+	    FileChannel destination = null;
+
+	    try {
+	        source = new FileInputStream(sourceFile).getChannel();
+	        destination = new FileOutputStream(destFile).getChannel();
+	        destination.transferFrom(source, 0, source.size());
+	    }
+	    finally {
+	        if(source != null) {
+	            source.close();
+	        }
+	        if(destination != null) {
+	            destination.close();
+	        }
+	    }
+	}  
 
 } 
