@@ -97,7 +97,6 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
 
-import netscape.javascript.JSObject;
 import speechrecorder.ConfigReader;
 
 /**
@@ -129,8 +128,8 @@ public class CapturePlayback extends JPanel implements ActionListener {
 
     // !!!!!! int numberofPrompts = 10;
     int numberofPrompts = 3;
-    JButton [] playA = new JButton [numberofPrompts]; //creates the array, not the objects!
-    JButton [] captA = new JButton [numberofPrompts]; //creates the array, not the objects!
+    JButton [] playA = new JButton [numberofPrompts]; 
+    JButton [] captA = new JButton [numberofPrompts];
     
     JButton uploadB;
     JButton moreInfoB;    
@@ -244,7 +243,8 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	ConvertAndUpload convertAndUpload; 
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public CapturePlayback(String lang, String targetDirectory, String cookie) {    	
+	public CapturePlayback(String lang, String targetDirectory, String cookie) 
+	{    	
 	//  ############ Localized Fields ####################################
 		// !!!!!!
 		this.language = lang;
@@ -312,7 +312,8 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	//  ############ Localized Fields ####################################  
 	
 		String [][] promptArray = (new Prompts(numberofPrompts,this.language)).getPrompts();
-	    for (int i = 0; i < numberofPrompts; i++) {
+	    for (int i = 0; i < numberofPrompts; i++) 
+	    {
 	    	this.promptidA [i] = promptArray[0][i];
 	    	this.promptA [i] = promptArray[1][i];
 	    	// System.err.println("Prompts:" + this.promptidA[i] + ":"+ this.promptA [i]);
@@ -324,11 +325,13 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	
 		// Create WAV files to hold recordings
 		try {
-	        for (int i = 0; i < numberofPrompts; i++) {
+	        for (int i = 0; i < numberofPrompts; i++) 
+	        {
 	        	wavFileA [i] = new File(tempdir + "wavFile" + i + ".wav");
 	        	wavFileA[i].deleteOnExit();
 	        }
-	        for (int i = 0; i < numberofPrompts; i++) {
+	        for (int i = 0; i < numberofPrompts; i++) 
+	        {
 				uploadWavFileA[i] = new File(tempdir + this.promptidA [i] + ".wav");
 				uploadWavFileA[i].deleteOnExit();
 	        }
@@ -344,210 +347,211 @@ public class CapturePlayback extends JPanel implements ActionListener {
 			System.err.println("Unable to create WAV cache file for storing audio\n" + e);
 			return;
 		}
-	    for (int i = 0; i < numberofPrompts; i++) {			
+	    for (int i = 0; i < numberofPrompts; i++) 
+	    {			
 			System.err.println("CapturePlayback's WAV file for recording uploadWavFile" + i + "is:" + uploadWavFileA[i]);
 	    }
 	
 	//  ############ GUI Display ####################################   
-			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-	        EmptyBorder eb = new EmptyBorder(5,5,5,5);
-	        SoftBevelBorder sbb = new SoftBevelBorder(SoftBevelBorder.LOWERED);
-	
-	        JPanel p2 = new JPanel();
-	        p2.setLayout(new BoxLayout(p2, BoxLayout.Y_AXIS));
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        EmptyBorder eb = new EmptyBorder(5,5,5,5);
+        SoftBevelBorder sbb = new SoftBevelBorder(SoftBevelBorder.LOWERED);
+
+        JPanel p2 = new JPanel();
+        p2.setLayout(new BoxLayout(p2, BoxLayout.Y_AXIS));
 	//      ############ User name ####################################             
-	//      userName is read when user clicks Upload
-	        JPanel usernamePanel = new JPanel();
-	        usernamePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
-	        if (leftToRight)
-	        {
-		        usernamePanel.add(new JLabel(usernamePanelLabel));
-		        usernamePanel.add(usernameTextField = new JTextField(20));
-	        }
-	        else
-	        {
-	            usernamePanel.add(usernameTextField = new JTextField(20));        	
-	            usernamePanel.add(new JLabel(usernamePanelLabel));        	
-	        }
-	        usernamePanel.add(new JLabel(usernamePanelText));     
-	        p2.add(usernamePanel);  
-	// ############ Gender ####################################             
-	        JPanel genderPanel = new JPanel();
-	        genderPanel.setLayout(new FlowLayout(FlowLayout.CENTER));  
-	        if (leftToRight)
-	        {
-		        genderPanel.add(new JLabel(genderPanelLabel));
-		        genderPanel.add(genderChooser = new JComboBox(genderSelection));
-	        }
-	        else
-	        {
-	            genderPanel.add(genderChooser = new JComboBox(genderSelection));   
-	        	genderPanel.add(new JLabel(genderPanelLabel));
-	    	
-	        }
-	        genderChooser.setSelectedIndex(0);       
-	        genderChooser.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent e){
-	                     gender = (String)genderChooser.getSelectedItem();
-	                 }
-	        	});
-	        p2.add(genderPanel);
+        JPanel usernamePanel = new JPanel();
+        usernamePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
+        if (leftToRight)
+        {
+	        usernamePanel.add(new JLabel(usernamePanelLabel));
+	        usernamePanel.add(usernameTextField = new JTextField(20));
+        }
+        else
+        {
+            usernamePanel.add(usernameTextField = new JTextField(20));        	
+            usernamePanel.add(new JLabel(usernamePanelLabel));        	
+        }
+        usernamePanel.add(new JLabel(usernamePanelText));     
+        p2.add(usernamePanel);  
+// ############ Gender ####################################             
+        JPanel genderPanel = new JPanel();
+        genderPanel.setLayout(new FlowLayout(FlowLayout.CENTER));  
+        if (leftToRight)
+        {
+	        genderPanel.add(new JLabel(genderPanelLabel));
+	        genderPanel.add(genderChooser = new JComboBox(genderSelection));
+        }
+        else
+        {
+            genderPanel.add(genderChooser = new JComboBox(genderSelection));   
+        	genderPanel.add(new JLabel(genderPanelLabel));
+    	
+        }
+        genderChooser.setSelectedIndex(0);       
+        genderChooser.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+                     gender = (String)genderChooser.getSelectedItem();
+                 }
+        	});
+        p2.add(genderPanel);
 	// ############ Age Range ####################################             
-	        JPanel ageRangePanel = new JPanel();
-	        ageRangePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
-	        if (leftToRight)
-	        {
-		        ageRangePanel.add(new JLabel(ageRangePanelLabel));
-				ageRangePanel.add(ageRangeChooser = new JComboBox(ageSelection));
-	        }
-	        else
-	        {
-	    		ageRangePanel.add(ageRangeChooser = new JComboBox(ageSelection));       	
-	            ageRangePanel.add(new JLabel(ageRangePanelLabel));
-	        }
-	        ageRangeChooser.setSelectedIndex(0);          
-	        ageRangeChooser.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent e){
-	                     ageRange = (String)ageRangeChooser.getSelectedItem();
-	                 }
-	        	});
-	        p2.add(ageRangePanel);
+        JPanel ageRangePanel = new JPanel();
+        ageRangePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
+        if (leftToRight)
+        {
+	        ageRangePanel.add(new JLabel(ageRangePanelLabel));
+			ageRangePanel.add(ageRangeChooser = new JComboBox(ageSelection));
+        }
+        else
+        {
+    		ageRangePanel.add(ageRangeChooser = new JComboBox(ageSelection));       	
+            ageRangePanel.add(new JLabel(ageRangePanelLabel));
+        }
+        ageRangeChooser.setSelectedIndex(0);          
+        ageRangeChooser.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+                     ageRange = (String)ageRangeChooser.getSelectedItem();
+                 }
+        	});
+        p2.add(ageRangePanel);
 	//      ############ Pronunciation Dialect: ####################################       
-	        JPanel dialectPanel = new JPanel();
-	        dialectPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-	        if (leftToRight)
-	        {
-	        	dialectPanel.add(new JLabel(dialectPanelLabel));
-	        	dialectPanel.add(dialectChooser = new JComboBox(dialectSelection));
-	        }
-	        else
-	        {
-	        	dialectPanel.add(dialectChooser = new JComboBox(dialectSelection));       
-	        	dialectPanel.add(new JLabel(dialectPanelLabel));
-	        }
-	        dialectChooser.setSelectedIndex(0);  
-	        dialectChooser.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent e){
-		                dialect = (String)dialectChooser.getSelectedItem();
-		            }
-	            });
-	        p2.add(dialectPanel);
+        JPanel dialectPanel = new JPanel();
+        dialectPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        if (leftToRight)
+        {
+        	dialectPanel.add(new JLabel(dialectPanelLabel));
+        	dialectPanel.add(dialectChooser = new JComboBox(dialectSelection));
+        }
+        else
+        {
+        	dialectPanel.add(dialectChooser = new JComboBox(dialectSelection));       
+        	dialectPanel.add(new JLabel(dialectPanelLabel));
+        }
+        dialectChooser.setSelectedIndex(0);  
+        dialectChooser.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+	                dialect = (String)dialectChooser.getSelectedItem();
+	            }
+            });
+        p2.add(dialectPanel);
 	//      ############ Microphone Type: ####################################       
-	        JPanel microphonePanel = new JPanel();
-	        microphonePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-	        if (leftToRight)
-	        {
-		        microphonePanel.add(new JLabel(microphonePanelLabel));
-		        microphonePanel.add(microphoneChooser = new JComboBox(microphoneSelection));
-	        }
-	        else
-	        {
-	            microphonePanel.add(microphoneChooser = new JComboBox(microphoneSelection));
-	            microphonePanel.add(new JLabel(microphonePanelLabel));            
-	        }
-	        microphoneChooser.setSelectedIndex(0);  
-	 //       microphoneChooser.setEditable(true); // user can add whatever they want ...
-	        microphoneChooser.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent e){
-	                     microphone = (String)microphoneChooser.getSelectedItem();
-	                 }
-	        	});
-	        p2.add(microphonePanel);
+        JPanel microphonePanel = new JPanel();
+        microphonePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        if (leftToRight)
+        {
+	        microphonePanel.add(new JLabel(microphonePanelLabel));
+	        microphonePanel.add(microphoneChooser = new JComboBox(microphoneSelection));
+        }
+        else
+        {
+            microphonePanel.add(microphoneChooser = new JComboBox(microphoneSelection));
+            microphonePanel.add(new JLabel(microphonePanelLabel));            
+        }
+        microphoneChooser.setSelectedIndex(0);  
+        // microphoneChooser.setEditable(true); // user can add whatever they want ...
+        microphoneChooser.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+                     microphone = (String)microphoneChooser.getSelectedItem();
+                 }
+        	});
+        p2.add(microphonePanel);
 	//		############ Prompt container ####################################   
-	        JPanel promptsContainer = new JPanel(); 
-	        promptsContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
-	        Color voxforgeColour 	= new Color(197, 216, 234);
-	         int startPromptCount = 0;
-	        int promptsPerPane = numberofPrompts;
+        JPanel promptsContainer = new JPanel(); 
+        promptsContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
+        Color voxforgeColour 	= new Color(197, 216, 234);
+         int startPromptCount = 0;
+        int promptsPerPane = numberofPrompts;
 	
 	//      ############ Prompts panel ####################################         
-	        JPanel prompts = new JPanel(); 
-	        prompts.setLayout(new BoxLayout(prompts, BoxLayout.Y_AXIS));
-	        prompts.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
-	    
-	        int maxWidth = 40;
-	
-	        JPanel promptPanelA[] = new JPanel[promptsPerPane]; 
-	        JPanel promptInnerPanelA[] = new JPanel[promptsPerPane]; 
-	        for (int i = startPromptCount; i < promptsPerPane; i++) {
-	        	promptPanelA[i] = new JPanel();
-	        	//promptPanelA[i].setLayout(new FlowLayout(FlowLayout.LEFT));    
-	        	promptPanelA[i].setLayout(new FlowLayout(FlowLayout.RIGHT));            	
-	        	promptInnerPanelA [i]= new JPanel(); 
-		        promptInnerPanelA[i].setBorder(BorderFactory.createLineBorder (voxforgeColour, 1));
-		        //promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth));
-		        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, leftToRight));     
-		        promptPanelA[i].add(promptInnerPanelA[i]);
-		        playA[i] = addButton(playButton, promptPanelA[i], false);
-		        if (i==0) {
-		        	captA[i] = addButton(recordButton, promptPanelA[i], true); // only turn on first record button 
-		        } else {
-			        captA[i] = addButton(recordButton, promptPanelA[i], false);
-		        }
-		        prompts.add(promptPanelA[i]);  
+        JPanel prompts = new JPanel(); 
+        prompts.setLayout(new BoxLayout(prompts, BoxLayout.Y_AXIS));
+        prompts.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
+    
+        int maxWidth = 40;
+
+        JPanel promptPanelA[] = new JPanel[promptsPerPane]; 
+        JPanel promptInnerPanelA[] = new JPanel[promptsPerPane]; 
+        for (int i = startPromptCount; i < promptsPerPane; i++) 
+        {
+        	promptPanelA[i] = new JPanel();
+        	//promptPanelA[i].setLayout(new FlowLayout(FlowLayout.LEFT));    
+        	promptPanelA[i].setLayout(new FlowLayout(FlowLayout.RIGHT));            	
+        	promptInnerPanelA [i]= new JPanel(); 
+	        promptInnerPanelA[i].setBorder(BorderFactory.createLineBorder (voxforgeColour, 1));
+	        //promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth));
+	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, leftToRight));     
+	        promptPanelA[i].add(promptInnerPanelA[i]);
+	        playA[i] = addButton(playButton, promptPanelA[i], false);
+	        if (i==0) {
+	        	captA[i] = addButton(recordButton, promptPanelA[i], true); // only turn on first record button 
+	        } else {
+		        captA[i] = addButton(recordButton, promptPanelA[i], false);
 	        }
+	        prompts.add(promptPanelA[i]);  
+        }
 		//############ Prompt container ####################################   	
-	        promptsContainer.add(prompts);
-	        p2.add(promptsContainer);
+        promptsContainer.add(prompts);
+        p2.add(promptsContainer);
 	
 	//      ############ Sampling Graph ####################################          
-	        JPanel samplingPanel = new JPanel(new BorderLayout());
-	        eb = new EmptyBorder(10,20,5,20);
-	        samplingPanel.setBorder(new CompoundBorder(eb, sbb));
-	        samplingPanel.add(samplingGraph = new SamplingGraph());
-	        p2.add(samplingPanel);
+        JPanel samplingPanel = new JPanel(new BorderLayout());
+        eb = new EmptyBorder(10,20,5,20);
+        samplingPanel.setBorder(new CompoundBorder(eb, sbb));
+        samplingPanel.add(samplingGraph = new SamplingGraph());
+        p2.add(samplingPanel);
 	//      ############ Upload Text ####################################             
-	        JPanel uploadTextPanel = new JPanel();
-	        uploadTextPanel.add(new JLabel(uploadText));               
-	        p2.add(uploadTextPanel);
+        JPanel uploadTextPanel = new JPanel();
+        uploadTextPanel.add(new JLabel(uploadText));               
+        p2.add(uploadTextPanel);
 	//		############ Upload ####################################          
-	         JPanel uploadButtonPanel = new JPanel();
-	         uploadButtonPanel.setBorder(new EmptyBorder(5,0,5,0));
-	         uploadB = addButton(uploadButtonLabel, uploadButtonPanel, false); // upload all submissions
-	         p2.add(uploadButtonPanel);
+        JPanel uploadButtonPanel = new JPanel();
+        uploadButtonPanel.setBorder(new EmptyBorder(5,0,5,0));
+        uploadB = addButton(uploadButtonLabel, uploadButtonPanel, false); // upload all submissions
+        p2.add(uploadButtonPanel);
 	//		############ Upload Progress bar ####################################
-	         progBar = new JProgressBar();
-	         progBar.setStringPainted(false);
-	         progBar.setString("Ready");
-	         //progBar.setVisible(false);
-	         p2.add(progBar);               
+        progBar = new JProgressBar();
+        progBar.setStringPainted(false);
+        progBar.setString("Ready");
+         //progBar.setVisible(false);
+        p2.add(progBar);               
 	// 		############ More Information Button ####################################          
-	         JPanel moreInfoButtonPanel = new JPanel();
-	         if (leftToRight)
-	         {
-		         moreInfoButtonPanel.add(new JLabel(moreInfoText));
-		         moreInfoB = addButton(moreInfoButtonLabel, moreInfoButtonPanel, true); 
-	         }
-	         else
-	         {
-	       	     moreInfoB = addButton(moreInfoButtonLabel, moreInfoButtonPanel, true); 
-	             moreInfoButtonPanel.add(new JLabel(moreInfoText));     	 
-	         }
-	         p2.add(moreInfoButtonPanel);   
-	// 		############ Disclaimer ####################################  
-	         JPanel DisclaimerPanel = new JPanel();
-	         DisclaimerPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
-	         JPanel DisclaimerInnerPanel = new JPanel(); 
-	         if (leftToRight)
-	         {
-	        	 DisclaimerInnerPanel.add(new JLabel(disclaimerText));
-	        	 aboutB = addButton(aboutButtonLabel, DisclaimerInnerPanel, true); 
-	         }
-	         else
-	         {
-	             aboutB = addButton(aboutButtonLabel, DisclaimerInnerPanel, true); 
-	             DisclaimerInnerPanel.add(new JLabel(disclaimerText));
-	         }
-	         DisclaimerInnerPanel.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
-	         DisclaimerPanel.add(DisclaimerInnerPanel);        
-	         p2.add(DisclaimerPanel); 
+        JPanel moreInfoButtonPanel = new JPanel();
+        if (leftToRight)
+        {
+	        moreInfoButtonPanel.add(new JLabel(moreInfoText));
+	        moreInfoB = addButton(moreInfoButtonLabel, moreInfoButtonPanel, true); 
+        }
+        else
+        {
+       	    moreInfoB = addButton(moreInfoButtonLabel, moreInfoButtonPanel, true); 
+            moreInfoButtonPanel.add(new JLabel(moreInfoText));     	 
+        }
+        p2.add(moreInfoButtonPanel);   
+// 		############ Disclaimer ####################################  
+        JPanel DisclaimerPanel = new JPanel();
+        DisclaimerPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
+        JPanel DisclaimerInnerPanel = new JPanel(); 
+        if (leftToRight)
+        {
+        	DisclaimerInnerPanel.add(new JLabel(disclaimerText));
+        	aboutB = addButton(aboutButtonLabel, DisclaimerInnerPanel, true); 
+        }
+        else
+        {
+            aboutB = addButton(aboutButtonLabel, DisclaimerInnerPanel, true); 
+            DisclaimerInnerPanel.add(new JLabel(disclaimerText));
+        }
+        DisclaimerInnerPanel.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
+        DisclaimerPanel.add(DisclaimerInnerPanel);        
+        p2.add(DisclaimerPanel); 
 	//#########################################################################   
-	         add(p2);
-	   
+        add(p2);
+   
 	
-	         // Load all settings that were saved from the last session
-	         loadSettings();
-	    }
+	    // Load all settings that were saved from the last session
+        loadSettings();
+	}
 
     public void open() { }
 
@@ -710,6 +714,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
 					saveSettings();
         	
            convertAndUpload.start(targetDirectory);
+           System.err.println("now what");
         }
 //      ################### More Information #######################################     
         else if (obj.equals(moreInfoB)) {
@@ -1281,27 +1286,13 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	        try {
 	        	copyFile(archiveFile, targetFile);
 				System.err.println("target file location:" + targetFile);
-				return;
 	        }
 	        catch (Exception e) {
 	            e.printStackTrace();
 	            System.out.println("Error: cant copy zip file to target folder" + e.getMessage());
-	            return;
 	        }
-			//############ Upload #################################### 
-			// Upload manager needs an array but JavaUpload.php script can only handle one file at a time
-			//File[] archiveFiles = new File[1];
-			//archiveFiles[0] = archiveFile;
-            //UploadManager u;
-            //try {
-            //    u = new UploadManager(archiveFiles, capturePlayback, destinationURL, 1, fileFieldName);
-            //} catch(java.lang.NullPointerException npered){
-            //	u = new UploadManager(archiveFiles, capturePlayback, destinationURL, fileFieldName);
-            //}
-            //System.err.println("Uploading to " + destinationURL);
-            //u.start();
-            
-            
+	        setProgress((int)targetFile.length());
+	        return;
         }
 
         protected void createZipArchive(File archiveFile, File[] tobeZippedFiles) {
@@ -1552,6 +1543,25 @@ public class CapturePlayback extends JPanel implements ActionListener {
         }
     } // End class SamplingGraph
 
+    // Methods called by the "postlet" UploadManager and UploadThread
+ 	public synchronized void setProgress(int a) {
+         sentBytes += a;
+         progBar.setValue(sentBytes);
+         if (sentBytes == totalBytes)
+         {
+           	progBar.setString(uploadCompletedMessageLabel);
+            progBar.setIndeterminate(false);
+            System.err.println("Finished! submission saved");
+            	 // Reset the applet
+            	 progBar.setValue(0);
+         } 
+         else 
+         {
+         	 System.err.println("setProgress(): Not reached end yet. sentBytes="+sentBytes+", totalBytes="+totalBytes);
+         }
+      }    
+    
+    
     public void saveSettings()
     {	
     	try {
