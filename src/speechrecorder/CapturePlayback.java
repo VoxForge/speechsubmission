@@ -127,7 +127,8 @@ public class CapturePlayback extends JPanel implements ActionListener {
     AudioInputStream audioInputStream;
     SamplingGraph samplingGraph;
 
-    int numberofPrompts = 10;
+    // !!!!!! int numberofPrompts = 10;
+    int numberofPrompts = 3;
     JButton [] playA = new JButton [numberofPrompts]; //creates the array, not the objects!
     JButton [] captA = new JButton [numberofPrompts]; //creates the array, not the objects!
     
@@ -138,11 +139,6 @@ public class CapturePlayback extends JPanel implements ActionListener {
     boolean [] play_stateA = new boolean [numberofPrompts];
     boolean [] capt_stateA = new boolean [numberofPrompts];
 
-    // !!!!!!
-    //License licenseObject = new License();
-    // String license = licenseObject.getLicense();
-    // String VFlicense = licenseObject.getVFLicense();
-    // !!!!!!
     JTextField textField;
 
     String fileName = "untitled";
@@ -596,16 +592,13 @@ public class CapturePlayback extends JPanel implements ActionListener {
         for (int i = 0; i < numberofPrompts; i++) {
         	playA[i].setEnabled(false); 
         	captA[i].setEnabled(false); 
-            //System.err.println("setButtonsOff" + "playA" + i + playA[i].isEnabled()+ ";captA" + i + captA[i].isEnabled());// !!!!!!
         }
     }
     
     private void saveButtonState() {
         for (int i = 0; i < numberofPrompts; i++) {
-       		// System.err.println("playA[i]" +  i ); // !!!!!!
         	if (playA[i].isEnabled()) {play_stateA [i] = true;} else {play_stateA [i] = false;}
         	if (captA[i].isEnabled()) {capt_stateA [i] = true;} else {capt_stateA [i] = false;}
-            //System.err.println("saveButtonState" + "playA" + i + playA[i].isEnabled()+ ";captA" + i + captA[i].isEnabled());// !!!!!!
         }
     }
     
@@ -613,7 +606,6 @@ public class CapturePlayback extends JPanel implements ActionListener {
         for (int i = 0; i < numberofPrompts; i++) {
          	if (play_stateA[i]) {playA[i].setEnabled(true);} else {playA[i].setEnabled(false);}
         	if (capt_stateA[i]) {captA[i].setEnabled(true);} else {captA[i].setEnabled(false);}
-            // System.err.println("restoreButtonState" + "playA" + i + playA[i].isEnabled()+ ";captA" + i + captA[i].isEnabled());// !!!!!!
         }
     }
 
@@ -622,13 +614,12 @@ public class CapturePlayback extends JPanel implements ActionListener {
          
 // ################### Play #######################################       
         for (int i = 0; i < numberofPrompts; i++) {
-       		//System.err.println("playA[i]" +  i ); // !!!!!!
             if (obj.equals(playA[i])) {
                 if (playA[i].getText().startsWith(playButton)) {
                     wavFile = wavFileA[i];      
                     duration = durationA[i];
                     totalBytesWritten = totalBytesWrittenA[i];
-                    System.err.println("=== Play " + (i+1) + " ===");// !!!!!!
+                    System.err.println("=== Play " + (i+1) + " ===");
                     playback.start();
             		System.err.println("duration:" + duration);
                     fileName = promptidA[i];  
@@ -653,7 +644,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	            if (captA[x].getText().startsWith(recordButton)) {
 	                file = null;
 	                wavFile = wavFileA[x];  
-	        		System.err.println("=== Record " + (x+1) + " ==="); // !!!!!!
+	        		System.err.println("=== Record " + (x+1) + " ==="); 
 	                capture.start(uploadWavFileA[x]);  
 	                fileName = promptidA[x];
 	                samplingGraph.start();
@@ -666,13 +657,12 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	            } else {
 	                lines.removeAllElements();  
 	                try {  
-	                	//capture.thread.sleep(1000);
 	                	Thread.sleep(1000);
 	                } catch (InterruptedException ex) { 
 	        			System.err.println("Recording Thread - Interrupt Exception");
 	                }
 	                capture.stop();
-	                totalBytesWrittenA[x] = totalBytesWritten; // !!!!!!
+	                totalBytesWrittenA[x] = totalBytesWritten; 
 	            	durationA[x]= totalBytesWritten / (double) (format.getSampleRate() * format.getSampleSizeInBits()/ 8);
 	        		System.err.println("duration1:" + durationA[x]);
 	            	samplingGraph.stop();
