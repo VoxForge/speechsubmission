@@ -38,8 +38,6 @@ package speechrecorder;
  * redistribute the Software for such purposes.
  */
 
-import static java.nio.file.StandardCopyOption.*;
-
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -67,8 +65,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.channels.FileChannel;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.Calendar;
@@ -101,7 +97,6 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
 
-import net.sf.postlet.UploadManager;
 import netscape.javascript.JSObject;
 import speechrecorder.ConfigReader;
 
@@ -112,7 +107,7 @@ import speechrecorder.ConfigReader;
  */
 
 @SuppressWarnings("serial")
-public class CapturePlayback extends JPanel implements ActionListener, net.sf.postlet.PostletInterface {
+public class CapturePlayback extends JPanel implements ActionListener {
 
 	private static final File CONFIGURATION_FILE = new File(System.getProperty("user.home"), "VoxForge.properties");
 
