@@ -47,6 +47,7 @@ public class RecorderApplication extends JFrame {
 	}
     
     public void init() {
+    	
         getContentPane().add("Center", 
               theRecorder = new CapturePlayback( language, "/home/kmaclean/temp/", cookie));
     }
@@ -58,9 +59,6 @@ public class RecorderApplication extends JFrame {
     public void stop() {
         theRecorder.close();
     }
-
-   
-
 	
     public void errorMessage(java.io.PrintStream out, String message){
         out.println("***"+message+"***");

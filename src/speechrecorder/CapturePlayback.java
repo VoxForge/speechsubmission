@@ -63,7 +63,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
@@ -83,7 +82,6 @@ import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -121,13 +119,13 @@ public class CapturePlayback extends JPanel implements ActionListener {
 
     Capture capture = new Capture();
     Playback playback = new Playback();
-    CapturePlayback capturePlayback; // Needed for referencing within the inner classes
 
     AudioInputStream audioInputStream;
     SamplingGraph samplingGraph;
 
     // !!!!!! int numberofPrompts = 10;
     int numberofPrompts = 3;
+    
     JButton [] playA = new JButton [numberofPrompts]; 
     JButton [] captA = new JButton [numberofPrompts];
     
@@ -242,7 +240,6 @@ public class CapturePlayback extends JPanel implements ActionListener {
 
 	ConvertAndUpload convertAndUpload; 
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public CapturePlayback(String lang, String targetDirectory, String cookie) 
 	{    	
 	//  ############ Localized Fields ####################################
@@ -309,7 +306,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	    
 	    leftToRight = labels.getLeftToRight();
 	    
-	//  ############ Localized Fields ####################################  
+	//  	############ Localized Fields ####################################  
 	
 		String [][] promptArray = (new Prompts(numberofPrompts,this.language)).getPrompts();
 	    for (int i = 0; i < numberofPrompts; i++) 
@@ -320,9 +317,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	    }
 	   
 	    this.cookie = cookie;
-	    
-	    capturePlayback = this;
-	
+
 		// Create WAV files to hold recordings
 		try {
 	        for (int i = 0; i < numberofPrompts; i++) 
@@ -352,14 +347,14 @@ public class CapturePlayback extends JPanel implements ActionListener {
 			System.err.println("CapturePlayback's WAV file for recording uploadWavFile" + i + "is:" + uploadWavFileA[i]);
 	    }
 	
-	//  ############ GUI Display ####################################   
+	//  	############ GUI Display ####################################   
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         EmptyBorder eb = new EmptyBorder(5,5,5,5);
         SoftBevelBorder sbb = new SoftBevelBorder(SoftBevelBorder.LOWERED);
 
         JPanel p2 = new JPanel();
         p2.setLayout(new BoxLayout(p2, BoxLayout.Y_AXIS));
-	//      ############ User name ####################################             
+	// 		############ User name ####################################             
         JPanel usernamePanel = new JPanel();
         usernamePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         if (leftToRight)
@@ -374,7 +369,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
         }
         usernamePanel.add(new JLabel(usernamePanelText));     
         p2.add(usernamePanel);  
-// ############ Gender ####################################             
+    // 		############ Gender ####################################             
         JPanel genderPanel = new JPanel();
         genderPanel.setLayout(new FlowLayout(FlowLayout.CENTER));  
         if (leftToRight)
@@ -395,7 +390,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
                  }
         	});
         p2.add(genderPanel);
-	// ############ Age Range ####################################             
+	// 		############ Age Range ####################################             
         JPanel ageRangePanel = new JPanel();
         ageRangePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         if (leftToRight)
@@ -475,11 +470,9 @@ public class CapturePlayback extends JPanel implements ActionListener {
         for (int i = startPromptCount; i < promptsPerPane; i++) 
         {
         	promptPanelA[i] = new JPanel();
-        	//promptPanelA[i].setLayout(new FlowLayout(FlowLayout.LEFT));    
         	promptPanelA[i].setLayout(new FlowLayout(FlowLayout.RIGHT));            	
         	promptInnerPanelA [i]= new JPanel(); 
 	        promptInnerPanelA[i].setBorder(BorderFactory.createLineBorder (voxforgeColour, 1));
-	        //promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth));
 	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, leftToRight));     
 	        promptPanelA[i].add(promptInnerPanelA[i]);
 	        playA[i] = addButton(playButton, promptPanelA[i], false);
@@ -513,7 +506,6 @@ public class CapturePlayback extends JPanel implements ActionListener {
         progBar = new JProgressBar();
         progBar.setStringPainted(false);
         progBar.setString("Ready");
-         //progBar.setVisible(false);
         p2.add(progBar);               
 	// 		############ More Information Button ####################################          
         JPanel moreInfoButtonPanel = new JPanel();
@@ -548,7 +540,6 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	//#########################################################################   
         add(p2);
    
-	
 	    // Load all settings that were saved from the last session
         loadSettings();
 	}
@@ -711,10 +702,10 @@ public class CapturePlayback extends JPanel implements ActionListener {
                userName = "anonymous";
             }
 
-					saveSettings();
-        	
-           convertAndUpload.start(targetDirectory);
-           System.err.println("now what");
+			saveSettings();
+     	
+			convertAndUpload.start(targetDirectory);
+			System.err.println("now what");
         }
 //      ################### More Information #######################################     
         else if (obj.equals(moreInfoB)) {
@@ -1559,7 +1550,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
          {
          	 System.err.println("setProgress(): Not reached end yet. sentBytes="+sentBytes+", totalBytes="+totalBytes);
          }
-      }    
+ 	}    
     
     
     public void saveSettings()
