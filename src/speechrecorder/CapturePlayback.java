@@ -242,9 +242,11 @@ public class CapturePlayback extends JPanel implements ActionListener {
 
     Color voxforgeColour 	= new Color(197, 216, 234);
 	
+    // constructor
+    
 	public CapturePlayback(String lang, String targetDirectory, String cookie) 
 	{    	
-	//  ############ Localized Fields ####################################
+		// ############ Localized Fields ####################################
 		this.language = lang;
 
 		this.targetDirectory = targetDirectory;
@@ -307,7 +309,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
 
 	    this.cookie = cookie;
 	
-	//  	############ GUI Display ####################################   
+	    // ############ GUI Display ####################################   
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JPanel p2 = new JPanel();
 		
@@ -320,6 +322,8 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	    // Load all settings that were saved from the last session
         //loadSettings();
 	}
+	
+	// methods
 
     private void addPromptInfo(JPanel p2, int numberofPrompts) 
     { 
@@ -462,7 +466,14 @@ public class CapturePlayback extends JPanel implements ActionListener {
         add(p2);    	
     	
     }
-		
+	
+    /**
+     * User name,
+     * Gender,
+     * Age Range,
+     * Pronunciation Dialect,
+     * Microphone Type
+     **/
     private void addUserInfo(JPanel p2) 
     { 
         p2.setLayout(new BoxLayout(p2, BoxLayout.Y_AXIS));
@@ -522,7 +533,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
                  }
         	});
         p2.add(ageRangePanel);
-	//      ############ Pronunciation Dialect: ####################################       
+	//      ############ Pronunciation Dialect ####################################       
         JPanel dialectPanel = new JPanel();
         dialectPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         if (leftToRight)
@@ -542,7 +553,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	            }
             });
         p2.add(dialectPanel);
-	//      ############ Microphone Type: ####################################       
+	//      ############ Microphone Type ####################################       
         JPanel microphonePanel = new JPanel();
         microphonePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         if (leftToRight)
