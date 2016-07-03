@@ -240,6 +240,8 @@ public class CapturePlayback extends JPanel implements ActionListener {
 
 	ConvertAndUpload convertAndUpload; 
 
+    Color voxforgeColour 	= new Color(197, 216, 234);
+	
 	public CapturePlayback(String lang, String targetDirectory, String cookie) 
 	{    	
 	//  ############ Localized Fields ####################################
@@ -305,16 +307,8 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	    uploadCompletedMessageLabel = labels.getUploadCompletedMessageLabel();
 	    
 	    leftToRight = labels.getLeftToRight();
-	    
-	//  	############ Localized Fields ####################################  
-	
-		String [][] promptArray = (new Prompts(numberofPrompts,this.language)).getPrompts();
-	    for (int i = 0; i < numberofPrompts; i++) 
-	    {
-	    	this.promptidA [i] = promptArray[0][i];
-	    	this.promptA [i] = promptArray[1][i];
-	    	// System.err.println("Prompts:" + this.promptidA[i] + ":"+ this.promptA [i]);
-	    }
+
+
 	   
 	    this.cookie = cookie;
 
@@ -353,6 +347,120 @@ public class CapturePlayback extends JPanel implements ActionListener {
         SoftBevelBorder sbb = new SoftBevelBorder(SoftBevelBorder.LOWERED);
 
         JPanel p2 = new JPanel();
+        addUserInfo(p2); 
+        addPromptInfo(p2, numberofPrompts); 
+        addRemainingPanelInfo(p2, eb, sbb); 
+   
+	    // Load all settings that were saved from the last session
+        loadSettings();
+	}
+
+    private void addPromptInfo(JPanel p2, int numberofPrompts) 
+    { 
+	    String [][] promptArray = (new Prompts(numberofPrompts,this.language)).getPrompts();
+	    for (int i = 0; i < numberofPrompts; i++) 
+	    {
+	    	this.promptidA [i] = promptArray[0][i];
+	    	this.promptA [i] = promptArray[1][i];
+	    }
+    	
+    	//		############ Prompt container ####################################   
+        JPanel promptsContainer = new JPanel(); 
+        promptsContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+         int startPromptCount = 0;
+        int promptsPerPane = numberofPrompts;
+	
+	//      ############ Prompts panel ####################################         
+        JPanel prompts = new JPanel(); 
+        prompts.setLayout(new BoxLayout(prompts, BoxLayout.Y_AXIS));
+        prompts.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
+    
+        int maxWidth = 40;
+
+        JPanel promptPanelA[] = new JPanel[promptsPerPane]; 
+        JPanel promptInnerPanelA[] = new JPanel[promptsPerPane]; 
+        for (int i = startPromptCount; i < promptsPerPane; i++) 
+        {
+        	promptPanelA[i] = new JPanel();
+        	promptPanelA[i].setLayout(new FlowLayout(FlowLayout.RIGHT));            	
+        	promptInnerPanelA [i]= new JPanel(); 
+	        promptInnerPanelA[i].setBorder(BorderFactory.createLineBorder (voxforgeColour, 1));
+	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, leftToRight));     
+	        promptPanelA[i].add(promptInnerPanelA[i]);
+	        playA[i] = addButton(playButton, promptPanelA[i], false);
+	        if (i==0) {
+	        	captA[i] = addButton(recordButton, promptPanelA[i], true); // only turn on first record button 
+	        } else {
+		        captA[i] = addButton(recordButton, promptPanelA[i], false);
+	        }
+	        prompts.add(promptPanelA[i]);  
+        }
+		//############ Prompt container ####################################   	
+        promptsContainer.add(prompts);
+        p2.add(promptsContainer);
+    }	
+	
+	
+    private void addRemainingPanelInfo(JPanel p2, EmptyBorder eb, SoftBevelBorder sbb) 
+    { 
+    	//      ############ Sampling Graph ####################################          
+        JPanel samplingPanel = new JPanel(new BorderLayout());
+        eb = new EmptyBorder(10,20,5,20);
+        samplingPanel.setBorder(new CompoundBorder(eb, sbb));
+        samplingPanel.add(samplingGraph = new SamplingGraph());
+        p2.add(samplingPanel);
+	//      ############ Upload Text ####################################             
+        JPanel uploadTextPanel = new JPanel();
+        uploadTextPanel.add(new JLabel(uploadText));               
+        p2.add(uploadTextPanel);
+	//		############ Upload ####################################          
+        JPanel uploadButtonPanel = new JPanel();
+        uploadButtonPanel.setBorder(new EmptyBorder(5,0,5,0));
+        uploadB = addButton(uploadButtonLabel, uploadButtonPanel, false); // upload all submissions
+        p2.add(uploadButtonPanel);
+	//		############ Upload Progress bar ####################################
+        progBar = new JProgressBar();
+        progBar.setStringPainted(false);
+        progBar.setString("Ready");
+        p2.add(progBar);               
+	// 		############ More Information Button ####################################          
+        JPanel moreInfoButtonPanel = new JPanel();
+        if (leftToRight)
+        {
+	        moreInfoButtonPanel.add(new JLabel(moreInfoText));
+	        moreInfoB = addButton(moreInfoButtonLabel, moreInfoButtonPanel, true); 
+        }
+        else
+        {
+       	    moreInfoB = addButton(moreInfoButtonLabel, moreInfoButtonPanel, true); 
+            moreInfoButtonPanel.add(new JLabel(moreInfoText));     	 
+        }
+        p2.add(moreInfoButtonPanel);   
+// 		############ Disclaimer ####################################  
+        JPanel DisclaimerPanel = new JPanel();
+        DisclaimerPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
+        JPanel DisclaimerInnerPanel = new JPanel(); 
+        if (leftToRight)
+        {
+        	DisclaimerInnerPanel.add(new JLabel(disclaimerText));
+        	aboutB = addButton(aboutButtonLabel, DisclaimerInnerPanel, true); 
+        }
+        else
+        {
+            aboutB = addButton(aboutButtonLabel, DisclaimerInnerPanel, true); 
+            DisclaimerInnerPanel.add(new JLabel(disclaimerText));
+        }
+        DisclaimerInnerPanel.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
+        DisclaimerPanel.add(DisclaimerInnerPanel);        
+        p2.add(DisclaimerPanel); 
+	//#########################################################################   
+        add(p2);    	
+    	
+    }
+		
+    private void addUserInfo(JPanel p2) 
+    { 
         p2.setLayout(new BoxLayout(p2, BoxLayout.Y_AXIS));
 	// 		############ User name ####################################             
         JPanel usernamePanel = new JPanel();
@@ -451,99 +559,8 @@ public class CapturePlayback extends JPanel implements ActionListener {
                  }
         	});
         p2.add(microphonePanel);
-	//		############ Prompt container ####################################   
-        JPanel promptsContainer = new JPanel(); 
-        promptsContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
-        Color voxforgeColour 	= new Color(197, 216, 234);
-         int startPromptCount = 0;
-        int promptsPerPane = numberofPrompts;
+    }	
 	
-	//      ############ Prompts panel ####################################         
-        JPanel prompts = new JPanel(); 
-        prompts.setLayout(new BoxLayout(prompts, BoxLayout.Y_AXIS));
-        prompts.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
-    
-        int maxWidth = 40;
-
-        JPanel promptPanelA[] = new JPanel[promptsPerPane]; 
-        JPanel promptInnerPanelA[] = new JPanel[promptsPerPane]; 
-        for (int i = startPromptCount; i < promptsPerPane; i++) 
-        {
-        	promptPanelA[i] = new JPanel();
-        	promptPanelA[i].setLayout(new FlowLayout(FlowLayout.RIGHT));            	
-        	promptInnerPanelA [i]= new JPanel(); 
-	        promptInnerPanelA[i].setBorder(BorderFactory.createLineBorder (voxforgeColour, 1));
-	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, leftToRight));     
-	        promptPanelA[i].add(promptInnerPanelA[i]);
-	        playA[i] = addButton(playButton, promptPanelA[i], false);
-	        if (i==0) {
-	        	captA[i] = addButton(recordButton, promptPanelA[i], true); // only turn on first record button 
-	        } else {
-		        captA[i] = addButton(recordButton, promptPanelA[i], false);
-	        }
-	        prompts.add(promptPanelA[i]);  
-        }
-		//############ Prompt container ####################################   	
-        promptsContainer.add(prompts);
-        p2.add(promptsContainer);
-	
-	//      ############ Sampling Graph ####################################          
-        JPanel samplingPanel = new JPanel(new BorderLayout());
-        eb = new EmptyBorder(10,20,5,20);
-        samplingPanel.setBorder(new CompoundBorder(eb, sbb));
-        samplingPanel.add(samplingGraph = new SamplingGraph());
-        p2.add(samplingPanel);
-	//      ############ Upload Text ####################################             
-        JPanel uploadTextPanel = new JPanel();
-        uploadTextPanel.add(new JLabel(uploadText));               
-        p2.add(uploadTextPanel);
-	//		############ Upload ####################################          
-        JPanel uploadButtonPanel = new JPanel();
-        uploadButtonPanel.setBorder(new EmptyBorder(5,0,5,0));
-        uploadB = addButton(uploadButtonLabel, uploadButtonPanel, false); // upload all submissions
-        p2.add(uploadButtonPanel);
-	//		############ Upload Progress bar ####################################
-        progBar = new JProgressBar();
-        progBar.setStringPainted(false);
-        progBar.setString("Ready");
-        p2.add(progBar);               
-	// 		############ More Information Button ####################################          
-        JPanel moreInfoButtonPanel = new JPanel();
-        if (leftToRight)
-        {
-	        moreInfoButtonPanel.add(new JLabel(moreInfoText));
-	        moreInfoB = addButton(moreInfoButtonLabel, moreInfoButtonPanel, true); 
-        }
-        else
-        {
-       	    moreInfoB = addButton(moreInfoButtonLabel, moreInfoButtonPanel, true); 
-            moreInfoButtonPanel.add(new JLabel(moreInfoText));     	 
-        }
-        p2.add(moreInfoButtonPanel);   
-// 		############ Disclaimer ####################################  
-        JPanel DisclaimerPanel = new JPanel();
-        DisclaimerPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
-        JPanel DisclaimerInnerPanel = new JPanel(); 
-        if (leftToRight)
-        {
-        	DisclaimerInnerPanel.add(new JLabel(disclaimerText));
-        	aboutB = addButton(aboutButtonLabel, DisclaimerInnerPanel, true); 
-        }
-        else
-        {
-            aboutB = addButton(aboutButtonLabel, DisclaimerInnerPanel, true); 
-            DisclaimerInnerPanel.add(new JLabel(disclaimerText));
-        }
-        DisclaimerInnerPanel.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
-        DisclaimerPanel.add(DisclaimerInnerPanel);        
-        p2.add(DisclaimerPanel); 
-	//#########################################################################   
-        add(p2);
-   
-	    // Load all settings that were saved from the last session
-        loadSettings();
-	}
-
     public void open() { }
 
     private String getTempDir() {
