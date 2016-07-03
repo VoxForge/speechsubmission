@@ -312,19 +312,65 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	
 	//  	############ GUI Display ####################################   
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-        JPanel p2 = new JPanel();
-
+		JPanel p2 = new JPanel();
+		
         addUserInfo(p2); 
 	    createWavFiles();
         addPromptInfo(p2, numberofPrompts); 
         addGraph(p2); 
         addRemainingPanelInfo(p2); 
-
 	    // Load all settings that were saved from the last session
         //loadSettings();
 	}
 
+    private void addPromptInfo(JPanel p2, int numberofPrompts) 
+    { 
+	    String [][] promptArray = (new Prompts(numberofPrompts,this.language)).getPrompts();
+	    for (int i = 0; i < numberofPrompts; i++) 
+	    {
+	    	this.promptidA [i] = promptArray[0][i];
+	    	this.promptA [i] = promptArray[1][i];
+	    }
+    	
+    	//		############ Prompt container ####################################   
+        JPanel promptsContainer = new JPanel(); 
+        promptsContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+         int startPromptCount = 0;
+        int promptsPerPane = numberofPrompts;
+	
+	//      ############ Prompts panel ####################################         
+        JPanel prompts = new JPanel(); 
+        prompts.setLayout(new BoxLayout(prompts, BoxLayout.Y_AXIS));
+        prompts.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
+    
+        int maxWidth = 40;
+
+        JPanel promptPanelA[] = new JPanel[promptsPerPane]; 
+        JPanel promptInnerPanelA[] = new JPanel[promptsPerPane]; 
+        for (int i = startPromptCount; i < promptsPerPane; i++) 
+        {
+        	promptPanelA[i] = new JPanel();
+        	promptPanelA[i].setLayout(new FlowLayout(FlowLayout.RIGHT));            	
+        	promptInnerPanelA [i]= new JPanel(); 
+	        promptInnerPanelA[i].setBorder(BorderFactory.createLineBorder (voxforgeColour, 1));
+	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, leftToRight));     
+	        promptPanelA[i].add(promptInnerPanelA[i]);
+	        playA[i] = addButton(playButton, promptPanelA[i], false);
+	        if (i==0) {
+	        	captA[i] = addButton(recordButton, promptPanelA[i], true); // only turn on first record button 
+	        } else {
+		        captA[i] = addButton(recordButton, promptPanelA[i], false);
+	        }
+	        prompts.add(promptPanelA[i]);  
+        }
+		//############ Prompt container ####################################   	
+        promptsContainer.add(prompts);
+        p2.add(promptsContainer);
+    }	
+		
+	
+	
     private void addGraph(JPanel p2) 
     { 
         //      ############ Sampling Graph ####################################          
@@ -420,52 +466,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
     	
     }
 	
-    private void addPromptInfo(JPanel p2, int numberofPrompts) 
-    { 
-	    String [][] promptArray = (new Prompts(numberofPrompts,this.language)).getPrompts();
-	    for (int i = 0; i < numberofPrompts; i++) 
-	    {
-	    	this.promptidA [i] = promptArray[0][i];
-	    	this.promptA [i] = promptArray[1][i];
-	    }
-    	
-    	//		############ Prompt container ####################################   
-        JPanel promptsContainer = new JPanel(); 
-        promptsContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-         int startPromptCount = 0;
-        int promptsPerPane = numberofPrompts;
-	
-	//      ############ Prompts panel ####################################         
-        JPanel prompts = new JPanel(); 
-        prompts.setLayout(new BoxLayout(prompts, BoxLayout.Y_AXIS));
-        prompts.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
-    
-        int maxWidth = 40;
-
-        JPanel promptPanelA[] = new JPanel[promptsPerPane]; 
-        JPanel promptInnerPanelA[] = new JPanel[promptsPerPane]; 
-        for (int i = startPromptCount; i < promptsPerPane; i++) 
-        {
-        	promptPanelA[i] = new JPanel();
-        	promptPanelA[i].setLayout(new FlowLayout(FlowLayout.RIGHT));            	
-        	promptInnerPanelA [i]= new JPanel(); 
-	        promptInnerPanelA[i].setBorder(BorderFactory.createLineBorder (voxforgeColour, 1));
-	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, leftToRight));     
-	        promptPanelA[i].add(promptInnerPanelA[i]);
-	        playA[i] = addButton(playButton, promptPanelA[i], false);
-	        if (i==0) {
-	        	captA[i] = addButton(recordButton, promptPanelA[i], true); // only turn on first record button 
-	        } else {
-		        captA[i] = addButton(recordButton, promptPanelA[i], false);
-	        }
-	        prompts.add(promptPanelA[i]);  
-        }
-		//############ Prompt container ####################################   	
-        promptsContainer.add(prompts);
-        p2.add(promptsContainer);
-    }	
-	
 
 		
     private void addUserInfo(JPanel p2) 
