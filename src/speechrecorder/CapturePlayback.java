@@ -41,6 +41,7 @@ package speechrecorder;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -236,20 +237,20 @@ public class CapturePlayback extends JPanel implements ActionListener {
     String licenseNotice;
     String vflicense;
   
-	String tempdir = getTempDir();
+	String tempdir;
 
 	ConvertAndUpload convertAndUpload; 
 
     Color voxforgeColour 	= new Color(197, 216, 234);
-	
+    Container contain;
     // constructor
     
-	public CapturePlayback(String lang, String targetDirectory, String cookie) 
+	public CapturePlayback(String lang, String targetDirectory, String cookie, Container contain) 
 	{    	
 		// ############ Localized Fields ####################################
 		this.language = lang;
-
 		this.targetDirectory = targetDirectory;
+		this.contain = contain;
 		
 	    LabelLocalizer labels = new LabelLocalizer(this.language);
 	    usernamePanelLabel = labels.getUsernamePanelLabel();
@@ -309,23 +310,52 @@ public class CapturePlayback extends JPanel implements ActionListener {
 
 	    this.cookie = cookie;
 	
-	    // ############ GUI Display ####################################   
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		JPanel p2 = new JPanel();
-		
-        addUserInfo(p2); 
-        addPromptInfo(p2, numberofPrompts); 
-	    createWavFiles(numberofPrompts, this.promptidA ); // promptidA array gets assigned in addPromptInfo
-        addGraph(p2); 
-        addRemainingPanelInfo(p2); 
-        
+		JPanel userPanel = startApp();
+        add(userPanel);  
+
 	    // Load all settings that were saved from the last session
         //loadSettings();
 	}
-	
-	// methods
 
-    private void addPromptInfo(JPanel p2, int numberofPrompts) 
+	// methods
+	
+	/**
+	 * see http://stackoverflow.com/questions/14874613/how-to-replace-jpanel-with-another-jpanel
+	 */
+    private JPanel startApp() 
+    { 	
+
+		JPanel userPanel = new JPanel();
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        addUserInfo(userPanel);
+
+        JPanel promptsContainer = addPromptInfo(new JPanel(), numberofPrompts);
+        userPanel.add(promptsContainer);
+
+        tempdir = getTempDir();      
+	    createWavFiles(numberofPrompts, this.promptidA ); // promptidA array gets assigned in addPromptInfo
+        addGraph(userPanel); 
+        addRemainingPanelInfo(userPanel); 
+
+        return userPanel;
+    }	
+    	
+	/**
+	 * see http://stackoverflow.com/questions/14874613/how-to-replace-jpanel-with-another-jpanel
+	 */
+    private void restartApp() 
+    { 	
+		removeAll();  //Removes all the components from this container
+
+		JPanel userPanel = startApp();
+        add(userPanel);  
+
+        validate();
+        repaint();
+        setVisible(true);
+    }	
+
+    private JPanel addPromptInfo(JPanel promptsContainer, int numberofPrompts) 
     { 
 	    String [][] promptArray = (new Prompts(numberofPrompts,this.language)).getPrompts();
 	    for (int i = 0; i < numberofPrompts; i++) 
@@ -335,7 +365,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	    }
     	
     	//		############ Prompt container ####################################   
-        JPanel promptsContainer = new JPanel(); 
+
         promptsContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         int startPromptCount = 0;
@@ -368,7 +398,8 @@ public class CapturePlayback extends JPanel implements ActionListener {
         }
 		//############ Prompt container ####################################   	
         promptsContainer.add(prompts);
-        p2.add(promptsContainer);
+
+        return promptsContainer;
     }	
 	
     private void createWavFiles(int numberofPrompts, String [] promptidA ) 
@@ -463,7 +494,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
         DisclaimerPanel.add(DisclaimerInnerPanel);        
         p2.add(DisclaimerPanel); 
 	//#########################################################################   
-        add(p2);    	
+ 	
     	
     }
 	
@@ -737,7 +768,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
 			saveSettings();
      	
 			convertAndUpload.start(targetDirectory);
-			System.err.println("now what");
+			restartApp();
         }
 //      ################### More Information #######################################     
         else if (obj.equals(moreInfoB)) {
@@ -1316,7 +1347,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	        }
 
 	        setProgress((int)targetFile.length());
-	        return;
+
         }
 
         protected void createZipArchive(File archiveFile, File[] tobeZippedFiles) {

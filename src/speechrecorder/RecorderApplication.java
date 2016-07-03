@@ -13,8 +13,7 @@
 
 package speechrecorder;
 
-import java.net.URL;
-
+import java.awt.Container;
 import javax.swing.JFrame;
 
 
@@ -41,10 +40,8 @@ public class RecorderApplication extends JFrame {
 	}
     
     public void init() {
-    	
         getContentPane().add("Center", 
-              theRecorder = new CapturePlayback( language, "/home/kmaclean/temp/", cookie));
-        stop();
+              theRecorder = new CapturePlayback( language, "/home/kmaclean/temp/", cookie, getContentPane()));
         
     }
 
