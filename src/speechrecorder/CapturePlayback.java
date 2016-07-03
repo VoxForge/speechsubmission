@@ -308,108 +308,36 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	    
 	    leftToRight = labels.getLeftToRight();
 
-
-	   
 	    this.cookie = cookie;
-
-		// Create WAV files to hold recordings
-		try {
-	        for (int i = 0; i < numberofPrompts; i++) 
-	        {
-	        	wavFileA [i] = new File(tempdir + "wavFile" + i + ".wav");
-	        	wavFileA[i].deleteOnExit();
-	        }
-	        for (int i = 0; i < numberofPrompts; i++) 
-	        {
-				uploadWavFileA[i] = new File(tempdir + this.promptidA [i] + ".wav");
-				uploadWavFileA[i].deleteOnExit();
-	        }
-			promptsFile = new File(tempdir + "prompts.txt");			
-			promptsFile.deleteOnExit();		
-			readmeFile = new File(tempdir + "readme.txt");			
-			readmeFile.deleteOnExit();		
-			licenseFile = new File(tempdir + "GPL_license.txt");			
-			licenseFile.deleteOnExit();			
-			licenseNoticeFile = new File(tempdir + "license.txt");	
-			licenseNoticeFile.deleteOnExit();	
-		} catch (Exception e) {
-			System.err.println("Unable to create WAV cache file for storing audio\n" + e);
-			return;
-		}
-	    for (int i = 0; i < numberofPrompts; i++) 
-	    {			
-			System.err.println("CapturePlayback's WAV file for recording uploadWavFile" + i + "is:" + uploadWavFileA[i]);
-	    }
 	
 	//  	############ GUI Display ####################################   
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        EmptyBorder eb = new EmptyBorder(5,5,5,5);
-        SoftBevelBorder sbb = new SoftBevelBorder(SoftBevelBorder.LOWERED);
 
         JPanel p2 = new JPanel();
+
         addUserInfo(p2); 
+	    createWavFiles();
         addPromptInfo(p2, numberofPrompts); 
-        addRemainingPanelInfo(p2, eb, sbb); 
-   
+        addGraph(p2); 
+        addRemainingPanelInfo(p2); 
+
 	    // Load all settings that were saved from the last session
-        loadSettings();
+        //loadSettings();
 	}
 
-    private void addPromptInfo(JPanel p2, int numberofPrompts) 
+    private void addGraph(JPanel p2) 
     { 
-	    String [][] promptArray = (new Prompts(numberofPrompts,this.language)).getPrompts();
-	    for (int i = 0; i < numberofPrompts; i++) 
-	    {
-	    	this.promptidA [i] = promptArray[0][i];
-	    	this.promptA [i] = promptArray[1][i];
-	    }
-    	
-    	//		############ Prompt container ####################################   
-        JPanel promptsContainer = new JPanel(); 
-        promptsContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
-
-         int startPromptCount = 0;
-        int promptsPerPane = numberofPrompts;
-	
-	//      ############ Prompts panel ####################################         
-        JPanel prompts = new JPanel(); 
-        prompts.setLayout(new BoxLayout(prompts, BoxLayout.Y_AXIS));
-        prompts.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
-    
-        int maxWidth = 40;
-
-        JPanel promptPanelA[] = new JPanel[promptsPerPane]; 
-        JPanel promptInnerPanelA[] = new JPanel[promptsPerPane]; 
-        for (int i = startPromptCount; i < promptsPerPane; i++) 
-        {
-        	promptPanelA[i] = new JPanel();
-        	promptPanelA[i].setLayout(new FlowLayout(FlowLayout.RIGHT));            	
-        	promptInnerPanelA [i]= new JPanel(); 
-	        promptInnerPanelA[i].setBorder(BorderFactory.createLineBorder (voxforgeColour, 1));
-	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, leftToRight));     
-	        promptPanelA[i].add(promptInnerPanelA[i]);
-	        playA[i] = addButton(playButton, promptPanelA[i], false);
-	        if (i==0) {
-	        	captA[i] = addButton(recordButton, promptPanelA[i], true); // only turn on first record button 
-	        } else {
-		        captA[i] = addButton(recordButton, promptPanelA[i], false);
-	        }
-	        prompts.add(promptPanelA[i]);  
-        }
-		//############ Prompt container ####################################   	
-        promptsContainer.add(prompts);
-        p2.add(promptsContainer);
-    }	
-	
-	
-    private void addRemainingPanelInfo(JPanel p2, EmptyBorder eb, SoftBevelBorder sbb) 
-    { 
-    	//      ############ Sampling Graph ####################################          
+        //      ############ Sampling Graph ####################################          
+        EmptyBorder eb = new EmptyBorder(25,25,25,25);
+        SoftBevelBorder sbb = new SoftBevelBorder(SoftBevelBorder.LOWERED);
         JPanel samplingPanel = new JPanel(new BorderLayout());
         eb = new EmptyBorder(10,20,5,20);
         samplingPanel.setBorder(new CompoundBorder(eb, sbb));
         samplingPanel.add(samplingGraph = new SamplingGraph());
         p2.add(samplingPanel);
+    }
+    private void addRemainingPanelInfo(JPanel p2) 
+    { 
 	//      ############ Upload Text ####################################             
         JPanel uploadTextPanel = new JPanel();
         uploadTextPanel.add(new JLabel(uploadText));               
@@ -458,6 +386,87 @@ public class CapturePlayback extends JPanel implements ActionListener {
         add(p2);    	
     	
     }
+	
+    private void createWavFiles() 
+    { 
+		// Create WAV files to hold recordings
+		try {
+	        for (int i = 0; i < numberofPrompts; i++) 
+	        {
+	        	wavFileA [i] = new File(tempdir + "wavFile" + i + ".wav");
+	        	wavFileA[i].deleteOnExit();
+	        }
+	        for (int i = 0; i < numberofPrompts; i++) 
+	        {
+				uploadWavFileA[i] = new File(tempdir + this.promptidA [i] + ".wav");
+				uploadWavFileA[i].deleteOnExit();
+	        }
+			promptsFile = new File(tempdir + "prompts.txt");			
+			promptsFile.deleteOnExit();		
+			readmeFile = new File(tempdir + "readme.txt");			
+			readmeFile.deleteOnExit();		
+			licenseFile = new File(tempdir + "GPL_license.txt");			
+			licenseFile.deleteOnExit();			
+			licenseNoticeFile = new File(tempdir + "license.txt");	
+			licenseNoticeFile.deleteOnExit();	
+		} catch (Exception e) {
+			System.err.println("Unable to create WAV cache file for storing audio\n" + e);
+			return;
+		}
+	    for (int i = 0; i < numberofPrompts; i++) 
+	    {			
+			System.err.println("CapturePlayback's WAV file for recording uploadWavFile" + i + "is:" + uploadWavFileA[i]);
+	    }    	
+    	
+    }
+	
+    private void addPromptInfo(JPanel p2, int numberofPrompts) 
+    { 
+	    String [][] promptArray = (new Prompts(numberofPrompts,this.language)).getPrompts();
+	    for (int i = 0; i < numberofPrompts; i++) 
+	    {
+	    	this.promptidA [i] = promptArray[0][i];
+	    	this.promptA [i] = promptArray[1][i];
+	    }
+    	
+    	//		############ Prompt container ####################################   
+        JPanel promptsContainer = new JPanel(); 
+        promptsContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+         int startPromptCount = 0;
+        int promptsPerPane = numberofPrompts;
+	
+	//      ############ Prompts panel ####################################         
+        JPanel prompts = new JPanel(); 
+        prompts.setLayout(new BoxLayout(prompts, BoxLayout.Y_AXIS));
+        prompts.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
+    
+        int maxWidth = 40;
+
+        JPanel promptPanelA[] = new JPanel[promptsPerPane]; 
+        JPanel promptInnerPanelA[] = new JPanel[promptsPerPane]; 
+        for (int i = startPromptCount; i < promptsPerPane; i++) 
+        {
+        	promptPanelA[i] = new JPanel();
+        	promptPanelA[i].setLayout(new FlowLayout(FlowLayout.RIGHT));            	
+        	promptInnerPanelA [i]= new JPanel(); 
+	        promptInnerPanelA[i].setBorder(BorderFactory.createLineBorder (voxforgeColour, 1));
+	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, leftToRight));     
+	        promptPanelA[i].add(promptInnerPanelA[i]);
+	        playA[i] = addButton(playButton, promptPanelA[i], false);
+	        if (i==0) {
+	        	captA[i] = addButton(recordButton, promptPanelA[i], true); // only turn on first record button 
+	        } else {
+		        captA[i] = addButton(recordButton, promptPanelA[i], false);
+	        }
+	        prompts.add(promptPanelA[i]);  
+        }
+		//############ Prompt container ####################################   	
+        promptsContainer.add(prompts);
+        p2.add(promptsContainer);
+    }	
+	
+
 		
     private void addUserInfo(JPanel p2) 
     { 
