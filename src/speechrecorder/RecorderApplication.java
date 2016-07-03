@@ -19,23 +19,17 @@ import javax.swing.JFrame;
 
 
 /**
- * @author  kmaclean
+ * 
  */
 @SuppressWarnings("serial")
 public class RecorderApplication extends JFrame {
 
-   // static RecorderApplet applet;
     private CapturePlayback theRecorder;
 ////// MOODLEY:
     String subject;
     String fileFieldName;
-    URL endPageURL;
-    URL helpPageURL;
-    URL destinationURL;
 
     String language = "EN";
-    String endpage = "www.voxforge.org";
-    String helppage = "www.voxforge.org";
     String cookie = null;
     
 	public RecorderApplication()
@@ -50,6 +44,8 @@ public class RecorderApplication extends JFrame {
     	
         getContentPane().add("Center", 
               theRecorder = new CapturePlayback( language, "/home/kmaclean/temp/", cookie));
+        stop();
+        
     }
 
     public void start() {

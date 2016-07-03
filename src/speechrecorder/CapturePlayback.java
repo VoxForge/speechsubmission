@@ -245,10 +245,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	public CapturePlayback(String lang, String targetDirectory, String cookie) 
 	{    	
 	//  ############ Localized Fields ####################################
-		// !!!!!!
 		this.language = lang;
-		//this.language = "FA"; // for testing 
-		// !!!!!!
 
 		this.targetDirectory = targetDirectory;
 		
@@ -315,10 +312,11 @@ public class CapturePlayback extends JPanel implements ActionListener {
 		JPanel p2 = new JPanel();
 		
         addUserInfo(p2); 
-	    createWavFiles();
         addPromptInfo(p2, numberofPrompts); 
+	    createWavFiles(numberofPrompts, this.promptidA ); // promptidA array gets assigned in addPromptInfo
         addGraph(p2); 
         addRemainingPanelInfo(p2); 
+        
 	    // Load all settings that were saved from the last session
         //loadSettings();
 	}
@@ -336,7 +334,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
         JPanel promptsContainer = new JPanel(); 
         promptsContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-         int startPromptCount = 0;
+        int startPromptCount = 0;
         int promptsPerPane = numberofPrompts;
 	
 	//      ############ Prompts panel ####################################         
@@ -368,7 +366,38 @@ public class CapturePlayback extends JPanel implements ActionListener {
         promptsContainer.add(prompts);
         p2.add(promptsContainer);
     }	
-		
+	
+    private void createWavFiles(int numberofPrompts, String [] promptidA ) 
+    { 
+		// Create WAV files to hold recordings
+		try {
+	        for (int i = 0; i < numberofPrompts; i++) 
+	        {
+	        	wavFileA [i] = new File(tempdir + "wavFile" + i + ".wav");
+	        	wavFileA[i].deleteOnExit();
+	        }
+	        for (int i = 0; i < numberofPrompts; i++) 
+	        {
+				uploadWavFileA[i] = new File(tempdir + promptidA [i] + ".wav");
+				uploadWavFileA[i].deleteOnExit();
+	        }
+			promptsFile = new File(tempdir + "prompts.txt");			
+			promptsFile.deleteOnExit();		
+			readmeFile = new File(tempdir + "readme.txt");			
+			readmeFile.deleteOnExit();		
+			licenseFile = new File(tempdir + "GPL_license.txt");			
+			licenseFile.deleteOnExit();			
+			licenseNoticeFile = new File(tempdir + "license.txt");	
+			licenseNoticeFile.deleteOnExit();	
+		} catch (Exception e) {
+			System.err.println("Unable to create WAV cache file for storing audio\n" + e);
+			return;
+		}
+	    for (int i = 0; i < numberofPrompts; i++) 
+	    {			
+			System.err.println("CapturePlayback's WAV file for recording uploadWavFile" + i + "is:" + uploadWavFileA[i]);
+	    }    	
+    }
 	
 	
     private void addGraph(JPanel p2) 
@@ -382,6 +411,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
         samplingPanel.add(samplingGraph = new SamplingGraph());
         p2.add(samplingPanel);
     }
+    
     private void addRemainingPanelInfo(JPanel p2) 
     { 
 	//      ############ Upload Text ####################################             
@@ -432,42 +462,6 @@ public class CapturePlayback extends JPanel implements ActionListener {
         add(p2);    	
     	
     }
-	
-    private void createWavFiles() 
-    { 
-		// Create WAV files to hold recordings
-		try {
-	        for (int i = 0; i < numberofPrompts; i++) 
-	        {
-	        	wavFileA [i] = new File(tempdir + "wavFile" + i + ".wav");
-	        	wavFileA[i].deleteOnExit();
-	        }
-	        for (int i = 0; i < numberofPrompts; i++) 
-	        {
-				uploadWavFileA[i] = new File(tempdir + this.promptidA [i] + ".wav");
-				uploadWavFileA[i].deleteOnExit();
-	        }
-			promptsFile = new File(tempdir + "prompts.txt");			
-			promptsFile.deleteOnExit();		
-			readmeFile = new File(tempdir + "readme.txt");			
-			readmeFile.deleteOnExit();		
-			licenseFile = new File(tempdir + "GPL_license.txt");			
-			licenseFile.deleteOnExit();			
-			licenseNoticeFile = new File(tempdir + "license.txt");	
-			licenseNoticeFile.deleteOnExit();	
-		} catch (Exception e) {
-			System.err.println("Unable to create WAV cache file for storing audio\n" + e);
-			return;
-		}
-	    for (int i = 0; i < numberofPrompts; i++) 
-	    {			
-			System.err.println("CapturePlayback's WAV file for recording uploadWavFile" + i + "is:" + uploadWavFileA[i]);
-	    }    	
-    	
-    }
-	
-
-
 		
     private void addUserInfo(JPanel p2) 
     { 
