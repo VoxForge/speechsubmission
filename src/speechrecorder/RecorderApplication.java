@@ -27,9 +27,7 @@ public class RecorderApplication extends JFrame {
 ////// MOODLEY:
     String subject;
     String fileFieldName;
-
     String language = "EN";
-    String cookie = null;
     
 	public RecorderApplication()
 	{
@@ -40,9 +38,8 @@ public class RecorderApplication extends JFrame {
 	}
     
     public void init() {
-        getContentPane().add("Center", 
-              theRecorder = new CapturePlayback( language, "/home/kmaclean/temp/", cookie, getContentPane()));
-        
+    	theRecorder = new CapturePlayback( language, "/home/kmaclean/temp/");
+        getContentPane().add("Center", theRecorder);
     }
 
     public void start() {

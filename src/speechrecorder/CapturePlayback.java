@@ -242,15 +242,13 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	ConvertAndUpload convertAndUpload; 
 
     Color voxforgeColour 	= new Color(197, 216, 234);
-    Container contain;
     // constructor
     
-	public CapturePlayback(String lang, String targetDirectory, String cookie, Container contain) 
+	public CapturePlayback(String lang, String targetDirectory) 
 	{    	
 		// ############ Localized Fields ####################################
 		this.language = lang;
 		this.targetDirectory = targetDirectory;
-		this.contain = contain;
 		
 	    LabelLocalizer labels = new LabelLocalizer(this.language);
 	    usernamePanelLabel = labels.getUsernamePanelLabel();
@@ -308,8 +306,6 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	    
 	    leftToRight = labels.getLeftToRight();
 
-	    this.cookie = cookie;
-	
 		JPanel userPanel = startApp();
         add(userPanel);  
 
@@ -324,39 +320,55 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	 */
     private JPanel startApp() 
     { 	
-
 		JPanel userPanel = new JPanel();
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         addUserInfo(userPanel);
-
-        JPanel promptsContainer = addPromptInfo(new JPanel(), numberofPrompts);
-        userPanel.add(promptsContainer);
-
-        tempdir = getTempDir();      
+        addPromptInfo(userPanel, numberofPrompts);
+        
+        tempdir = getTempDir(); // creates new temp dir with every call
 	    createWavFiles(numberofPrompts, this.promptidA ); // promptidA array gets assigned in addPromptInfo
         addGraph(userPanel); 
         addRemainingPanelInfo(userPanel); 
 
         return userPanel;
     }	
-    	
+    
 	/**
 	 * see http://stackoverflow.com/questions/14874613/how-to-replace-jpanel-with-another-jpanel
 	 */
     private void restartApp() 
     { 	
+    	try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		removeAll();  //Removes all the components from this container
 
 		JPanel userPanel = startApp();
         add(userPanel);  
-
+        loadSettings();
+        
         validate();
         repaint();
         setVisible(true);
     }	
-
-    private JPanel addPromptInfo(JPanel promptsContainer, int numberofPrompts) 
+    
+    private void addGraph(JPanel userPanel) 
     { 
+        //      ############ Sampling Graph ####################################          
+        EmptyBorder eb = new EmptyBorder(25,25,25,25);
+        SoftBevelBorder sbb = new SoftBevelBorder(SoftBevelBorder.LOWERED);
+        JPanel samplingPanel = new JPanel(new BorderLayout());
+        eb = new EmptyBorder(10,20,5,20);
+        samplingPanel.setBorder(new CompoundBorder(eb, sbb));
+        samplingPanel.add(samplingGraph = new SamplingGraph());
+        userPanel.add(samplingPanel);
+    }
+
+    private void addPromptInfo(JPanel userPanel, int numberofPrompts) 
+    { 
+    	JPanel promptsContainer = new JPanel();
 	    String [][] promptArray = (new Prompts(numberofPrompts,this.language)).getPrompts();
 	    for (int i = 0; i < numberofPrompts; i++) 
 	    {
@@ -399,9 +411,12 @@ public class CapturePlayback extends JPanel implements ActionListener {
 		//############ Prompt container ####################################   	
         promptsContainer.add(prompts);
 
-        return promptsContainer;
+        userPanel.add(promptsContainer);
     }	
 	
+    
+
+
     private void createWavFiles(int numberofPrompts, String [] promptidA ) 
     { 
 		// Create WAV files to hold recordings
@@ -435,17 +450,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
     }
 	
 	
-    private void addGraph(JPanel p2) 
-    { 
-        //      ############ Sampling Graph ####################################          
-        EmptyBorder eb = new EmptyBorder(25,25,25,25);
-        SoftBevelBorder sbb = new SoftBevelBorder(SoftBevelBorder.LOWERED);
-        JPanel samplingPanel = new JPanel(new BorderLayout());
-        eb = new EmptyBorder(10,20,5,20);
-        samplingPanel.setBorder(new CompoundBorder(eb, sbb));
-        samplingPanel.add(samplingGraph = new SamplingGraph());
-        p2.add(samplingPanel);
-    }
+
     
     private void addRemainingPanelInfo(JPanel p2) 
     { 
@@ -1676,19 +1681,6 @@ public class CapturePlayback extends JPanel implements ActionListener {
 			usernameTextField.setText("");
 		} 	
     }
-    
-	public String getCookie(){
-		// If passed in as a param then we don't need to worry about trying to fetch it from the context
-	//	System.err.println("CapturePlayback Cookie: " + cookie +":\n");  
-	//	System.err.println("CapturePlayback Cookie: " + this.cookie +":\n");
-    	if (cookie != null && !cookie.equals(""))
-			return cookie;
-		// Method reads the cookie in from the Browser using the LiveConnect object.
-		// May also add an option to set the cookie using an applet parameter 
-//		JSObject win = (JSObject) JSObject.getWindow((JApplet) this.getParent());
-//		cookie = "" + (String) win.eval("document.cookie");
-		return cookie;
-	}
 	
 	/*
 	 * from: http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java 
