@@ -107,6 +107,7 @@ import speechrecorder.ConfigReader;
 @SuppressWarnings("serial")
 public class CapturePlayback extends JPanel implements ActionListener {
 
+	// TODO need some way to create same session config file - by date and time???
 	private static final File CONFIGURATION_FILE = new File(System.getProperty("user.home"), "VoxForge.properties");
 
     final int bufSize = 16384;
@@ -124,8 +125,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
     AudioInputStream audioInputStream;
     SamplingGraph samplingGraph;
 
-    // !!!!!! int numberofPrompts = 10;
-    int numberofPrompts = 3;
+    int numberofPrompts = 10;
     
     JButton [] playA = new JButton [numberofPrompts]; 
     JButton [] captA = new JButton [numberofPrompts];

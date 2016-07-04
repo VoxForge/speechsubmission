@@ -29,7 +29,7 @@ public class License {
 			L;
 
 	private static final String VFabout =  
-			"VoxForge Speech Submission Application v0.2.4b" + L +
+			"VoxForge Speech Submission Application v0.3" + L +
 	  		"============================" + L +
 			"Allows a user to record their speech and upload it to the VoxForge server" + L + 
 	  	    "so that it can be incorporated into the VoxForge speech corpus and used" + L + 

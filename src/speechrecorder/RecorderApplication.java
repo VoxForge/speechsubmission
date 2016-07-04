@@ -33,7 +33,7 @@ public class RecorderApplication extends JFrame {
 	{
 		System.out.println("Java");
 		init();				// simulate browser call(1)
-		setSize(400,600);   		// Set the size of the frame
+		setSize(800,1100);   		// Set the size of the frame
 		setVisible(true);   		// Show the frame 
 	}
     
