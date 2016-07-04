@@ -1,7 +1,3 @@
-Manifest-Version: 0.1
-Permissions: all-permissions
-Codebase: *.voxforge.org *.voxforge1.org 
-Application-Name: VoxForge SpeechSubmission App
-Application-Library-Allowable-Codebase: *.voxforge.org *.voxforge1.org
-Trusted-Only: true
-Sealed: true
+Manifest-Version: 1.0
+Main-Class: speechrecorder.RecorderApplication
+
