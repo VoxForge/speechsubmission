@@ -6,7 +6,6 @@
    This Moodle plugin incorporates open-source 
    Java code from other projects:
     - JSpeex player/recorder, (c) Wimba S.A.
-    - Postlet HTTP uploader,  (c) Simon Rycroft
     - JavaSoundDemo,          (c) Sun Microsystems
    Please see the licences stored in the "copyrights" folder for more details.
 

@@ -110,7 +110,6 @@ public class License {
 			"   - ConfigReader and supporting code modifications (c) 2014 Joseph Lewis"+ L +			
 			"  Other Projects:"+ L +
 			"   - MoodleSpeex,               (c) 2006 Dan Stowell"+ L +
-			"   - Postlet HTTP uploader,  (c) Simon Rycroft"+ L +
 			"   - JavaSoundDemo,           (c) Sun Microsystems"+ L +
 			"Please see the licences stored in the \"copyrights\" folder in the " + L +
 			"speechsubmission jar file for details."+ L + L +

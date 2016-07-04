@@ -125,7 +125,7 @@ public class CapturePlayback extends JPanel implements ActionListener {
     AudioInputStream audioInputStream;
     SamplingGraph samplingGraph;
 
-    int numberofPrompts = 10;
+    int numberofPrompts = 5;
     
     JButton [] playA = new JButton [numberofPrompts]; 
     JButton [] captA = new JButton [numberofPrompts];

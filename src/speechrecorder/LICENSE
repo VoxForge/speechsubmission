@@ -18,9 +18,9 @@ This Java Applet also incorporates other open-source code:
     - ConfigReader and supporting code modifications (c) 2014 Joseph Lewis	
    Other Projects:
 	  - MoodleSpeex, 			  (c) 2006 Dan Stowell
-    - Postlet HTTP uploader,  (c) Simon Rycroft
     - JavaSoundDemo,          (c) Sun Microsystems
-    - CMU_ARCTIC prompts,     (c) 2005 Carnegie Mellon University (derived from
-                                       out-of-copyright texts from Project Gutenberg)  
+    - The English prompts used by the VoxForge speech submission applet were 
+      derived from CMU's version of the public domain Enron Email Dataset 
+      (https://www.cs.cmu.edu/~./enron/)
     
    Please see the licences stored in the "copyrights" folder for more details.
