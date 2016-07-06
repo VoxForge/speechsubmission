@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<project name="SpeechRecorder" default="package" basedir=".">
+  <description>VoxForge Speech Recorder (postlet)</description>
+
+  <!-- set global properties for this build -->
+  <property name="root"       location="."/>
+  <property name="src"        location="src"/>
+  <property name="src.java"   location="${src}"/>
+  <property name="build"      location="build"/>
+  <property name="build.java" location="${build}"/>
+  <property name="include"    location="include"/>
+  <property name="dist"       location="dist"/>
+  <property name="version" value="0.3"/>
+
+  <target name="init" description="Initialise ant" depends="clean">
+    <tstamp>
+      <format property="NOW" pattern="dd/MM/yyyy HH:mm" locale="en"/>
+    </tstamp>
+    <mkdir dir="${dist}"/>
+    <mkdir dir="${build}"/>
+    <mkdir dir="${build.java}"/>
+  </target>
+
+  <target name="compile" depends="init" description="Compile VoxForge Speech" >
+    <javac srcdir="${src.java}" destdir="${build.java}"
+         optimize="${optimize}"
+         debug="${debug}"
+         source="1.7"
+         target="1.7"
+          >
+      <include name="speechrecorder/*.java"/>
+    </javac>
+    <copy todir="${build.java}/speechrecorder/prompts">
+      <fileset dir="${src.java}/speechrecorder/prompts"/>
+    </copy>
+  </target>
+
+
+  <target name="package" depends="compile">
+    <jar jarfile="${dist}/speechrecorder.jar">
+      <fileset dir="${build.java}">
+        <include name="**/*.class"/>
+        <include name="**/speechrecorder/prompts/*"/>
+        <exclude name="**/Test*"/>
+        <exclude name="**/ant/**"/>
+      </fileset>
+      <metainf dir="${include}/metainf/"/>
+      <manifest>
+        <section name="build">
+          <attribute name="Build-Date" value="${NOW}"/>
+          <attribute name="Built-By" value="${user.name}"/>
+          <attribute name="Built-With" value="${os.name} ${os.version} ${os.arch}"/>
+        </section>
+        <attribute name="Main-Class" value="speechrecorder.RecorderApplication"/>
+      </manifest>
+    </jar>
+  
+
+  </target>
+
+
+  <target name="clean" description="Clean up" >
+    <delete dir="${build}"/>
+<!--    <delete dir="${temp}"/> -->
+  </target>
+
+</project>
