@@ -99,7 +99,7 @@ import javax.swing.border.SoftBevelBorder;
 
 import speechrecorder.ConfigReader;
 import net.sf.postlet.UploadManager;
-import netscape.javascript.JSObject;
+
 
 /**
  * Capture/Playback sample.  Record audio in different formats and then playback the recorded audio.  The captured audio can  be saved either as a WAVE, AU or AIFF.  Or load an audio file for streaming playback.
@@ -129,7 +129,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     AudioInputStream audioInputStream;
     SamplingGraph samplingGraph;
 
-    int numberofPrompts = 2;
+    int numberofPrompts = 10;
     
     JButton [] playA = new JButton [numberofPrompts]; 
     JButton [] captA = new JButton [numberofPrompts];
