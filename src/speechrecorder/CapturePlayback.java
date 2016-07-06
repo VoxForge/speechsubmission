@@ -64,6 +64,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
@@ -97,6 +98,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
 
 import speechrecorder.ConfigReader;
+import net.sf.postlet.UploadManager;
+import netscape.javascript.JSObject;
 
 /**
  * Capture/Playback sample.  Record audio in different formats and then playback the recorded audio.  The captured audio can  be saved either as a WAVE, AU or AIFF.  Or load an audio file for streaming playback.
@@ -105,7 +108,7 @@ import speechrecorder.ConfigReader;
  */
 
 @SuppressWarnings("serial")
-public class CapturePlayback extends JPanel implements ActionListener {
+public class CapturePlayback extends JPanel implements ActionListener, net.sf.postlet.PostletInterface {
 
 	// TODO need some way to create same session config file - by date and time???
 	private static final File CONFIGURATION_FILE = new File(System.getProperty("user.home"), "VoxForge.properties");
@@ -121,16 +124,18 @@ public class CapturePlayback extends JPanel implements ActionListener {
 
     Capture capture = new Capture();
     Playback playback = new Playback();
+    CapturePlayback capturePlayback; // Needed for referencing within the inner classes
 
     AudioInputStream audioInputStream;
     SamplingGraph samplingGraph;
 
-    int numberofPrompts = 5;
+    int numberofPrompts = 2;
     
     JButton [] playA = new JButton [numberofPrompts]; 
     JButton [] captA = new JButton [numberofPrompts];
     
     JButton uploadB;
+    JButton saveLocalB;
     JButton moreInfoB;    
     JButton aboutB; 
 
@@ -229,6 +234,8 @@ public class CapturePlayback extends JPanel implements ActionListener {
     private Boolean leftToRight; // direction of text
     
     String targetDirectory;
+    URL destinationURL;
+    
     String language;
     String endpage;
     String helppage;
@@ -240,15 +247,30 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	String tempdir;
 
 	ConvertAndUpload convertAndUpload; 
-
+	ConvertAndSavelocally convertAndSavelocally; 
+	
     Color voxforgeColour 	= new Color(197, 216, 234);
     // constructor
     
-	public CapturePlayback(String lang, String targetDirectory) 
+	public CapturePlayback(String lang, String targetDirectory, String destination) 
 	{    	
 		// ############ Localized Fields ####################################
 		this.language = lang;
 		this.targetDirectory = targetDirectory;
+        try 
+        {
+        	this.destinationURL = new URL(destination);
+        } 
+        catch(java.net.MalformedURLException malurlex)
+        {
+            System.out.println( "Badly formed destination URL" + destination);
+        } 
+        catch(java.lang.NullPointerException npe)
+        {
+            System.out.println( "destination is null" );
+        }
+		
+		this.capturePlayback = this;
 		
 	    LabelLocalizer labels = new LabelLocalizer(this.language);
 	    usernamePanelLabel = labels.getUsernamePanelLabel();
@@ -263,7 +285,8 @@ public class CapturePlayback extends JPanel implements ActionListener {
 				+ License.getBlanklicenseNotice();				
 		vflicense = License.getVFLicense();	 		
 		convertAndUpload = new ConvertAndUpload();
-	    
+		convertAndSavelocally = new ConvertAndSavelocally();
+		
 	    pleaseSelect = labels.getPleaseSelect();
 	    notApplicable = labels.getNotApplicable();
 	    
@@ -416,10 +439,11 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	
     
 
-
+	/**
+	 * Create WAV files to hold recordings
+	 */
     private void createWavFiles(int numberofPrompts, String [] promptidA ) 
     { 
-		// Create WAV files to hold recordings
 		try {
 	        for (int i = 0; i < numberofPrompts; i++) 
 	        {
@@ -451,7 +475,10 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	
 	
 
-    
+    /**
+     * 
+     * @param p2
+     */
     private void addRemainingPanelInfo(JPanel p2) 
     { 
 	//      ############ Upload Text ####################################             
@@ -463,6 +490,11 @@ public class CapturePlayback extends JPanel implements ActionListener {
         uploadButtonPanel.setBorder(new EmptyBorder(5,0,5,0));
         uploadB = addButton(uploadButtonLabel, uploadButtonPanel, false); // upload all submissions
         p2.add(uploadButtonPanel);
+    	//		############ Save Local ####################################          
+        JPanel saveLocalButtonPanel = new JPanel();
+        saveLocalButtonPanel.setBorder(new EmptyBorder(5,0,5,0));
+        saveLocalB = addButton("saveLocal", saveLocalButtonPanel, false); // upload all submissions
+        p2.add(saveLocalButtonPanel);
 	//		############ Upload Progress bar ####################################
         progBar = new JProgressBar();
         progBar.setStringPainted(false);
@@ -740,41 +772,84 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	                }
 	                if (x == numberofPrompts-1) {
 	                	uploadB.setEnabled(true);
+	                	saveLocalB.setEnabled(true);
 	                }
 	            }
 	        } 
 	    }
 
 //          ################### Upload #######################################               
-	    if (obj.equals(uploadB)) { 
-	        for (int i = 0; i < numberofPrompts; i++) {
+	    if (obj.equals(uploadB)) 
+	    { 
+	        for (int i = 0; i < numberofPrompts; i++) 
+	        {
 	        	playA[i].setEnabled(false);
 	            captA[i].setEnabled(false);
 	        }
-               uploadB.setEnabled(false);               
-        	try {
+            uploadB.setEnabled(false);               
+        	try 
+        	{
  	    	   usernameTextField.selectAll();
 	    	   userName = usernameTextField.getText();
-    		   // see   java.util.regex.Pattern
-    		   //	   \w  	A word character: [a-zA-Z_0-9]
-    		   //	   \W  	A non-word character: [^\w]
+    		   // see   java.util.regex.Pattern: \W  A non-word character: [^\w]
 			   userName = (usernameTextField.getText().replaceAll("\\W",""));
-	    	   if (userName.length() == 0 ) {
+	    	   if (userName.length() == 0 ) 
+	    	   {
 	               userName = "anonymous";
-	    	   } else {
-				   if (userName.length() > 40 ) {
+	    	   } else 
+	    	   {
+				   if (userName.length() > 40 ) 
+				   {
 					   userName = userName.substring(0,40);
 	    		   } 
 	    	   }
-        	} catch (NullPointerException ex) { 
+        	} 
+        	catch (NullPointerException ex) 
+        	{ 
                userName = "anonymous";
             }
 
 			saveSettings();
-     	
-			convertAndUpload.start(targetDirectory);
-			restartApp();
+
+			convertAndUpload.start();
+			//restartApp();
         }
+//      ################### SaveLocally #######################################               
+	    if (obj.equals(saveLocalB)) 
+	    { 
+	        for (int i = 0; i < numberofPrompts; i++) 
+	        {
+	        	playA[i].setEnabled(false);
+	            captA[i].setEnabled(false);
+	        }
+	        saveLocalB.setEnabled(false);               
+	    	try 
+	    	{
+		    	   usernameTextField.selectAll();
+	    	   userName = usernameTextField.getText();
+			   userName = (usernameTextField.getText().replaceAll("\\W",""));
+	    	   if (userName.length() == 0 ) 
+	    	   {
+	               userName = "anonymous";
+	    	   } 
+	    	   else 
+	    	   {
+				   if (userName.length() > 40 ) 
+				   {
+					   userName = userName.substring(0,40);
+	    		   } 
+	    	   }
+	    	} 
+	    	catch (NullPointerException ex) 
+	    	{ 
+	           userName = "anonymous";
+	        }
+	
+			saveSettings();
+	 	
+			convertAndSavelocally.start(targetDirectory);
+			restartApp();
+	    }	    
 //      ################### More Information #######################################     
         else if (obj.equals(moreInfoB)) {
          	 JTextArea textArea = new JTextArea(License.getLicense());
@@ -1203,197 +1278,6 @@ public class CapturePlayback extends JPanel implements ActionListener {
 		// debug System.err.println("Grabbed audio input stream from cache file");
 	}
 
-    
-    /** 
-     * uploads the file
-     */
-    class ConvertAndUpload  implements Runnable {
-
-        Thread thread;
-        String targetDirectory;
-        
-        public void start(String targetDirectory) {
-            errStr = null;
-            thread = new Thread(this);
-            thread.setName("ConvertAndUpload");
-    		System.err.println("=== Upload ===");
-    		this.targetDirectory = targetDirectory;
-            thread.start();
-        }
-
-        public void stop() {
-            thread = null;
-        }
-        
-		public void run() {
-            progBar.setVisible(true);
-            progBar.setStringPainted(true);
-            progBar.setMaximum(100);
-            progBar.setString(uploadingMessageLabel);
-            progBar.setIndeterminate(false);
-            progBar.setMinimum(0);
-            sentBytes = 0;
-
-			//############ audio files ####################################
-			File[] files = new File[numberofPrompts + 4];
-	        for (int i = 0; i < numberofPrompts; i++) {
-				files[i] = uploadWavFileA[i];
-	        }
-			//############ prompt files #################################### 
-			try {
-				BufferedWriter out_prompts = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(promptsFile),"UTF-8"));
-		        for (int i = 0; i < numberofPrompts; i++) {
-					out_prompts.write(promptidA[i] + " " + promptA[i] + System.getProperty("line.separator"));
-		        }
-			    out_prompts.close();
-			} catch (IOException e) {
-				    System.err.println("Problems with prompts");
-			} 
-			files[numberofPrompts] = promptsFile;
-			//############ ReadMe file#################################### 
-			try {
-				BufferedWriter out_readme = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(readmeFile),"UTF-8"));
-		
-				out_readme.write("User Name:" + userName + System.getProperty("line.separator"));
-				out_readme.write(System.getProperty("line.separator"));	
-			
-				out_readme.write("Speaker Characteristics:" + System.getProperty("line.separator") );
-				out_readme.write(System.getProperty("line.separator"));	
-				out_readme.write("Gender: " + gender + System.getProperty("line.separator") );
-				out_readme.write("Age Range: " + ageRange + System.getProperty("line.separator")); 
-				out_readme.write("Language: " + language + System.getProperty("line.separator"));	
-				out_readme.write("Pronunciation dialect: " + dialect + System.getProperty("line.separator"));	
-				out_readme.write(System.getProperty("line.separator"));
-			
-				out_readme.write("Recording Information:" + System.getProperty("line.separator"));	
-				out_readme.write(System.getProperty("line.separator"));
-				out_readme.write("Microphone make: n/a" + System.getProperty("line.separator"));	
-				out_readme.write("Microphone type: " + microphone + System.getProperty("line.separator"));	
-				out_readme.write("Audio card make: unknown" + System.getProperty("line.separator"));	
-				out_readme.write("Audio card type: unknown" + System.getProperty("line.separator"));
-				out_readme.write("Audio Recording Software: VoxForge Speech Submission Application" + System.getProperty("line.separator"));
-				out_readme.write("O/S:" + System.getProperty("line.separator"));	
-				out_readme.write(System.getProperty("line.separator"));	
-				
-				out_readme.write("File Info:" + System.getProperty("line.separator"));
-				out_readme.write(System.getProperty("line.separator"));
-				out_readme.write("File type: " + fileType + System.getProperty("line.separator"));
-				out_readme.write("Sampling Rate: " + samplingRate + System.getProperty("line.separator"));
-				out_readme.write("Sample rate format: " + samplingRateFormat + System.getProperty("line.separator"));
-				out_readme.write("Number of channels: " + numberChannels + System.getProperty("line.separator"));	
-				
-				out_readme.close();	
-			} catch (IOException e) {
-			    System.err.println("Problems with Gender, Age Range or Dialect");
-			} 
-			files[numberofPrompts + 1] = readmeFile;
-			//############ License Notice File ####################################    
-			try {
-				BufferedWriter out_licenseNoticeFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseNoticeFile),"UTF-8"));
-				out_licenseNoticeFile.write(licenseNotice);
-				out_licenseNoticeFile.close();	
-			} catch (IOException e) {
-				    System.err.println("Problems with licenseNoticeFile file");
-			} 
-			files[numberofPrompts + 2] = licenseNoticeFile;
-			//############ license file ####################################    
-			try {
-				BufferedWriter out_licenseFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseFile),"UTF-8"));
-				out_licenseFile.write(License.getGPLLicense());
-				out_licenseFile.close();	
-			} catch (IOException e) {
-				System.err.println("Problems with license file");
-			} 
-			files[numberofPrompts + 3] = licenseFile;
-			//############ create archive file #################################### 
-			File archiveFile;
-			Calendar cal = Calendar.getInstance();
-			int day = cal.get(Calendar.DATE);
-			int month = cal.get(Calendar.MONTH) + 1;
-			int year = cal.get(Calendar.YEAR);
-			StringBuffer sb = new StringBuffer(11);
-			sb.append(year);
-			if( month < 10 ) sb.append("0");
-			sb.append(month);
-			if( day < 10 ) sb.append("0");
-			sb.append(day);
-			String date = sb.toString();
-			
-			Random randomGenerator = new Random();
-			int SMALL_LETTERS_BASE_VALUE = 97;
-			StringBuffer randomID = new StringBuffer("");  // required for jvm 1.4.2
-			for ( int i = 0; i < 3; i++ )
-			{
-			   	int currentValue = randomGenerator.nextInt(26);
-				currentValue += SMALL_LETTERS_BASE_VALUE;//convert to ASCII value for a-z
-				randomID.append((char)currentValue);
-			}
-			
-			String zipfilename = tempdir + language + "-" + userName + "-" + date + "-" + randomID + ".zip";
-			if (userName != null){
-				archiveFile = new File(zipfilename);
-			} else {
-				archiveFile = new File(zipfilename);
-			}
-			
-			createZipArchive(archiveFile, files);
-			System.err.println("Archive file location:" + archiveFile);
-			totalBytes = ((int)archiveFile.length()) ; 
-			progBar.setMaximum((int)archiveFile.length());
-
-			File targetFile = new File(this.targetDirectory + language + "-" + userName + "-" + date + "-" + randomID + ".zip");
-	        try {
-	        	copyFile(archiveFile, targetFile);
-				System.err.println("target file location:" + targetFile);
-	        }
-	        catch (Exception e) {
-	            e.printStackTrace();
-	            System.out.println("Error: cant copy zip file to target folder" + e.getMessage());
-	        }
-
-	        setProgress((int)targetFile.length());
-
-        }
-
-        protected void createZipArchive(File archiveFile, File[] tobeZippedFiles) {
-          try {
-            byte buffer[] = new byte[BUFFER_SIZE];
-            // Open archive file
-            FileOutputStream stream = new FileOutputStream(archiveFile);
-            ZipOutputStream out = new ZipOutputStream(stream);
-
-            for (int i = 0; i < tobeZippedFiles.length; i++) {
-              if (tobeZippedFiles[i] == null || !tobeZippedFiles[i].exists()
-                  || tobeZippedFiles[i].isDirectory())
-                continue;
-              System.out.println("Adding " + tobeZippedFiles[i].getName());
-
-              // Add archive entry
-              ZipEntry zipAdd = new ZipEntry(tobeZippedFiles[i].getName());
-              zipAdd.setTime(tobeZippedFiles[i].lastModified());
-              out.putNextEntry(zipAdd);
-
-              // Read input & write to output
-              FileInputStream in = new FileInputStream(tobeZippedFiles[i]);
-              while (true) {
-                int nRead = in.read(buffer, 0, buffer.length);
-                if (nRead <= 0)
-                  break;
-                out.write(buffer, 0, nRead);
-              }
-              in.close();
-            }
-
-            out.close();
-            stream.close();
-            System.out.println("Adding completed OK");
-          } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error: " + e.getMessage());
-            return;
-          }
-        }
-    }
 
     /**
      * Render a WaveForm.
@@ -1709,4 +1593,373 @@ public class CapturePlayback extends JPanel implements ActionListener {
 	    }
 	}  
 
+    
+    /** 
+     * saves the submission locally
+     */
+    class ConvertAndSavelocally  implements Runnable {
+
+        Thread thread;
+        String targetDirectory;
+        
+        public void start(String targetDirectory) {
+            errStr = null;
+            thread = new Thread(this);
+            thread.setName("ConvertAndSavelocally");
+    		System.err.println("=== Save Local ===");
+    		this.targetDirectory = targetDirectory;
+            thread.start();
+        }
+
+        public void stop() {
+            thread = null;
+        }
+        
+		public void run() {
+            progBar.setVisible(true);
+            progBar.setStringPainted(true);
+            progBar.setMaximum(100);
+            progBar.setString(uploadingMessageLabel);
+            progBar.setIndeterminate(false);
+            progBar.setMinimum(0);
+            sentBytes = 0;
+
+			//############ audio files ####################################
+			File[] files = new File[numberofPrompts + 4];
+	        for (int i = 0; i < numberofPrompts; i++) {
+				files[i] = uploadWavFileA[i];
+	        }
+			//############ prompt files #################################### 
+			try {
+				BufferedWriter out_prompts = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(promptsFile),"UTF-8"));
+		        for (int i = 0; i < numberofPrompts; i++) {
+					out_prompts.write(promptidA[i] + " " + promptA[i] + System.getProperty("line.separator"));
+		        }
+			    out_prompts.close();
+			} catch (IOException e) {
+				    System.err.println("Problems with prompts");
+			} 
+			files[numberofPrompts] = promptsFile;
+			//############ ReadMe file#################################### 
+			try {
+				BufferedWriter out_readme = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(readmeFile),"UTF-8"));
+		
+				out_readme.write("User Name:" + userName + System.getProperty("line.separator"));
+				out_readme.write(System.getProperty("line.separator"));	
+			
+				out_readme.write("Speaker Characteristics:" + System.getProperty("line.separator") );
+				out_readme.write(System.getProperty("line.separator"));	
+				out_readme.write("Gender: " + gender + System.getProperty("line.separator") );
+				out_readme.write("Age Range: " + ageRange + System.getProperty("line.separator")); 
+				out_readme.write("Language: " + language + System.getProperty("line.separator"));	
+				out_readme.write("Pronunciation dialect: " + dialect + System.getProperty("line.separator"));	
+				out_readme.write(System.getProperty("line.separator"));
+			
+				out_readme.write("Recording Information:" + System.getProperty("line.separator"));	
+				out_readme.write(System.getProperty("line.separator"));
+				out_readme.write("Microphone make: n/a" + System.getProperty("line.separator"));	
+				out_readme.write("Microphone type: " + microphone + System.getProperty("line.separator"));	
+				out_readme.write("Audio card make: unknown" + System.getProperty("line.separator"));	
+				out_readme.write("Audio card type: unknown" + System.getProperty("line.separator"));
+				out_readme.write("Audio Recording Software: VoxForge Speech Submission Application" + System.getProperty("line.separator"));
+				out_readme.write("O/S:" + System.getProperty("line.separator"));	
+				out_readme.write(System.getProperty("line.separator"));	
+				
+				out_readme.write("File Info:" + System.getProperty("line.separator"));
+				out_readme.write(System.getProperty("line.separator"));
+				out_readme.write("File type: " + fileType + System.getProperty("line.separator"));
+				out_readme.write("Sampling Rate: " + samplingRate + System.getProperty("line.separator"));
+				out_readme.write("Sample rate format: " + samplingRateFormat + System.getProperty("line.separator"));
+				out_readme.write("Number of channels: " + numberChannels + System.getProperty("line.separator"));	
+				
+				out_readme.close();	
+			} catch (IOException e) {
+			    System.err.println("Problems with Gender, Age Range or Dialect");
+			} 
+			files[numberofPrompts + 1] = readmeFile;
+			//############ License Notice File ####################################    
+			try {
+				BufferedWriter out_licenseNoticeFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseNoticeFile),"UTF-8"));
+				out_licenseNoticeFile.write(licenseNotice);
+				out_licenseNoticeFile.close();	
+			} catch (IOException e) {
+				    System.err.println("Problems with licenseNoticeFile file");
+			} 
+			files[numberofPrompts + 2] = licenseNoticeFile;
+			//############ license file ####################################    
+			try {
+				BufferedWriter out_licenseFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseFile),"UTF-8"));
+				out_licenseFile.write(License.getGPLLicense());
+				out_licenseFile.close();	
+			} catch (IOException e) {
+				System.err.println("Problems with license file");
+			} 
+			files[numberofPrompts + 3] = licenseFile;
+			//############ create archive file #################################### 
+			File archiveFile;
+			Calendar cal = Calendar.getInstance();
+			int day = cal.get(Calendar.DATE);
+			int month = cal.get(Calendar.MONTH) + 1;
+			int year = cal.get(Calendar.YEAR);
+			StringBuffer sb = new StringBuffer(11);
+			sb.append(year);
+			if( month < 10 ) sb.append("0");
+			sb.append(month);
+			if( day < 10 ) sb.append("0");
+			sb.append(day);
+			String date = sb.toString();
+			
+			Random randomGenerator = new Random();
+			int SMALL_LETTERS_BASE_VALUE = 97;
+			StringBuffer randomID = new StringBuffer("");  // required for jvm 1.4.2
+			for ( int i = 0; i < 3; i++ )
+			{
+			   	int currentValue = randomGenerator.nextInt(26);
+				currentValue += SMALL_LETTERS_BASE_VALUE;//convert to ASCII value for a-z
+				randomID.append((char)currentValue);
+			}
+			
+			String zipfilename = tempdir + language + "-" + userName + "-" + date + "-" + randomID + ".zip";
+			if (userName != null){
+				archiveFile = new File(zipfilename);
+			} else {
+				archiveFile = new File(zipfilename);
+			}
+			
+			createZipArchive(archiveFile, files);
+			System.err.println("Archive file location:" + archiveFile);
+			totalBytes = ((int)archiveFile.length()) ; 
+			progBar.setMaximum((int)archiveFile.length());
+
+			File targetFile = new File(this.targetDirectory + language + "-" + userName + "-" + date + "-" + randomID + ".zip");
+	        try {
+	        	copyFile(archiveFile, targetFile);
+				System.err.println("target file location:" + targetFile);
+	        }
+	        catch (Exception e) {
+	            e.printStackTrace();
+	            System.out.println("Error: cant copy zip file to target folder" + e.getMessage());
+	        }
+
+	        setProgress((int)targetFile.length());
+
+        }
+
+
+    }
+    
+    protected void createZipArchive(File archiveFile, File[] tobeZippedFiles) {
+        try {
+          byte buffer[] = new byte[BUFFER_SIZE];
+          // Open archive file
+          FileOutputStream stream = new FileOutputStream(archiveFile);
+          ZipOutputStream out = new ZipOutputStream(stream);
+
+          for (int i = 0; i < tobeZippedFiles.length; i++) {
+            if (tobeZippedFiles[i] == null || !tobeZippedFiles[i].exists()
+                || tobeZippedFiles[i].isDirectory())
+              continue;
+            System.out.println("Adding " + tobeZippedFiles[i].getName());
+
+            // Add archive entry
+            ZipEntry zipAdd = new ZipEntry(tobeZippedFiles[i].getName());
+            zipAdd.setTime(tobeZippedFiles[i].lastModified());
+            out.putNextEntry(zipAdd);
+
+            // Read input & write to output
+            FileInputStream in = new FileInputStream(tobeZippedFiles[i]);
+            while (true) {
+              int nRead = in.read(buffer, 0, buffer.length);
+              if (nRead <= 0)
+                break;
+              out.write(buffer, 0, nRead);
+            }
+            in.close();
+          }
+
+          out.close();
+          stream.close();
+          System.out.println("Adding completed OK");
+        } catch (Exception e) {
+          e.printStackTrace();
+          System.out.println("Error: " + e.getMessage());
+          return;
+        }
+      }    
+    
+    /** 
+     * uploads the file
+     */
+    class ConvertAndUpload implements Runnable {
+
+        Thread thread;
+        String fileFieldName = "userfile";         
+        
+        public void start() {
+            errStr = null;
+            thread = new Thread(this);
+            thread.setName("ConvertAndUpload");
+    		System.err.println("=== Upload ===");
+    		System.err.println("destinationURL:" + destinationURL);
+            thread.start();
+        }
+
+        public void stop() {
+            thread = null;
+        }
+        
+		public void run() {
+            progBar.setVisible(true);
+            progBar.setStringPainted(true);
+            progBar.setMaximum(100);
+            progBar.setString(uploadingMessageLabel);
+            progBar.setIndeterminate(false);
+            progBar.setMinimum(0);
+            sentBytes = 0;
+			try {
+				destinationURL = new URL(destinationURL.toString());	  
+			}catch(Exception err){
+			    System.err.println(err);
+			}
+			System.err.println("Destination URL is " + destinationURL);
+
+			//############ audio files ####################################
+			File[] files = new File[numberofPrompts + 4];
+	        for (int i = 0; i < numberofPrompts; i++) {
+				files[i] = uploadWavFileA[i];
+	        }
+			//############ prompt files #################################### 
+			try {
+				BufferedWriter out_prompts = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(promptsFile),"UTF-8"));
+		        for (int i = 0; i < numberofPrompts; i++) {
+					out_prompts.write(promptidA[i] + " " + promptA[i] + System.getProperty("line.separator"));
+		        }
+			    out_prompts.close();
+			} catch (IOException e) {
+				    System.err.println("Problems with prompts");
+			} 
+			files[numberofPrompts] = promptsFile;
+			//############ ReadMe file#################################### 
+			try {
+				BufferedWriter out_readme = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(readmeFile),"UTF-8"));
+		
+				out_readme.write("User Name:" + userName + System.getProperty("line.separator"));
+				out_readme.write(System.getProperty("line.separator"));	
+			
+				out_readme.write("Speaker Characteristics:" + System.getProperty("line.separator") );
+				out_readme.write(System.getProperty("line.separator"));	
+				out_readme.write("Gender: " + gender + System.getProperty("line.separator") );
+				out_readme.write("Age Range: " + ageRange + System.getProperty("line.separator")); 
+				out_readme.write("Language: " + language + System.getProperty("line.separator"));	
+				out_readme.write("Pronunciation dialect: " + dialect + System.getProperty("line.separator"));	
+				out_readme.write(System.getProperty("line.separator"));
+			
+				out_readme.write("Recording Information:" + System.getProperty("line.separator"));	
+				out_readme.write(System.getProperty("line.separator"));
+				out_readme.write("Microphone make: n/a" + System.getProperty("line.separator"));	
+				out_readme.write("Microphone type: " + microphone + System.getProperty("line.separator"));	
+				out_readme.write("Audio card make: unknown" + System.getProperty("line.separator"));	
+				out_readme.write("Audio card type: unknown" + System.getProperty("line.separator"));
+				out_readme.write("Audio Recording Software: VoxForge Speech Submission Application" + System.getProperty("line.separator"));
+				out_readme.write("O/S:" + System.getProperty("line.separator"));	
+				out_readme.write(System.getProperty("line.separator"));	
+				
+				out_readme.write("File Info:" + System.getProperty("line.separator"));
+				out_readme.write(System.getProperty("line.separator"));
+				out_readme.write("File type: " + fileType + System.getProperty("line.separator"));
+				out_readme.write("Sampling Rate: " + samplingRate + System.getProperty("line.separator"));
+				out_readme.write("Sample rate format: " + samplingRateFormat + System.getProperty("line.separator"));
+				out_readme.write("Number of channels: " + numberChannels + System.getProperty("line.separator"));	
+				
+				out_readme.close();	
+			} catch (IOException e) {
+			    System.err.println("Problems with Gender, Age Range or Dialect");
+			} 
+			files[numberofPrompts + 1] = readmeFile;
+			//############ License Notice File ####################################    
+			try {
+				BufferedWriter out_licenseNoticeFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseNoticeFile),"UTF-8"));
+				out_licenseNoticeFile.write(licenseNotice);
+				out_licenseNoticeFile.close();	
+			} catch (IOException e) {
+				    System.err.println("Problems with licenseNoticeFile file");
+			} 
+			files[numberofPrompts + 2] = licenseNoticeFile;
+			//############ license file ####################################    
+			try {
+				BufferedWriter out_licenseFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseFile),"UTF-8"));
+				out_licenseFile.write(License.getGPLLicense());
+				out_licenseFile.close();	
+			} catch (IOException e) {
+				System.err.println("Problems with license file");
+			} 
+			files[numberofPrompts + 3] = licenseFile;
+			//############ create archive file #################################### 
+			File archiveFile;
+			Calendar cal = Calendar.getInstance();
+			int day = cal.get(Calendar.DATE);
+			int month = cal.get(Calendar.MONTH) + 1;
+			int year = cal.get(Calendar.YEAR);
+			StringBuffer sb = new StringBuffer(11);
+			sb.append(year);
+			if( month < 10 ) sb.append("0");
+			sb.append(month);
+			if( day < 10 ) sb.append("0");
+			sb.append(day);
+			String date = sb.toString();
+			
+			Random randomGenerator = new Random();
+			int SMALL_LETTERS_BASE_VALUE = 97;
+			StringBuffer randomID = new StringBuffer("");  // required for jvm 1.4.2
+			for ( int i = 0; i < 3; i++ )
+			{
+			   	int currentValue = randomGenerator.nextInt(26);
+				currentValue += SMALL_LETTERS_BASE_VALUE;//convert to ASCII value for a-z
+				randomID.append((char)currentValue);
+			}
+			
+			String zipfilename = tempdir + language + "-" + userName + "-" + date + "-" + randomID + ".zip";
+			if (userName != null){
+				archiveFile = new File(zipfilename);
+			} else {
+				archiveFile = new File(zipfilename);
+			}
+			
+			createZipArchive(archiveFile, files);
+			System.err.println("Archive file location:" + archiveFile);
+			totalBytes = ((int)archiveFile.length()) ; 
+			progBar.setMaximum((int)archiveFile.length());
+
+			//############ Upload #################################### 
+			// Upload manager needs an array but JavaUpload.php script can only handle one file at a time
+			File[] archiveFiles = new File[1];
+			archiveFiles[0] = archiveFile;
+            UploadManager u;
+            try 
+            {
+                u = new UploadManager(archiveFiles, capturePlayback, destinationURL, 1, fileFieldName);
+            } 
+            catch(java.lang.NullPointerException npered)
+            {
+            	u = new UploadManager(archiveFiles, capturePlayback, destinationURL, fileFieldName);
+            }
+            System.err.println("Uploading to " + destinationURL);
+            u.start();
+
+        }
+    }
+    
+	public String getCookie(){
+		// If passed in as a param then we don't need to worry about trying to fetch it from the context
+	//	System.err.println("CapturePlayback Cookie: " + cookie +":\n");  
+	//	System.err.println("CapturePlayback Cookie: " + this.cookie +":\n");
+    	if (cookie != null && !cookie.equals(""))
+			return cookie;
+		// Method reads the cookie in from the Browser using the LiveConnect object.
+		// May also add an option to set the cookie using an applet parameter 
+//		JSObject win = (JSObject) JSObject.getWindow((JApplet) this.getParent());
+//		cookie = "" + (String) win.eval("document.cookie");
+		return cookie;
+	}
+    
 } 

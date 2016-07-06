@@ -14,6 +14,8 @@
 package speechrecorder;
 
 import java.awt.Container;
+import java.net.URL;
+
 import javax.swing.JFrame;
 
 
@@ -28,7 +30,9 @@ public class RecorderApplication extends JFrame {
     String subject;
     String fileFieldName;
     String language = "EN";
-    
+   	String targetDirectory = ""; // blank target directory means current
+    String destination = "http://read.voxforge1.org/r0_2_4b/javaUploadServer.php";
+   	
 	public RecorderApplication()
 	{
 		System.out.println("Java");
@@ -36,9 +40,9 @@ public class RecorderApplication extends JFrame {
 		setSize(800,800);   		// Set the size of the frame
 		setVisible(true);   		// Show the frame 
 	}
-    
+	
     public void init() {
-    	theRecorder = new CapturePlayback( language, "/home/kmaclean/temp/");
+    	theRecorder = new CapturePlayback( language, targetDirectory, destination); 
         getContentPane().add("Center", theRecorder);
     }
 
@@ -57,6 +61,6 @@ public class RecorderApplication extends JFrame {
     
     public static void main(String[] args) 
     {
-    	        new RecorderApplication();
+    	new RecorderApplication();
     }
 }
