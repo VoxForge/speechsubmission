@@ -33,6 +33,9 @@
     <copy todir="${build.java}/speechrecorder/prompts">
       <fileset dir="${src.java}/speechrecorder/prompts"/>
     </copy>
+        <copy todir="${build.java}/speechrecorder/copyrights">
+      <fileset dir="${src.java}/speechrecorder/copyrights"/>
+    </copy>
   </target>
 
   <target name="test" depends="compile">
@@ -43,8 +46,7 @@
       <fileset dir="${build.java}">
         <include name="**/*.class"/>
         <include name="**/speechrecorder/prompts/*"/>
-        <exclude name="**/Test*"/>
-        <exclude name="**/ant/**"/>
+        <include name="**/speechrecorder/copyrights/*"/>
       </fileset>
       <metainf dir="${include}/metainf/"/>
       <manifest>
