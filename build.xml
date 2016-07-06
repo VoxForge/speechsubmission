@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<project name="SpeechRecorder" default="package" basedir=".">
+<project name="SpeechRecorder" default="package" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
   <description>VoxForge Speech Recorder (postlet)</description>
 
   <!-- set global properties for this build -->
@@ -58,15 +58,31 @@
         <attribute name="Main-Class" value="speechrecorder.RecorderApplication"/>
       </manifest>
     </jar>
-  
-
-  </target>
-  
-
-  
+   </target>
+ 
   <target name="clean" description="Clean up" >
     <delete dir="${build}"/>
-<!--    <delete dir="${temp}"/> -->
   </target>
+
+
+<!-- This command create both rpm and deb packages on Fedora:
+     javapackager -deploy -native -BsystemWide=true -BjvmOptions=-Xmx128m  
+     -BjvmOptions=-Xms128m -outdir packages -outfile SpeechSubmission -srcdir dist    
+     -srcfiles speechrecorder.jar -appclass speechrecorder.RecorderApplication 
+     -name voxforge_speechrecorder  -title "voxforge speech_recorder"
+--> 
+
+<fx:deploy width="${javafx.run.width}" 
+           height="${javafx.run.height}"
+           nativeBundles="all"
+           outdir="packages" 
+           outfile="SpeechSubmission">
+    <fx:application name="voxforge_speechrecord" mainClass="speechrecorder.RecorderApplication"/>
+    <fx:resources>
+        <fx:fileset dir="dist" includes="speechrecorder.jar"/>
+    </fx:resources>
+    <fx:info title="${application.title}" vendor="${application.vendor}"/>
+</fx:deploy>
+
 
 </project>

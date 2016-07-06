@@ -377,9 +377,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         setVisible(true);
     }	
     
+    /**
+     * add Sampling Graph
+     * 
+     * @param userPanel
+     */
     private void addGraph(JPanel userPanel) 
     { 
-        //      ############ Sampling Graph ####################################          
         EmptyBorder eb = new EmptyBorder(25,25,25,25);
         SoftBevelBorder sbb = new SoftBevelBorder(SoftBevelBorder.LOWERED);
         JPanel samplingPanel = new JPanel(new BorderLayout());
@@ -389,6 +393,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         userPanel.add(samplingPanel);
     }
 
+	/**
+	 * add prompts to GUI
+	 * 
+	 * @param userPanel
+	 * @param numberofPrompts
+	 */
     private void addPromptInfo(JPanel userPanel, int numberofPrompts) 
     { 
     	JPanel promptsContainer = new JPanel();
@@ -488,13 +498,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	//		############ Upload ####################################          
         JPanel uploadButtonPanel = new JPanel();
         uploadButtonPanel.setBorder(new EmptyBorder(5,0,5,0));
-        uploadB = addButton(uploadButtonLabel, uploadButtonPanel, false); // upload all submissions
+        uploadB = addButton("upload to VoxForge", uploadButtonPanel, false); // upload all submissions
         p2.add(uploadButtonPanel);
     	//		############ Save Local ####################################          
-        JPanel saveLocalButtonPanel = new JPanel();
-        saveLocalButtonPanel.setBorder(new EmptyBorder(5,0,5,0));
-        saveLocalB = addButton("saveLocal", saveLocalButtonPanel, false); // upload all submissions
-        p2.add(saveLocalButtonPanel);
+        //saveLocalB = addButton("save on your computer", uploadButtonPanel, false); // upload all submissions
+        //p2.add(uploadButtonPanel);
 	//		############ Upload Progress bar ####################################
         progBar = new JProgressBar();
         progBar.setStringPainted(false);
