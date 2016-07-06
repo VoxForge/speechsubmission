@@ -57,51 +57,6 @@ public class License {
 			"along with these files.  If not, see <http://www.gnu.org/licenses/>." + L +
 			L;
 
-	/*
-	private static final String	CMUlicenseNotice =  
-			"============================" + L +
-			"The English prompts used by the VoxForge speech submission applet contain prompts" + L +
-			"from the CMU_ARCTIC speech synthesis databases." + L +
-			L +		
-			"The CMU_ARCTIC databases were constructed at the Language Technologies Institute" + L +
-			"at Carnegie Mellon University as phonetically balanced, US English single speaker" + L +
-			"databases designed for unit selection speech synthesis research." + L +
-			L + 	
-			"CMU_ARCTIC license:" + L +		
-			L + 			
-			"    This voice is free for use for any purpose (commercial or otherwise)" + L +
-			"    subject to the pretty light restrictions detailed below." + L +
-			L +
-			"    ########################################################" + L +
-			"    ###                                                                       " + L +
-			"    ###                     Carnegie Mellon University                        " + L +
-			"    ###                         Copyright (c) 2005                            " + L +
-			"    ###                        All Rights Reserved.                           " + L +
-			"    ###                                                                       " + L +
-			"    ###  Permission to use, copy, modify,  and licence this software and its  " + L +
-			"    ###  documentation for any purpose, is hereby granted without fee,        " + L +
-			"    ###  subject to the following conditions:                                 " + L +
-			"    ###   1. The code must retain the above copyright notice, this list of    " + L +
-			"    ###      conditions and the following disclaimer.                         " + L +
-			"    ###   2. Any modifications must be clearly marked as such.                " + L +
-			"    ###   3. Original authors' names are not deleted.                         " + L +
-			"    ###                                                                       " + L +
-			"    ###  THE AUTHORS OF THIS WORK DISCLAIM ALL WARRANTIES WITH REGARD TO      " + L +
-			"    ###  THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY   " + L +
-			"    ###  AND FITNESS, IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY         " + L +
-			"    ###  SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES            " + L +
-			"    ###  WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN   " + L +
-			"    ###  AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,          " + L +
-			"    ###  ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF       " + L +
-			"    ###  THIS SOFTWARE.                                                       " + L +
-			"    ###                                                                       " + L +
-			"    ########################################################" + L +
-			"    ###                                                                       " + L +
-			"    ###  See http://www.festvox.org/cmu_arctic/ for more details              " + L +
-			"    ###                                                                       " + L +
-			"    ########################################################"	 + L +
-		 	L;				
-	*/
 	private static final String Acknowledgments =			
 			"Acknowledgments:" + L + 
 			"===========" + L + 
@@ -817,11 +772,7 @@ public class License {
     	return licenseFAQ;
     }
 
-//	public static String getEN_BlanklicenseNotice() {
-//		return  blankLicenseNotice  + L + L + 
-//				CMUlicenseNotice;
-//    }
-	
+
 	public static String getBlanklicenseNotice() {
 		return blankLicenseNotice;
     }
@@ -840,20 +791,13 @@ public class License {
 		gplLicense;
     }
 	
-//	public static String getEN_VFLicense() {
-//		return VFabout + L +   
-//			CMUGPLpreamble + L + 
-//			GPLshort + L + 					
-//			CMUlicenseNotice + L + 							
-//			Acknowledgments + L + L	+				
-//			gplLicense;
-//   }
-	
 	public static String getVFLicense() {
+		//return VFabout + L +   
+		//	GPLshort + L + 					
+		//	Acknowledgments + L + L	+				
+		//	gplLicense;		
 		return VFabout + L +   
-//			VFGPLpreamble + L + 
-			GPLshort + L + 					
-			Acknowledgments + L + L	+				
-			gplLicense;		
+				GPLshort + L + 					
+				Acknowledgments;	
     }
 }

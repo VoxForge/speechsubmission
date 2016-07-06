@@ -519,7 +519,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         JPanel DisclaimerInnerPanel = new JPanel(); 
         if (leftToRight)
         {
-        	DisclaimerInnerPanel.add(new JLabel(disclaimerText));
+        	//DisclaimerInnerPanel.add(new JLabel(disclaimerText));
         	aboutB = addButton(aboutButtonLabel, DisclaimerInnerPanel, true); 
         }
         else
