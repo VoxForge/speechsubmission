@@ -70,7 +70,7 @@
      -BjvmOptions=-Xms128m -outdir packages -outfile SpeechSubmission -srcdir dist    
      -srcfiles speechrecorder.jar -appclass speechrecorder.RecorderApplication 
      -name voxforge_speechrecorder  -title "voxforge speech_recorder"
---> 
+
 
 <fx:deploy width="${javafx.run.width}" 
            height="${javafx.run.height}"
@@ -83,6 +83,6 @@
     </fx:resources>
     <fx:info title="${application.title}" vendor="${application.vendor}"/>
 </fx:deploy>
-
+--> 
 
 </project>
