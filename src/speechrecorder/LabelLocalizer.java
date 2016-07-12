@@ -166,7 +166,7 @@ class LabelLocalizer  {
 	     stopButton = "Stop"; 
 	     playButton = "Play"; 
 	     
-	     peakWarningLabel =  "Warning: input may be too loud"; 
+	     peakWarningLabel =  "Error: input too loud, please re-record prompt line"; 
 	     sampleGraphFileLabel = "File: ";
 	     sampleGraphLengthLabel = "  Length: ";
 	     sampleGraphPositionLabel ="  Position: ";

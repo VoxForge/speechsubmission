@@ -41,7 +41,6 @@ package speechrecorder;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -100,7 +99,6 @@ import javax.swing.border.SoftBevelBorder;
 import speechrecorder.ConfigReader;
 import net.sf.postlet.UploadManager;
 
-
 /**
  * Capture/Playback sample.  Record audio in different formats and then playback the recorded audio.  The captured audio can  be saved either as a WAVE, AU or AIFF.  Or load an audio file for streaming playback.
  * @version  @(#)CapturePlayback.java	1.11	99/12/03
@@ -129,13 +127,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     AudioInputStream audioInputStream;
     SamplingGraph samplingGraph;
 
-    int numberofPrompts = 10;
+    int numberofPrompts = 3;
     
     JButton [] playA = new JButton [numberofPrompts]; 
     JButton [] captA = new JButton [numberofPrompts];
     
     JButton uploadB;
-    JButton saveLocalB;
+    //JButton saveLocalB;
     JButton moreInfoB;    
     JButton aboutB; 
 
@@ -389,7 +387,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         JPanel samplingPanel = new JPanel(new BorderLayout());
         eb = new EmptyBorder(10,20,5,20);
         samplingPanel.setBorder(new CompoundBorder(eb, sbb));
-        samplingPanel.add(samplingGraph = new SamplingGraph());
+        samplingGraph = new SamplingGraph();
+        samplingPanel.add(samplingGraph);
         userPanel.add(samplingPanel);
     }
 
@@ -505,8 +504,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         //p2.add(uploadButtonPanel);
 	//		############ Upload Progress bar ####################################
         progBar = new JProgressBar();
-        progBar.setStringPainted(false);
-        progBar.setString("Ready");
+        progBar.setStringPainted(true);
+        progBar.setString("Ready to Record");
         p2.add(progBar);               
 	// 		############ More Information Button ####################################          
         JPanel moreInfoButtonPanel = new JPanel();
@@ -741,7 +740,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                 }
             }
         }
-  
+// ################### Record (capture) #######################################        
 	    for (int x = 0; x < numberofPrompts; x++) {
 	        if (obj.equals(captA[x])) {
 	            if (captA[x].getText().startsWith(recordButton)) {
@@ -778,9 +777,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                if (x < numberofPrompts-1) {
 	                	captA[x+1].setEnabled(true);
 	                }
+	        		System.err.println("x " + x +"numberofPrompts " +numberofPrompts);
 	                if (x == numberofPrompts-1) {
 	                	uploadB.setEnabled(true);
-	                	saveLocalB.setEnabled(true);
+	                	//saveLocalB.setEnabled(true);
 	                }
 	            }
 	        } 
@@ -820,9 +820,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			saveSettings();
 
 			convertAndUpload.start();
-			//restartApp();
+			restartApp();
         }
-//      ################### SaveLocally #######################################               
+//      ################### SaveLocally #######################################   
+	    /*
 	    if (obj.equals(saveLocalB)) 
 	    { 
 	        for (int i = 0; i < numberofPrompts; i++) 
@@ -857,7 +858,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	 	
 			convertAndSavelocally.start(targetDirectory);
 			restartApp();
-	    }	    
+	    }	   
+	    */ 
 //      ################### More Information #######################################     
         else if (obj.equals(moreInfoB)) {
          	 JTextArea textArea = new JTextArea(License.getLicense());
@@ -1011,7 +1013,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			getAudioInputStream();
 
             // get an AudioInputStream of the desired format for playback
-//DEL            AudioFormat format = formatControls.getFormat();
             AudioInputStream playbackInputStream = AudioSystem.getAudioInputStream(format, audioInputStream);
                         
             if (playbackInputStream == null) {
@@ -1070,8 +1071,19 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             playbackInputStream = AudioSystem.getAudioInputStream(format, audioInputStream);
             
             progBar.setStringPainted(true);
-            progBar.setString(samplingGraph.peakWarning ? 
-            		peakWarningLabel : "");
+            //progBar.setString(samplingGraph.peakWarning ? 
+            //		peakWarningLabel : "");
+            if (samplingGraph.peakWarning)
+            {
+            	progBar.setBackground(Color.red);
+            	progBar.setString(peakWarningLabel);
+            }
+            else
+            {
+            	progBar.setBackground(getBackground());         	
+            	progBar.setString("");
+            }
+            
             while (thread != null) {
                 try {
                     if ((numBytesRead = playbackInputStream.read(data)) == -1) {
@@ -1254,8 +1266,18 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             getAudioInputStream();
 
             progBar.setStringPainted(true);
-            progBar.setString(samplingGraph.peakWarning ? 
-            		peakWarningLabel : "");
+        	//progBar.setString(samplingGraph.peakWarning ? 
+            //		peakWarningLabel : "");
+            if (samplingGraph.peakWarning)
+            {
+            	progBar.setBackground(Color.red);
+            	progBar.setString(peakWarningLabel);
+            }
+            else
+            {
+            	progBar.setBackground(getBackground());         	
+            	progBar.setString("");
+            }
         }
     } // End class Capture
  
@@ -1508,7 +1530,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
          } 
          else 
          {
-         	 System.err.println("setProgress(): Not reached end yet. sentBytes="+sentBytes+", totalBytes="+totalBytes);
+         	// !!!!!!
+         	//FORDEBUG
+         	// System.err.println("setProgress(): Not reached end yet. sentBytes="+sentBytes+", totalBytes="+totalBytes);
+         	// !!!!!!
          }
  	}    
     
@@ -1627,7 +1652,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             progBar.setVisible(true);
             progBar.setStringPainted(true);
             progBar.setMaximum(100);
-            progBar.setString(uploadingMessageLabel);
+            //progBar.setString(uploadingMessageLabel); // TODO
+            progBar.setString("Saving locally");
             progBar.setIndeterminate(false);
             progBar.setMinimum(0);
             sentBytes = 0;
@@ -1750,10 +1776,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	        }
 
 	        setProgress((int)targetFile.length());
-
         }
-
-
     }
     
     protected void createZipArchive(File archiveFile, File[] tobeZippedFiles) {
