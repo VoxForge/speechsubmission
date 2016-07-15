@@ -47,6 +47,7 @@ class LabelLocalizer  {
     private String sampleGraphPositionLabel;
     
     private String uploadingMessageLabel;
+    private String savingMessageLabel;
     private String uploadCompletedMessageLabel;
     
     private Boolean leftToRight = true; // direction of text
@@ -172,6 +173,7 @@ class LabelLocalizer  {
 	     sampleGraphPositionLabel ="  Position: ";
 	     
 	     uploadingMessageLabel = "Uploading...";
+	     savingMessageLabel = "Uploading...";
 	     uploadCompletedMessageLabel = "Upload completed... Thank you for your submission!";
  	}
 
@@ -1472,6 +1474,10 @@ class LabelLocalizer  {
 	
 	public String getUploadingMessageLabel() {
 		return uploadingMessageLabel;
+	}
+	
+	public String getSavingMessageLabel() {
+		return savingMessageLabel;
 	}
 	
 	public String getUploadCompletedMessageLabel() {

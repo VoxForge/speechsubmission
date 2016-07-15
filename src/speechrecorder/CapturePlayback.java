@@ -360,7 +360,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     private void restartApp() 
     { 	
     	try {
-			Thread.sleep(3000);
+			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -447,10 +447,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     }	
 	
     
-
-	/**
-	 * Create WAV files to hold recordings
-	 */
+    /**
+     * Create WAV files to hold recordings
+     * 
+     * @param numberofPrompts
+     * @param promptidA
+     */
     private void createWavFiles(int numberofPrompts, String [] promptidA ) 
     { 
 		try {
@@ -485,6 +487,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	
 
     /**
+     * Add remaining Panel Information
+     * - upload text & button
+     * - upload progress bar
+     * - more information button
+     * - disclaimer
      * 
      * @param p2
      */
@@ -653,6 +660,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	
     public void open() { }
 
+    
+    /**
+     * create temporary directory and return path as a string
+     * 
+     * @return
+     */
     private String getTempDir() {
     	String tempdir=null;
 		try {
@@ -711,6 +724,16 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
     }
 
+    /**
+     * Which button pressed:
+     * 
+     *  Play
+     *  Record
+     *  Upload
+     *  More Information
+     *  About
+     *  
+     */
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
          
@@ -1248,7 +1271,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             // load bytes into the audio input stream for playback
             getAudioInputStream();
       	
- //           saveToFile(this.uploadWavFile, AudioFileFormat.Type.WAVE);
+            // saveToFile(this.uploadWavFile, AudioFileFormat.Type.WAVE);
             try {
                 if (AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, uploadWavFile) == -1) {
                     throw new IOException("Problems writing to file");
@@ -1294,8 +1317,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		}
 		// debug System.err.println("getAudioInputStream - totalBytesWritten:" + totalBytesWritten);
 		try {
-			//            	audioInputStream = AudioSystem.getAudioInputStream(wavFile);
-
 			audioInputStream = new AudioInputStream(new BufferedInputStream(
 					new FileInputStream(wavFile)), format, totalBytesWritten
 					/ (format.getChannels() * format.getSampleSizeInBits() / 8) // Length in sample frames
@@ -1314,7 +1335,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      */
     class SamplingGraph extends JPanel implements Runnable {
         private Thread thread;
-        //private Font font10 = new Font("serif", Font.PLAIN, 10);
         private final Font font12 = new Font("serif", Font.PLAIN, 12);
         Color jfcBlue = new Color(204, 204, 255);
         Color pink = new Color(255, 175, 175);
@@ -1532,7 +1552,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
          {
          	// !!!!!!
          	//FORDEBUG
-         	// System.err.println("setProgress(): Not reached end yet. sentBytes="+sentBytes+", totalBytes="+totalBytes);
+         	 System.err.println("setProgress(): Not reached end yet. sentBytes="+sentBytes+", totalBytes="+totalBytes);
          	// !!!!!!
          }
  	}    
@@ -1652,7 +1672,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             progBar.setVisible(true);
             progBar.setStringPainted(true);
             progBar.setMaximum(100);
-            //progBar.setString(uploadingMessageLabel); // TODO
             progBar.setString("Saving locally");
             progBar.setIndeterminate(false);
             progBar.setMinimum(0);
@@ -1843,6 +1862,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             progBar.setVisible(true);
             progBar.setStringPainted(true);
             progBar.setMaximum(100);
+    		System.err.println("uploadingMessageLabel:" + uploadingMessageLabel);
             progBar.setString(uploadingMessageLabel);
             progBar.setIndeterminate(false);
             progBar.setMinimum(0);
