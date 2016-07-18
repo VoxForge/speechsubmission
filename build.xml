@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <project name="SpeechRecorder" default="package" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
-  <description>VoxForge Speech Recorder (postlet)</description>
+  <description>VoxForge Speech Recorder</description>
 
   <!-- set global properties for this build -->
   <property name="root"       location="."/>
@@ -10,6 +10,7 @@
   <property name="build.java" location="${build}"/>
   <property name="include"    location="include"/>
   <property name="dist"       location="dist"/>
+  <property name="javafx.sdk.path"    location="/usr/lib/jdk/jdk1.8.0_77"/>
   <property name="version" value="0.3"/>
 
   <target name="init" description="Initialise ant" depends="clean">
@@ -66,23 +67,41 @@
 
 
 <!-- This command create both rpm and deb packages on Fedora:
-     javapackager -deploy -native -BsystemWide=true -BjvmOptions=-Xmx128m  
-     -BjvmOptions=-Xms128m -outdir packages -outfile SpeechSubmission -srcdir dist    
-     -srcfiles speechrecorder.jar -appclass speechrecorder.RecorderApplication 
+/usr/lib/jdk/jdk1.8.0_77/bin/javapackager -deploy -native -BsystemWide=true \
+     -BjvmOptions=-Xms128m -outdir packages -outfile SpeechSubmission -srcdir dist    \
+     -srcfiles speechrecorder.jar -appclass speechrecorder.RecorderApplication \
      -name voxforge_speechrecorder  -title "voxforge speech_recorder"
 
-
-<fx:deploy width="${javafx.run.width}" 
-           height="${javafx.run.height}"
-           nativeBundles="all"
-           outdir="packages" 
-           outfile="SpeechSubmission">
-    <fx:application name="voxforge_speechrecord" mainClass="speechrecorder.RecorderApplication"/>
-    <fx:resources>
-        <fx:fileset dir="dist" includes="speechrecorder.jar"/>
-    </fx:resources>
-    <fx:info title="${application.title}" vendor="${application.vendor}"/>
-</fx:deploy>
+for ant; needed: sudo apt-get install ant-contrib
 --> 
+	
+
+  	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"      
+        uri="javafx:com.sun.javafx.tools.ant"
+        classpath="${javafx.sdk.path}/lib/ant-javafx.jar"/>	
+	
+
+	<fx:jar destfile="dist-web/speechrecorder.jar">
+	    <fx:application mainClass="speechrecorder.RecorderApplication"/>
+	      <fileset dir="${build.java}">
+	        <include name="**/*.class"/>
+	        <include name="**/speechrecorder/prompts/*"/>
+	        <include name="**/speechrecorder/copyrights/*"/>
+	      </fileset>
+	</fx:jar>
+
+	<fx:deploy width="800" 
+	           height="1200"
+	           nativeBundles="all"
+	           outdir="packages" 
+	           outfile="SpeechSubmission">
+	    <fx:application name="voxforge_speechrecorder" 
+	    	mainClass="speechrecorder.RecorderApplication"/>
+	    <fx:resources>
+	        <fx:fileset dir="dist" includes="speechrecorder.jar"/>
+	    </fx:resources>
+	    <fx:info title="speechrecorder" vendor="voxforge"/>
+	</fx:deploy>
+
 
 </project>
