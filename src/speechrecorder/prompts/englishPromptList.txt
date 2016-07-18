@@ -1,214 +1,291 @@
-rp-01 When the sunlight strikes raindrops in the air,
-rp-02 they act as a prism and form a rainbow.
-rp-03 The rainbow is a division of white light into many beautiful colors.
-rp-04 These take the shape of a long round arch, with its path high above,
-rp-05 and its two ends apparently beyond the horizon.
-rp-06 There is , according to legend, a boiling pot of gold at one end.
-rp-07 People look, but no one ever finds it.
-rp-08 When a man looks for something beyond his reach,
-rp-09 his friends say he is looking for the pot of gold at the end of the rainbow.
-rp-10 Throughout the centuries people have explained the rainbow in various ways.
-rp-11 Some have accepted it as a miracle without physical explanation.
-rp-12 To the Hebrews it was a token that there would be no more universal floods.
-rp-13 The Greeks used to imagine that it was a sign
-rp-14 from the gods to foretell war or heavy rain.
-rp-15 The Norsemen considered the rainbow as a bridge
-rp-16 over which the gods passed from earth to their home in the sky.
-rp-17 Others have tried to explain the phenomenon physically.
-rp-18 Aristotle thought that the rainbow was caused by
-rp-19 reflection of the sun's rays by the rain.
-rp-20 Since then physicists have found that it is not reflection,
-rp-21 but refraction by the raindrops which causes the rainbows.
-rp-22 Many complicated ideas about the rainbow have been formed.
-rp-23 The difference in the rainbow depends considerably upon the size of the drops,
-rp-24 and the width of the colored band increases as the size of the drops increases.
-rp-25 The actual primary rainbow observed is said to be the effect of
-rp-26 super-imposition of a number of bows.
-rp-27 If the red of the second bow falls upon the green of the first,
-rp-28 the result is to give a bow with an abnormally wide yellow band,
-rp-29 since red and green light when mixed form yellow.
-rp-30 This is a very common type of bow, one showing mainly red and yellow,
-rp-31 with little or no green or blue.
-ar-01 Once there was a young rat named Arthur who never could make up his mind.
-ar-02 Whenever his friends asked him if he would like to go out with them,
-ar-03 he would only answer, "I don't know;" he wouldn't say yes or no either.
-ar-04 He would always shirk making a choice. His Aunt Helen said to him,
-ar-05 "Now look here! No one is going to care for you if you carry on like this."
-ar-06 You have no more mind than a blade of grass.
-ar-07 One rainy day the rats heard a great noise in the loft.
-ar-08 The pine rafters were all rotten, so that the barn was rather unsafe.
-ar-09 At last the joists gave way and fell to the ground.
-ar-10 The walls shook, and all the rats' hair stood on end with fear and horror.
-ar-11 "This won't do," said the captain; "I'll send out scouts to search for a new home."
-ar-12 Within five hours the ten scouts came back and said,
-ar-13 We found a stone house where there is room for us all.
-ar-14 There is a kindly horse named Nelly, a cow, a calf, and a garden with an elm tree.
-ar-15 The rats crawled out of their little houses and stood on the floor in a long line.
-ar-16 Just then the old rat saw Arthur. Stop. he ordered coarsely.
-ar-17 "You are coming, of course." "I'm not certain," said Arthur, undaunted,
-ar-18 "The roof may not come down yet."
-ar-19 "Well," said the old rat, "we can't wait for you to join us. Right about face! March!"
-ar-20 Arthur stood and watched them hurry away.
-ar-21 "I think I'll go tomorrow," he said calmly to himself, "but then again I don't know;"
-ar-22 "it's so nice and snug here,".  That night there was a big crash.
-ar-23 In the foggy morning some men with some boys and girls rode up and looked at the barn.
-ar-24 One of them moved a board and saw a rat quite dead, half in and half out of his hole.
-e0001 We are trying to get closure on this issue so we can order the fuel oil to replace that which we caused to burn to begin construction on the site.
-e0002 This new procedure is effective immediately!
-e0003 They granted approval to eleven generic drug manufacturers to market generic versions of the Company's popular diabetes medication
-e0004 The often casually dressed man  is clearly in his element talking with the traders.
-e0005 the relocation department is available any time to discuss alternative temporary housing with you as well.
-e0006 If the price of the deal had been closer to current market we wouldn't have noticed. 
-e0007 Per our conversation this morning, I will list the items in question. 
-e0008 My intention is to get this deal done, then bring North America in to the equation.
-e0009 This grid of computing networks will harness the computational power needed to conduct major scientific experiments
-e0010 they make the same offer to unaffiliated entities at the same time through its electronic bulletin board
-e0011 This e-mail (and any attachments hereto) are not intended to be an offer 
-e0012 I spoke with Frazier who asked that if they could cut the trees and bushes along the fence line we share.
-e0013 Researched and graphed the historical temperatures for the Pacific Northwest
-e0014 We do not have boilerplate in word format and assume that you have such documents.  If not, please let us know.
-e0015 the fire was caused by embers falling in between the fireplace and the hearth, igniting the wooden framing installed in front
-e0016 Here is your hotel itinerary for Monday night.
-e0017 So, would a way of teaching guilt include the parent sharing feelings of sadness and disappointment at the behavior?
-e0018 To what do I owe this small pleasure?  I'm fine in Texas, still hanging out with Hendry, working hard, etcetera
-e0019 I think that a change of this magnitude is unavoidable.  This fight has been brewing for a long time.
-e0020 They reflect comments by our outside counsel which highlight the differences between this contract and the side letter
-e0021 Tell him to chill out;  client's deposition has been scheduled and rescheduled too many times to count.
-e0022 Thank you for your reply.  I know you are doubly busy with your being on the road this week, just prior to a vacation.
-e0023 There is a significant difference the Packaged Ice position per the positions report and Frazier's forecast
-e0024 The skull fracture and the concussion I got when I jumped out of the window of my dormitory when it caught fire
-e0025 Good Morning, The party was Great!!! I thought you might want to use this one as a screen saver.
-e0026 I had figured that Harry would value the pipe, and then we would try to market it away at a higher value.
-e0027 Finances being what they are -- we need to do some serious soul searching on Royal Oaks.
-e0028 Please excuse the delay in getting these resumes to you.  Larry did not have his prepared and then I forgot to send them.
-e0029 Was commended as Governor by one of the oldest Black Bar Associations for his record of appointing minorities
-e0030 I have not received your list of charitable donations.  Please send 
-e0031 This will reflect your investment decision for the duration of the transition period.
-e0032 I met the barrel, which was now proceeding downward at an equal, impressive speed
-e0033 The Multimedia Modular Stage takes the incredible energy onstage and transports it to the farthest reaches of the outdoor venue
-e0034 Babushka cooked all our meals as well and she and I became close friends even though she spoke only Russian and I only English.
-e0035 Aucoin would assume oversight of all Retail Power Structuring and Deal Management activities.
-e0036 Lee will direct an immensely complicated, around the clock operation responsible for procuring energy
-e0037 Our records indicate that we haven't received your employment application.
-e0038 Folks have asked me to coordinate California to some degree and there'll be an expectation that we're well coordinated.
-e0039 I looked over the plan.  It looks fine.
-e0040 I'll book a room and time that works for the majority, and confirm with a "meeting invitation"
-e0041 What is a Dog? They growl when they are not happy.
-e0042 Please consider joining my team or one of the many other teams and help us find a cure for Diabetes!
-e0043 will market wind power supplied by community energy from a site under development in the mountains of northeast Pennsylvania
-e0044 The resolution is unclear. You should add a rep that has the authority to enter into the deal.
-e0045 I don't remember who I used .  Let me look and I will get back to you.
-e0046 Thank you for getting back with me.  To answer your question:  It is looking more and more like the week of January eighth.
-e0047 Phil and Sarah say that they would probably withdraw their protest if we would amend our proposed tariff language
-e0048 Surplus Exchange has sold twenty million dollars worth of oilfield equipment since it was launched.
-e0049 That ought to make them an even less creditworthy entity.
-e0050 Please let me know if those changes are acceptable.  If so, I will have clean copies thereof sent to you to sign
-e0051 Supported the team of originators and traders by gathering data on the pulp market, preparing presentations, doing analysis
-e0052 As an added security measure, which has been requested by many customers, some new password rules have been instituted.
-e0053 So glad to hear that you're well.  Was wondering how you were weathering the tech melt down.  I'm good.
-e0054 There still appears to be some confusion regarding the inclusion of issue number six into the deal.
-e0055 Yes, I is here.  About to go to lunch!  Friday may work for me I'll drop you a line in a little while!
-e0056 The cookie exchange was fun, fudge is definitely the easy route on that one.
-e0057 I believe that we have a mushrooming "process" issue.  I also believe that the credit group is part of the problem
-e0058 Jonathan.  Disregard that email.  I am handling this. 
-e0059 Joints in Motion is a marathon training program for walkers and runners, a fundraising effort for the Arthritis Foundation 
-e0060 The big boat show is going on through the thirteenth.  Anybody wanna go?  Give me possible days during the week you can attend.
-e0061 Bob, you and I spoke briefly after the meeting regarding what, if anything, we could do to "fix their problem".
-e0062 Massage therapy services will continue and are available by appointment by calling extension three three
-e0063 Thanks for letting us know about Blake.  I just tried to reach him and left a congratulatory message on his answering machine.
-e0064 In accordance with requirements of the Securities and Exchange Commission
-e0065 Sue calls me a party pooper, but I've highlighted areas (in bold italics) that I think would benefit from some smoothing of the edges.
-e0066 Just don't seem right to have Nancy cook on her birthday.
-e0067 Please put me and my spouse down for the flu shot as soon as possible.
-e0068 Thank you so much for the invitation, but I will be at the Customer meeting in Kansas City otherwise I would plan on attending.
-e0069 I am told that a discount for cable modem service is not available in my area.  What do I need to do?
-e0070 What will it take to make us the World's Leading Company?  Share your thoughts today.
-e0071 The appetite for forging new cross border alliances may diminish. Risk aversion may take on ever greater importance
-e0072 So if you can make one of the other two dates work, I would love to come.  Just keep me posted.
-e0073 Please let me know your specific plan and target dates, by which each action item will be accomplished.
-e0074 I will also run a report each day to ensure that the spreadsheet reflects power exactly.
-e0075 In preparation for this rollout, it is imperative that we gather information about your workstation and the applications you use.
-e0076 I figure those are parameters that are measured and known but they weren't on the spec sheet.
-e0077 This transaction represents an important step for strengthening our position in the global pulp and paper markets.
-e0078 Is the transport upstream or downstream of the delivery point?
-e0079 that is if rock star Frank can take time away from the fiftieth floor crowd to hang with mere mortals!
-e0080 This promotion may be used in combination with other Starwood Preferred Guest bonus offers.
-e0081 Powerful, practical treatment approaches proven to work.
-e0082 we have allegedly prevented his contractors from inspecting the premises thereby breaching a condition of termination agreement.
-e0083 Visual Basic Monte Carlo simulator for Excel for option analysis.
-e0084 WOW! that was very powerful.  thank you for sharing this with me.    it makes me want to make a few changes to my life.
-e0085 Congratulations!  That is FANTASTIC!  When is the date?  When will you next be in town?
-e0086 let me know if you hear any expressions of outrage from other pipes.
-e0087 I hope to make that short and sweet and be back here as soon as I can.    So I should be able to make the meeting at four.  
-e0088 regulators released a final environmental impact report for the state's second merchant underground natural gas storage project
-e0089 The featured guest for this episode is Australian rocker Richardson
-e0090 According to the spec sheet I have, the method for vanadium is normal and the units of measurement are parts per million
-e0091 I am attaching our latest generic schedule format.
-e0092 The agreements also provide for our acquisition of their cold rolling and certain coil pickling operations
-e0093 this is simply a facade of utilities banding together to cover each other's asses.
-e0094 I would suggest the following language to replace rather than deleting the passage
-e0095 Greater focus on energy efficient purchases by customers, makes gas the fuel of choice for many
-e0096 Let me know what you think.  I will follow up with an email and phone call about Cherry Creek.
-e0097 since you are the guru of these unwindings and whether there are others which need to be unwound I am forwarding this to you.
-e0098 Thanks for the info.  I just need simple, basic frames.  No decorations or anything.
-e0099 Hope the London trip is going well!  Thanks for the suggestion below which was perfect.
-e0100 There is, for example, no assurance that the posted prices represent prevailing market prices.
-e0101 Very belated reply. I am cleaning up old e-mails today, and came across this one that I had not answered.
-e0102 The potential for freezing rain and hazardous road conditions may be present this evening and early tomorrow morning
-e0103 Just a note to check in.  Are there any new developments?
-e0104 He said he gave her a pay raise to lure her to state service in April
-e0105 I spent all day yesterday getting things in order; after the thief charged six thousand dollars on my credit and debit cards!
-e0106 I sincerely hope that our paths in life will cross again very soon.
-e0107 each company will give a ten, fifteen minute business overview in a powerpoint format with books for audience members
-e0108 He said that prices in Europe and Japan have been pretty close historically, thus he uses European prices as a base.
-e0109 Jim from Arizona had a rambling conversation that never really pinpointed what he wanted to do.
-e0110 Just wondering if you are at work today or not???  If so, we're going to Happy Hour again
-e0111 Just got notice of our twenty year reunion.  I'd rather be slathered with jam and staked to an anthill.
-e0112 Securing the rope at ground level, I went up to the roof.
-e0113 The region already enjoys an open and competitive transmission network
-e0114 They have consented to allow the Federal Bureau of Investigation to search the Building
-e0115 Please have him download the substance of the call to me next Monday.  I will check my voice mail tomorrow
-e0116 in addition to continuing the work of the vision and values diversity and corporate responsibility task forces.
-e0117 Elizabeth prepared an agreement last week whereby Harris would be allowed certain access across the property 
-e0118 While I hope that people thoroughly enjoy themselves, I ask that you keep in mind that we all have to act professionally
-e0119 Thank you for the update.  The need is still great for this disk space.
-e0120 Seriously, if there's anything specific you would like to know or if you have any questions about document retention, let me know. 
-e0121 we need  to broaden the participation the next generation of leadership in the important decisions affecting the company.
-e0122 Forget the greenhouse requirements
-e0123 He said that they need to make sure that it only pays the December transmission services invoice.
-e0124 I have scheduled and entered on each of your calendars a meeting for the above referenced topic.
-e0125 Your heart is only good for so many beats, and that's it.  Everything  wears out eventually.  
-e0126 Yo, here is my friends boat that is for sale.  He has a bunch more pictures that I can get by tomorrow.
-e0127 Whew!! Your schedule makes me tired!  I am sure that she is happy that you are involved in so many activities with her school
-e0128 If you have any questions conflicts, please feel free to call me.
-e0129 Dan, what is the status of this deal?  I hadn't heard anything for a few days, and I knew we were on a tight time frame.
-e0130 We need each person's email address.  It would also be good to have each person's phone number, in the event we need to reach them.
-e0131 If anyone tries to access the building from the garage via the sky ring and they do not have their badge,
-e0132 He needs to satisfy their creditworthiness requirements in order to enter into a transportation agreement
-e0133 Since this project appears so promising, it seems like we should tackle these issues now.
-e0134 Here is my stab at the talking points to be sent in along with the pricing info they requested for the California markets 
-e0135 It depends on donations to raise the  money to bring these children here
-e0136 As we discussed this morning, Greg, Gerry, and I spoke this morning.  Greg will be getting back to us next week.
-e0137 The absolute correct person for them to meet and who will make the media  buying decision would be Mr Crane.
-e0138 Would you like for me to place a call and find out what's going on?  Let me know.
-e0139 Attached is a summary of the major provisions in the tax cut conference.
-e0140 We have historically only booked Interest Rate Swaps with them until now.
-e0141 This is certainly a project that will make our lives more difficult for a while, but will be worth it in the long run.
-e0142 Thanks for trying to call.  I am not surprised by this outcome.   I guess we're bargaining!
-e0143 Christian please provide your input to Holly, considering the no threshold issue.
-e0144 where a buyer or seller will be able to more easily, with a computer mouse click, process complex transactions.
-e0145 Thank you for hosting a brown bag lunch session yesterday; your presentation was very informative.
-e0146 He complained that "a bunch of bureaucrats" are embracing the national power grid agenda
-e0147 However, President Bush, an opponent of price controls, still wields veto power.
-e0148 "Even Jeff's biggest detractors wouldn't have wanted him to walk out the door," one loyalist admits.
-e0149 Please call if you need further documentation.
-e0150 We have already been in touch with several employers and many are interested in our alumni.
-e0151 I am sending you the files again just in case you didn't receive them or couldn't open them.
-e0152 Members are recognized at a dinner hosted by the United Way.
-e0153 Do you want to go ahead and set up Central time to trade?   Please let me know.
-e0154 Mom said that she might want to fix noodle soup on Mothers Day.  That would be great.
-e0155 I will be relocating effective December fourth.  Can you have me set up with all the required equipment including, PC, Telephone, and cell phone.
-e0156 We  can go out of town, i would love to get away... have you heard about the hilton in Austin?  
+We are trying to get closure on this issue so we can order the fuel oil 
+to replace that which we caused to burn to begin construction on the site.
+This new procedure is effective immediately!
+They granted approval to eleven generic drug manufacturers 
+to market generic versions of the Company's popular diabetes medication
+The often casually dressed man 
+is clearly in his element talking with the traders.
+the relocation department is available any time 
+to discuss alternative temporary housing with you as well.
+If the price of the deal had been closer to current market 
+we wouldn't have noticed. 
+Per our conversation this morning, I will list the items in question. 
+My intention is to get this deal done, 
+then bring North America in to the equation.
+This grid of computing networks will harness 
+the computational power needed to conduct major scientific experiments
+they make the same offer to unaffiliated entities 
+at the same time through its electronic bulletin board
+This e-mail (and any attachments hereto) are not intended to be an offer 
+I spoke with Frazier who asked 
+if they could cut the trees and bushes along the fence line we share.
+Researched and graphed the historical temperatures for the Pacific Northwest
+We do not have boilerplate in word format 
+and assume that you have such documents.  
+If not, please let us know.
+the fire was caused by embers falling in between the fireplace and the hearth, 
+igniting the wooden framing installed in front
+Here is your hotel itinerary for Monday night.
+So, would a way of teaching guilt include
+the parent sharing feelings of sadness and disappointment at the behavior?
+To what do I owe this small pleasure?  
+I'm fine in Texas, still hanging out with Hendry, working hard, etcetera
+I think that a change of this magnitude is unavoidable.  
+This fight has been brewing for a long time.
+They reflect comments by our outside counsel 
+which highlight the differences between this contract and the side letter
+Tell him to chill out;  
+client's deposition has been scheduled and rescheduled too many times to count.
+Thank you for your reply.  
+I know you are doubly busy with your being on the road this week, 
+just prior to a vacation.
+There is a significant difference the Packaged Ice position
+per the positions report and Frazier's forecast
+The skull fracture and the concussion I got 
+when I jumped out of the window of my dormitory when it caught fire
+Good Morning, The party was Great!!! 
+I thought you might want to use this one as a screen saver.
+I had figured that Harry would value the pipe, 
+and then we would try to market it away at a higher value.
+Finances being what they are ... 
+we need to do some serious soul searching on Royal Oaks.
+Please excuse the delay in getting these resumes to you.  
+Larry did not have his prepared and then I forgot to send them.
+He was commended as Governor by one of the oldest Black Bar Associations 
+for his record of appointing minorities
+I have not received your list of charitable donations.  Please send 
+This will reflect your investment decision 
+for the duration of the transition period.
+I met the barrel, which was now proceeding downward
+at an equal, impressive speed
+The Multimedia Modular Stage takes the incredible energy onstage
+and transports it to the farthest reaches of the outdoor venue
+Babushka cooked all our meals as well 
+and she and I became close friends 
+even though she spoke only Russian and I only English.
+Aucoin would assume oversight of all Retail Power Structuring 
+and Deal Management activities.
+Lee will direct an immensely complicated, around the clock operation 
+responsible for procuring energy
+Our records indicate that we haven't received your employment application.
+Folks have asked me to coordinate California to some degree
+and there'll be an expectation that we're well coordinated.
+I looked over the plan.  It looks fine.
+I'll book a room and time that works for the majority, 
+and confirm with a "meeting invitation"
+What is a Dog? They growl when they are not happy.
+Please consider joining my team or one of the many other teams 
+and help us find a cure for Diabetes!
+will market wind power supplied by community energy
+from a site under development in the mountains of northeast Pennsylvania
+The resolution is unclear. 
+You should add a rep that has the authority to enter into the deal.
+I don't remember who I used .  Let me look and I will get back to you.
+Thank you for getting back with me.  
+To answer your question:  
+It is looking more and more like the week of January eighth.
+Phil and Sarah say that they would probably withdraw their protest
+if we would amend our proposed tariff language
+Surplus Exchange has sold twenty million dollars worth of oilfield equipment
+since it was launched.
+That ought to make them an even less creditworthy entity.
+Please let me know if those changes are acceptable.  
+If so, I will have clean copies thereof sent to you to sign
+Supported the team of originators and traders
+by gathering data on the pulp market, preparing presentations, doing analysis
+As an added security measure, which has been requested by many customers 
+some new password rules have been instituted.
+So glad to hear that you're well.  
+Was wondering how you were weathering the tech melt down.  I'm good.
+There still appears to be some confusion regarding
+the inclusion of issue number six into the deal.
+Yes, I is here.  About to go to lunch!  
+Friday may work for me I'll drop you a line in a little while!
+The cookie exchange was fun, fudge is definitely the easy route on that one.
+I believe that we have a mushrooming "process" issue.  
+I also believe that the credit group is part of the problem
+Jonathan.  Disregard that email.  I am handling this. 
+Joints in Motion is a marathon training program for walkers and runners, 
+a fundraising effort for the Arthritis Foundation 
+The big boat show is going on through the thirteenth.  
+Anybody wanna go?  Give me possible days during the week you can attend.
+Bob, you and I spoke briefly after the meeting 
+regarding what, if anything, we could do to "fix their problem".
+Massage therapy services will continue
+and are available by appointment by calling extension three three
+Thanks for letting us know about Blake.  
+I just tried to reach him 
+and left a congratulatory message on his answering machine.
+In accordance with requirements of the Securities and Exchange Commission
+Sue calls me a party pooper, but I've highlighted areas (in bold italics) 
+that I think would benefit from some smoothing of the edges.
+Just don't seem right to have Nancy cook on her birthday.
+Please put me and my spouse down for the flu shot as soon as possible.
+Thank you so much for the invitation, 
+but I will be at the Customer meeting in Kansas City 
+otherwise I would plan on attending.
+I am told that a discount for cable modem service is not available in my area.  
+What do I need to do?
+What will it take to make us the World's Leading Company?  
+Share your thoughts today.
+The appetite for forging new cross border alliances may diminish. 
+Risk aversion may take on ever greater importance
+So if you can make one of the other two dates work, I would love to come.  
+Just keep me posted.
+Please let me know your specific plan and target dates, 
+by which each action item will be accomplished.
+I will also run a report each day 
+to ensure that the spreadsheet reflects power exactly.
+In preparation for this rollout, it is imperative that 
+we gather information about your workstation and the applications you use.
+I figure those are parameters that are measured 
+but they weren't on the spec sheet.
+This transaction represents an important step 
+for strengthening our position in the global pulp and paper markets.
+Is the transport upstream or downstream of the delivery point?
+that is if rock star Frank can take time away
+from the fiftieth floor crowd to hang with mere mortals!
+This promotion may be used in combination with 
+other Starwood Preferred Guest bonus offers.
+Powerful, practical treatment approaches proven to work.
+we have allegedly prevented his contractors from inspecting the premises
+thereby breaching a condition of termination agreement.
+Visual Basic Monte Carlo simulator for Excel for option analysis.
+WOW! that was very powerful.  thank you for sharing this with me.    
+it makes me want to make a few changes to my life.
+Congratulations!  That is FANTASTIC!  
+When is the date?  When will you next be in town?
+let me know if you hear any expressions of outrage from other pipes.
+I hope to make that short and sweet and be back here as soon as I can.    
+So I should be able to make the meeting at four.  
+regulators released a final environmental impact report
+for the state's second merchant underground natural gas storage project
+The featured guest for this episode is Australian rocker Richardson
+According to the spec sheet I have, 
+the method for vanadium is normal 
+and the units of measurement are parts per million
+I am attaching our latest generic schedule format.
+The agreements also provide for our acquisition of 
+their cold rolling and certain coil pickling operations
+this is simply a facade of utilities banding together 
+to cover each other's asses.
+I would suggest the following language 
+to replace rather than deleting the passage
+Greater focus on energy efficient purchases by customers, 
+makes gas the fuel of choice for many
+Let me know what you think.  
+I will follow up with an email and phone call about Cherry Creek.
+since you are the guru of these unwindings 
+and whether there are others which need to be unwound 
+I am forwarding this to you.
+Thanks for the info.  I just need simple, basic frames.  
+No decorations or anything.
+Hope the London trip is going well!  
+Thanks for the suggestion below which was perfect.
+There is, for example, no assurance that 
+the posted prices represent prevailing market prices.
+Very belated reply. I am cleaning up old e-mails today, 
+and came across this one that I had not answered.
+The potential for freezing rain and hazardous road conditions
+may be present this evening and early tomorrow morning
+Just a note to check in.  Are there any new developments?
+He said he gave her a pay raise to lure her to state service in April
+I spent all day yesterday getting things in order; 
+after the thief charged six thousand dollars on my credit and debit cards!
+I sincerely hope that our paths in life will cross again very soon.
+each company will give a ten, fifteen minute business overview
+in a powerpoint format with books for audience members
+He said that prices in Europe and Japan have been pretty close historically, 
+thus he uses European prices as a base.
+Jim from Arizona had a rambling conversation 
+that never really pinpointed what he wanted to do.
+Just wondering if you are at work today or not???  
+If so, we're going to Happy Hour again
+Just got notice of our twenty year reunion.  
+I'd rather be slathered with jam and staked to an anthill.
+Securing the rope at ground level, I went up to the roof.
+The region already enjoys an open and competitive transmission network
+They have consented to allow the Federal Bureau of Investigation 
+to search the Building
+Please have him download the substance of the call to me next Monday.  
+I will check my voice mail tomorrow
+in addition to continuing the work of the vision and values, 
+diversity and corporate responsibility task forces.
+Elizabeth prepared an agreement last week 
+whereby Harris would be allowed certain access across the property 
+While I hope that people thoroughly enjoy themselves, 
+I ask that you keep in mind that we all have to act professionally
+Thank you for the update.  The need is still great for this disk space.
+Seriously, if there's anything specific you would like to know 
+or if you have any questions about document retention, let me know. 
+we need  to broaden the participation the next generation of leadership 
+in the important decisions affecting the company.
+Forget the greenhouse requirements
+He said that they need to make sure that 
+it only pays the December transmission services invoice.
+I have scheduled and entered on each of your calendars 
+a meeting for the above referenced topic.
+Your heart is only good for so many beats, and that's it.  
+Everything  wears out eventually.  
+Yo, here is my friends boat that is for sale.  
+He has a bunch more pictures that I can get by tomorrow.
+Whew!! Your schedule makes me tired!  
+I am sure that she is happy 
+that you are involved in so many activities with her school
+If you have any questions conflicts, please feel free to call me.
+Dan, what is the status of this deal?  
+I hadn't heard anything for a few days, a
+nd I knew we were on a tight time frame.
+We need each person's email address.  
+It would also be good to have each person's phone number, 
+in the event we need to reach them.
+If anyone tries to access the building from the garage 
+via the sky ring and they do not have their badge,
+He needs to satisfy their creditworthiness requirements 
+in order to enter into a transportation agreement
+Since this project appears so promising, 
+it seems like we should tackle these issues now.
+Here is my stab at the talking points 
+to be sent in along with the pricing info they requested 
+for the California markets 
+It depends on donations to raise the  money to bring these children here
+As we discussed this morning, Greg, Gerry, and I spoke this morning.  
+Greg will be getting back to us next week.
+The absolute correct person for them to meet 
+and who will make the media  buying decision would be Mr Crane.
+Would you like for me to place a call and find out what's going on?  
+Let me know.
+Attached is a summary of the major provisions in the tax cut conference.
+We have historically only booked Interest Rate Swaps with them until now.
+This is certainly a project that will make our lives more difficult for a while, 
+but will be worth it in the long run.
+Thanks for trying to call.  I am not surprised by this outcome.   
+I guess we're bargaining!
+Christian please provide your input to Holly, considering the no threshold issue.
+where a buyer or seller will be able to more easily, 
+with a computer mouse click, process complex transactions.
+Thank you for hosting a brown bag lunch session yesterday; 
+your presentation was very informative.
+He complained that "a bunch of bureaucrats" 
+are embracing the national power grid agenda
+However, President Bush, an opponent of price controls, still wields veto power.
+"Even Jeff's biggest detractors wouldn't have wanted him to walk out the door," 
+one loyalist admits.
+Please call if you need further documentation.
+We have already been in touch with several employers 
+and many are interested in our alumni.
+I am sending you the files again 
+just in case you didn't receive them or couldn't open them.
+Members are recognized at a dinner hosted by the United Way.
+Do you want to go ahead and set up Central time to trade?   
+Please let me know.
+Mom said that she might want to fix noodle soup on Mothers Day.  
+That would be great.
+I will be relocating effective December fourth.  
+Can you have me set up with all the required equipment 
+including, PC, Telephone, and cell phone.
+We  can go out of town, i would love to get away... 
+have you heard about the Hilton in Austin?  
 e0157 can you also find out how often they update the capacity and whether they remove the maintenance related downtime when they come up with the capacity number
 e0158 They also ranked among the highest in per capita giving for large companies for the tenth straight year
 e0159 The compromise from the chair was to promise that language would be added to grandfather in existing direct access contracts
