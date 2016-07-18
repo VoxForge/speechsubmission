@@ -101,7 +101,7 @@ class Prompts  {
 	public Prompts(int NumberofPrompts, String Language) {
 		if (Language.equals("EN")) {
 //			promptList = getPromptTextFile("prompts/englishPromptList.txt", 1223); // number of prompts needs to be exact or there might be an error on a roll-over
-			promptList = getPromptTextFile("prompts/englishPromptList.txt", 699); // number of prompts needs to be exact or there might be an error on a roll-over
+			promptList = getPromptTextFile("en", "prompts/englishPromptList.txt", 798); // number of prompts needs to be exact or there might be an error on a roll-over
 
 		} else if (Language.equals("NL")) {
 			promptList = getPromptTextFile("nl","prompts/dutchPromptList.txt", 947);
@@ -111,16 +111,10 @@ class Prompts  {
 			promptList = getPromptTextFile("prompts/russianPromptList.txt", 81);	
 		} else if (Language.equals("IT")) {
 			promptList = getPromptTextFile("it","prompts/italianPromptList.txt", 1185);
-		//!!!!!
-		//} else if (Language.equals("HB")) {
-		//	promptList = getPromptTextFile("prompts/hebrewPromptList.txt", 55);	
-		//} else if (Language.equals("PT_BR")) {
-		//	promptList = getPromptTextFile("prompts/brazilianPromptList.txt", 218);	
 		} else if (Language.equals("HE")) {
 			promptList = getPromptTextFile("prompts/hebrewPromptList.txt", 55);	
 		} else if (Language.equals("PT")) {
 			promptList = getPromptTextFile("prompts/portuguesePromptList.txt", 218);	
-		// !!!!!!
 		} else if (Language.equals("ES")) {
 			promptList = getPromptTextFile("es","prompts/spanishPromptList.txt", 43);	
 		} else if (Language.equals("FR")) {
