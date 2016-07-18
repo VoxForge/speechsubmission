@@ -42,7 +42,7 @@
   <target name="test" depends="compile">
   </target>
 
-  <target name="package" depends="compile">
+  <target name="build" depends="compile">
     <jar jarfile="${dist}/speechrecorder.jar">
       <fileset dir="${build.java}">
         <include name="**/*.class"/>
@@ -74,34 +74,33 @@
 
 for ant; needed: sudo apt-get install ant-contrib
 --> 
-	
 
   	<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"      
         uri="javafx:com.sun.javafx.tools.ant"
         classpath="${javafx.sdk.path}/lib/ant-javafx.jar"/>	
 	
-
-	<fx:jar destfile="dist-web/speechrecorder.jar">
-	    <fx:application mainClass="speechrecorder.RecorderApplication"/>
-	      <fileset dir="${build.java}">
-	        <include name="**/*.class"/>
-	        <include name="**/speechrecorder/prompts/*"/>
-	        <include name="**/speechrecorder/copyrights/*"/>
-	      </fileset>
-	</fx:jar>
-
-	<fx:deploy width="800" 
-	           height="1200"
-	           nativeBundles="all"
-	           outdir="packages" 
-	           outfile="SpeechSubmission">
-	    <fx:application name="voxforge_speechrecorder" 
-	    	mainClass="speechrecorder.RecorderApplication"/>
-	    <fx:resources>
-	        <fx:fileset dir="dist" includes="speechrecorder.jar"/>
-	    </fx:resources>
-	    <fx:info title="speechrecorder" vendor="voxforge"/>
-	</fx:deploy>
-
+	<target name="package" depends="compile">
+		<fx:jar destfile="dist-vf/speechrecorder.jar">
+		    <fx:application mainClass="speechrecorder.RecorderApplication"/>
+		      <fileset dir="${build.java}">
+		        <include name="**/*.class"/>
+		        <include name="**/speechrecorder/prompts/*"/>
+		        <include name="**/speechrecorder/copyrights/*"/>
+		      </fileset>
+		</fx:jar>
+	
+		<fx:deploy width="800" 
+		           height="1200"
+		           nativeBundles="deb"
+		           outdir="packages" 
+		           outfile="SpeechSubmission">
+		    <fx:application name="voxforge_speechrecorder" 
+		    	mainClass="speechrecorder.RecorderApplication"/>
+		    <fx:resources>
+		        <fx:fileset dir="dist" includes="speechrecorder.jar"/>
+		    </fx:resources>
+		    <fx:info title="speechrecorder" vendor="voxforge"/>
+		</fx:deploy>
+	</target>
 
 </project>
