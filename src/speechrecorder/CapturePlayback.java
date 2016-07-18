@@ -127,7 +127,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     AudioInputStream audioInputStream;
     SamplingGraph samplingGraph;
 
-    int numberofPrompts = 3;
+    int numberofPrompts = 15;
     
     JButton [] playA = new JButton [numberofPrompts]; 
     JButton [] captA = new JButton [numberofPrompts];
@@ -248,9 +248,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	ConvertAndSavelocally convertAndSavelocally; 
 	
     Color voxforgeColour 	= new Color(197, 216, 234);
-    // constructor
     
-	public CapturePlayback(String lang, String targetDirectory, String destination) 
+    // constructor
+    public CapturePlayback(String lang, String targetDirectory, String destination) 
 	{    	
 		// ############ Localized Fields ####################################
 		this.language = lang;
@@ -328,7 +328,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    leftToRight = labels.getLeftToRight();
 
 		JPanel userPanel = startApp();
-        add(userPanel);  
+		JScrollPane scrollPane = new JScrollPane(userPanel);
+
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		//setLayout(new BorderLayout());
+		//setPreferredSize(new Dimension(500, 500));
+		add(scrollPane, BorderLayout.CENTER);
 
 	    // Load all settings that were saved from the last session
         loadSettings();
@@ -341,8 +346,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	 */
     private JPanel startApp() 
     { 	
+    	
+    	
 		JPanel userPanel = new JPanel();
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
         addUserInfo(userPanel);
         addPromptInfo(userPanel, numberofPrompts);
         
