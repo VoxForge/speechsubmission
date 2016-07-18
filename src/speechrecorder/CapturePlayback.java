@@ -129,7 +129,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     AudioInputStream audioInputStream;
     SamplingGraph samplingGraph;
 
-    int numberofPrompts = 5;
+    int numberofPrompts = 3;
     
     JButton [] playA = new JButton [numberofPrompts]; 
     JButton [] captA = new JButton [numberofPrompts];
@@ -333,7 +333,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         add(userPanel);  
 
 	    // Load all settings that were saved from the last session
-        //loadSettings();
+        loadSettings();
 	}
 
 	// methods
@@ -781,7 +781,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                }
 	                if (x == numberofPrompts-1) {
 	                	uploadB.setEnabled(true);
-	                	saveLocalB.setEnabled(true);
+	                	//saveLocalB.setEnabled(true);
 	                }
 	            }
 	        } 
@@ -1495,20 +1495,25 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
     } // End class SamplingGraph
 
+    /**
+     * always called by Postlet uploader
+     */
  	public synchronized void setProgress(int a) {
          sentBytes += a;
          progBar.setValue(sentBytes);
          if (sentBytes == totalBytes)
          {
+            progBar.setStringPainted(true);
            	progBar.setString(uploadCompletedMessageLabel);
             progBar.setIndeterminate(false);
-            System.err.println("Finished! submission saved");
+            System.err.println("Finished! submission uploaded to VoxForge repository");
             // Reset the applet
             progBar.setValue(0);
          } 
          else 
          {
-         	 System.err.println("setProgress(): Not reached end yet. sentBytes="+sentBytes+", totalBytes="+totalBytes);
+        	 // debug
+         	 // System.err.println("setProgress(): Not reached end yet. sentBytes="+sentBytes+", totalBytes="+totalBytes);
          }
  	}    
     
@@ -1651,35 +1656,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			//############ ReadMe file#################################### 
 			try {
 				BufferedWriter out_readme = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(readmeFile),"UTF-8"));
-		
-				out_readme.write("User Name:" + userName + System.getProperty("line.separator"));
-				out_readme.write(System.getProperty("line.separator"));	
-			
-				out_readme.write("Speaker Characteristics:" + System.getProperty("line.separator") );
-				out_readme.write(System.getProperty("line.separator"));	
-				out_readme.write("Gender: " + gender + System.getProperty("line.separator") );
-				out_readme.write("Age Range: " + ageRange + System.getProperty("line.separator")); 
-				out_readme.write("Language: " + language + System.getProperty("line.separator"));	
-				out_readme.write("Pronunciation dialect: " + dialect + System.getProperty("line.separator"));	
-				out_readme.write(System.getProperty("line.separator"));
-			
-				out_readme.write("Recording Information:" + System.getProperty("line.separator"));	
-				out_readme.write(System.getProperty("line.separator"));
-				out_readme.write("Microphone make: n/a" + System.getProperty("line.separator"));	
-				out_readme.write("Microphone type: " + microphone + System.getProperty("line.separator"));	
-				out_readme.write("Audio card make: unknown" + System.getProperty("line.separator"));	
-				out_readme.write("Audio card type: unknown" + System.getProperty("line.separator"));
-				out_readme.write("Audio Recording Software: VoxForge Speech Submission Application" + System.getProperty("line.separator"));
-				out_readme.write("O/S:" + System.getProperty("line.separator"));	
-				out_readme.write(System.getProperty("line.separator"));	
-				
-				out_readme.write("File Info:" + System.getProperty("line.separator"));
-				out_readme.write(System.getProperty("line.separator"));
-				out_readme.write("File type: " + fileType + System.getProperty("line.separator"));
-				out_readme.write("Sampling Rate: " + samplingRate + System.getProperty("line.separator"));
-				out_readme.write("Sample rate format: " + samplingRateFormat + System.getProperty("line.separator"));
-				out_readme.write("Number of channels: " + numberChannels + System.getProperty("line.separator"));	
-				
+				out_readme.write( userDataToString() );
 				out_readme.close();	
 			} catch (IOException e) {
 			    System.err.println("Problems with Gender, Age Range or Dialect");
@@ -1850,35 +1827,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			//############ ReadMe file#################################### 
 			try {
 				BufferedWriter out_readme = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(readmeFile),"UTF-8"));
-		
-				out_readme.write("User Name:" + userName + System.getProperty("line.separator"));
-				out_readme.write(System.getProperty("line.separator"));	
-			
-				out_readme.write("Speaker Characteristics:" + System.getProperty("line.separator") );
-				out_readme.write(System.getProperty("line.separator"));	
-				out_readme.write("Gender: " + gender + System.getProperty("line.separator") );
-				out_readme.write("Age Range: " + ageRange + System.getProperty("line.separator")); 
-				out_readme.write("Language: " + language + System.getProperty("line.separator"));	
-				out_readme.write("Pronunciation dialect: " + dialect + System.getProperty("line.separator"));	
-				out_readme.write(System.getProperty("line.separator"));
-			
-				out_readme.write("Recording Information:" + System.getProperty("line.separator"));	
-				out_readme.write(System.getProperty("line.separator"));
-				out_readme.write("Microphone make: n/a" + System.getProperty("line.separator"));	
-				out_readme.write("Microphone type: " + microphone + System.getProperty("line.separator"));	
-				out_readme.write("Audio card make: unknown" + System.getProperty("line.separator"));	
-				out_readme.write("Audio card type: unknown" + System.getProperty("line.separator"));
-				out_readme.write("Audio Recording Software: VoxForge Speech Submission Application" + System.getProperty("line.separator"));
-				out_readme.write("O/S:" + System.getProperty("line.separator"));	
-				out_readme.write(System.getProperty("line.separator"));	
-				
-				out_readme.write("File Info:" + System.getProperty("line.separator"));
-				out_readme.write(System.getProperty("line.separator"));
-				out_readme.write("File type: " + fileType + System.getProperty("line.separator"));
-				out_readme.write("Sampling Rate: " + samplingRate + System.getProperty("line.separator"));
-				out_readme.write("Sample rate format: " + samplingRateFormat + System.getProperty("line.separator"));
-				out_readme.write("Number of channels: " + numberChannels + System.getProperty("line.separator"));	
-				
+				out_readme.write( userDataToString() );
 				out_readme.close();	
 			} catch (IOException e) {
 			    System.err.println("Problems with Gender, Age Range or Dialect");
@@ -1956,18 +1905,38 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
         }
     }
-    /*
-	public String getCookie(){
-		// If passed in as a param then we don't need to worry about trying to fetch it from the context
-	//	System.err.println("CapturePlayback Cookie: " + cookie +":\n");  
-	//	System.err.println("CapturePlayback Cookie: " + this.cookie +":\n");
-    	if (cookie != null && !cookie.equals(""))
-			return cookie;
-		// Method reads the cookie in from the Browser using the LiveConnect object.
-		// May also add an option to set the cookie using an applet parameter 
-//		JSObject win = (JSObject) JSObject.getWindow((JApplet) this.getParent());
-//		cookie = "" + (String) win.eval("document.cookie");
-		return cookie;
+    
+	private String userDataToString () {
+		String user = "";
+		
+		user = "User Name:" + userName + System.getProperty("line.separator");
+		user = user + System.getProperty("line.separator");	
+
+		user = user + "Speaker Characteristics:" + System.getProperty("line.separator");
+		user = user + System.getProperty("line.separator");	
+		user = user + "Gender: " + gender + System.getProperty("line.separator");
+		user = user + "Age Range: " + ageRange + System.getProperty("line.separator"); 
+		user = user + "Language: " + language + System.getProperty("line.separator");	
+		user = user + "Pronunciation dialect: " + dialect + System.getProperty("line.separator");	
+		user = user + System.getProperty("line.separator");
+	
+		user = user + "Recording Information:" + System.getProperty("line.separator");	
+		user = user + System.getProperty("line.separator");
+		user = user + "Microphone make: n/a" + System.getProperty("line.separator");	
+		user = user + "Microphone type: " + microphone + System.getProperty("line.separator");	
+		user = user + "Audio card make: unknown" + System.getProperty("line.separator");	
+		user = user + "Audio card type: unknown" + System.getProperty("line.separator");
+		user = user + "Audio Recording Software: VoxForge Speech Submission Application" + System.getProperty("line.separator");
+		user = user + "O/S:" + System.getProperty("line.separator");	
+		user = user + System.getProperty("line.separator");	
+		
+		user = user + "File Info:" + System.getProperty("line.separator");
+		user = user + System.getProperty("line.separator");
+		user = user + "File type: " + fileType + System.getProperty("line.separator");
+		user = user + "Sampling Rate: " + samplingRate + System.getProperty("line.separator");
+		user = user + "Sample rate format: " + samplingRateFormat + System.getProperty("line.separator");
+		user = user + "Number of channels: " + numberChannels + System.getProperty("line.separator");	
+	
+		return user;
 	}
-    */
 } 
