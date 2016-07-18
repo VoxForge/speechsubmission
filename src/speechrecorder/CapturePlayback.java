@@ -129,7 +129,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     AudioInputStream audioInputStream;
     SamplingGraph samplingGraph;
 
-    int numberofPrompts = 10;
+    int numberofPrompts = 5;
     
     JButton [] playA = new JButton [numberofPrompts]; 
     JButton [] captA = new JButton [numberofPrompts];
@@ -263,7 +263,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         } 
         catch(java.net.MalformedURLException malurlex)
         {
-            System.out.println( "Badly formed destination URL" + destination);
+            System.out.println( "Badly formed destination URL: " + destination);
         } 
         catch(java.lang.NullPointerException npe)
         {
@@ -651,8 +651,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         	});
         p2.add(microphonePanel);
     }	
-	
-    public void open() { }
 
     private String getTempDir() {
     	String tempdir=null;
@@ -670,6 +668,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		return tempdir;
     }
 
+	
+    public void open() { }
+    
     public void close() {
         if (playback.thread != null) {
             for (int i = 0; i < numberofPrompts; i++) {
@@ -741,7 +742,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                 }
             }
         }
-  
+// ################### Record #######################################   
 	    for (int x = 0; x < numberofPrompts; x++) {
 	        if (obj.equals(captA[x])) {
 	            if (captA[x].getText().startsWith(recordButton)) {
@@ -820,7 +821,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			saveSettings();
 
 			convertAndUpload.start();
-			//restartApp();
+			restartApp();
         }
 //      ################### SaveLocally #######################################               
 	    if (obj.equals(saveLocalB)) 
@@ -1011,7 +1012,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			getAudioInputStream();
 
             // get an AudioInputStream of the desired format for playback
-//DEL            AudioFormat format = formatControls.getFormat();
             AudioInputStream playbackInputStream = AudioSystem.getAudioInputStream(format, audioInputStream);
                         
             if (playbackInputStream == null) {
@@ -1956,7 +1956,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
         }
     }
-    
+    /*
 	public String getCookie(){
 		// If passed in as a param then we don't need to worry about trying to fetch it from the context
 	//	System.err.println("CapturePlayback Cookie: " + cookie +":\n");  
@@ -1969,5 +1969,5 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 //		cookie = "" + (String) win.eval("document.cookie");
 		return cookie;
 	}
-    
+    */
 } 
