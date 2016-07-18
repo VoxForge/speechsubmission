@@ -127,7 +127,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     AudioInputStream audioInputStream;
     SamplingGraph samplingGraph;
 
-    int numberofPrompts = 15;
+    int numberofPrompts = 10;
     
     JButton [] playA = new JButton [numberofPrompts]; 
     JButton [] captA = new JButton [numberofPrompts];
@@ -327,15 +327,19 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    
 	    leftToRight = labels.getLeftToRight();
 
+	    // !!!!!! original
+		//JPanel userPanel = startApp();
+	    //setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		//add(userPanel);
+	    // !!!!!!
 		JPanel userPanel = startApp();
 		JScrollPane scrollPane = new JScrollPane(userPanel);
-
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		//setLayout(new BorderLayout());
-		//setPreferredSize(new Dimension(500, 500));
 		add(scrollPane, BorderLayout.CENTER);
+		setPreferredSize(new Dimension(500, 500));
+		// !!!!!!
 
-	    // Load all settings that were saved from the last session
+		// Load all settings that were saved from the last session
         loadSettings();
 	}
 
@@ -346,8 +350,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	 */
     private JPanel startApp() 
     { 	
-    	
-    	
 		JPanel userPanel = new JPanel();
 
         addUserInfo(userPanel);
@@ -389,14 +391,25 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      */
     private void addGraph(JPanel userPanel) 
     { 
-        EmptyBorder eb = new EmptyBorder(25,25,25,25);
+        //EmptyBorder eb = new EmptyBorder(25,25,25,25);
+        
         SoftBevelBorder sbb = new SoftBevelBorder(SoftBevelBorder.LOWERED);
+        EmptyBorder eb = new EmptyBorder(10,20,5,20);
+
         JPanel samplingPanel = new JPanel(new BorderLayout());
-        eb = new EmptyBorder(10,20,5,20);
         samplingPanel.setBorder(new CompoundBorder(eb, sbb));
+        
         samplingGraph = new SamplingGraph();
+        samplingGraph.setPreferredSize(new Dimension(50, 100));
         samplingPanel.add(samplingGraph);
+        
         userPanel.add(samplingPanel);
+        
+    	//		############ Upload Progress bar ####################################
+        progBar = new JProgressBar();
+        progBar.setStringPainted(true);
+        progBar.setString("Ready to Record");
+        userPanel.add(progBar);    
     }
 
 	/**
@@ -516,11 +529,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     	//		############ Save Local ####################################          
         //saveLocalB = addButton("save on your computer", uploadButtonPanel, false); // upload all submissions
         //p2.add(uploadButtonPanel);
-	//		############ Upload Progress bar ####################################
-        progBar = new JProgressBar();
-        progBar.setStringPainted(true);
-        progBar.setString("Ready to Record");
-        p2.add(progBar);               
+           
 	// 		############ More Information Button ####################################          
         JPanel moreInfoButtonPanel = new JPanel();
         if (leftToRight)
@@ -1487,7 +1496,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                     }
 
                     // .. draw current position ..
-// debug            System.err.println("seconds "+seconds+";duration:"+duration+":");
                     if (seconds != 0) {
                         double loc = seconds/duration*w;
                         g2.setColor(pink);
@@ -1520,16 +1528,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                     long milliseconds = playback.line.getMicrosecondPosition() / 1000;
 
                     seconds =  milliseconds / 1000.0;
-    // debug        System.err.println("playback.line:seconds "+seconds+";milliseconds:"+milliseconds+":");
                 } else if ( (capture.line != null) && (capture.line.isActive()) ) {
 
                     long milliseconds = capture.line.getMicrosecondPosition() / 1000;
                     seconds =  milliseconds / 1000.0;
-    // debug        System.err.println("capture.line:seconds "+seconds+";milliseconds:"+milliseconds+":");
 
                 }
 
-                //try { thread.sleep(100); } catch (Exception e) { break; }
                 try { Thread.sleep(100); } catch (Exception e) { break; }
                 
                 repaint();
@@ -1537,7 +1542,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                 while ((capture.line != null && !capture.line.isActive()) ||
                        (playback.line != null && !playback.line.isOpen())) 
                 {
-                    //try { thread.sleep(10); } catch (Exception e) { break; }
                     try { Thread.sleep(10); } catch (Exception e) { break; }
                 }
             }
