@@ -1,3 +1,7 @@
 /bin/
 *.*~
 *~
+/packages/
+/build/
+/dist/
+/dist-vf/
