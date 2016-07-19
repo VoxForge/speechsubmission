@@ -68,10 +68,7 @@ import java.nio.channels.FileChannel;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.Calendar;
-import java.util.Random;
 import java.util.Vector;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -97,7 +94,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
 
 import speechrecorder.ConfigReader;
-import net.sf.postlet.UploadManager;
+import speechrecorder.SaveOrUpload;
 
 /**
  * Capture/Playback sample.  Record audio in different formats and then playback the recorded audio.  The captured audio can  be saved either as a WAVE, AU or AIFF.  Or load an audio file for streaming playback.
@@ -127,7 +124,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     AudioInputStream audioInputStream;
     SamplingGraph samplingGraph;
 
-    int numberofPrompts = 10;
+    int numberofPrompts = 3;
     
     JButton [] playA = new JButton [numberofPrompts]; 
     JButton [] captA = new JButton [numberofPrompts];
@@ -244,8 +241,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
   
 	String tempdir;
 
-	ConvertAndUpload convertAndUpload; 
-	ConvertAndSavelocally convertAndSavelocally; 
+	SaveOrUpload saveOrUpload; 
+	//ConvertAndSavelocally convertAndSavelocally; 
 	
     Color voxforgeColour 	= new Color(197, 216, 234);
     
@@ -281,9 +278,23 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		licenseNotice = "Copyright " + cal.get(Calendar.YEAR) + " " + copyrightName + System.getProperty("line.separator") 
 				+ System.getProperty("line.separator") 
 				+ License.getBlanklicenseNotice();				
-		vflicense = License.getVFLicense();	 		
-		convertAndUpload = new ConvertAndUpload();
-		convertAndSavelocally = new ConvertAndSavelocally();
+		vflicense = License.getVFLicense();	 	
+		
+        tempdir = getTempDir(); // creates new temp dir with every call
+		saveOrUpload = new SaveOrUpload(
+				capturePlayback,
+				destinationURL, 
+				uploadingMessageLabel, 
+				numberofPrompts,
+				uploadWavFileA,
+			    promptidA,
+			    promptA,
+			    tempdir,
+			    licenseNotice,
+			    BUFFER_SIZE,
+			    language
+		);
+		//convertAndSavelocally = new ConvertAndSavelocally();
 		
 	    pleaseSelect = labels.getPleaseSelect();
 	    notApplicable = labels.getNotApplicable();
@@ -355,7 +366,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         addUserInfo(userPanel);
         addPromptInfo(userPanel, numberofPrompts);
         
-        tempdir = getTempDir(); // creates new temp dir with every call
+
 	    createWavFiles(numberofPrompts, this.promptidA ); // promptidA array gets assigned in addPromptInfo
         addGraph(userPanel); 
         addRemainingPanelInfo(userPanel); 
@@ -374,7 +385,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			e.printStackTrace();
 		}
 		removeAll();  //Removes all the components from this container
-
+        tempdir = getTempDir(); // creates new temp dir with every call
+        
 		JPanel userPanel = startApp();
         add(userPanel);  
         loadSettings();
@@ -385,7 +397,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     }	
     
     /**
-     * add Sampling Graph
+     * Sampling Graph
+     * progress bar
      * 
      * @param userPanel
      */
@@ -465,8 +478,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
         userPanel.add(promptsContainer);
     }	
-	
-    
+	    
     /**
      * Create WAV files to hold recordings
      * 
@@ -486,14 +498,14 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 				uploadWavFileA[i] = new File(tempdir + promptidA [i] + ".wav");
 				uploadWavFileA[i].deleteOnExit();
 	        }
-			promptsFile = new File(tempdir + "prompts.txt");			
-			promptsFile.deleteOnExit();		
-			readmeFile = new File(tempdir + "readme.txt");			
-			readmeFile.deleteOnExit();		
-			licenseFile = new File(tempdir + "GPL_license.txt");			
-			licenseFile.deleteOnExit();			
-			licenseNoticeFile = new File(tempdir + "license.txt");	
-			licenseNoticeFile.deleteOnExit();	
+			//promptsFile = new File(tempdir + "prompts.txt");			
+			//promptsFile.deleteOnExit();		
+			//readmeFile = new File(tempdir + "readme.txt");			
+			//readmeFile.deleteOnExit();		
+			//licenseFile = new File(tempdir + "GPL_license.txt");			
+			//licenseFile.deleteOnExit();			
+			//licenseNoticeFile = new File(tempdir + "license.txt");	
+			//licenseNoticeFile.deleteOnExit();	
 		} catch (Exception e) {
 			System.err.println("Unable to create WAV cache file for storing audio\n" + e);
 			return;
@@ -504,8 +516,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    }    	
     }
 	
-	
-
     /**
      * Add remaining Panel Information
      * - upload text & button
@@ -674,7 +684,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         p2.add(microphonePanel);
     }	
 
-    
     /**
      * create temporary directory and return path as a string
      * 
@@ -695,7 +704,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		}
 		return tempdir;
     }
-
 	
     public void open() { }
     
@@ -860,7 +868,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
 			saveSettings();
 
-			convertAndUpload.start();
+			totalBytes = saveOrUpload.start(progBar, userName, userDataToString() );
 			restartApp();
         }
 //      ################### SaveLocally #######################################   
@@ -940,7 +948,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                 duration = milliseconds / 1000.0;
         		System.err.println("createAudioInputStream duration:" + duration);
                 if (updateComponents) {
-//DEL                    formatControls.setFormat(audioInputStream.getFormat());
                     samplingGraph.createWaveForm(null);
                 }
             } catch (Exception ex) { 
@@ -1112,8 +1119,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             playbackInputStream = AudioSystem.getAudioInputStream(format, audioInputStream);
             
             progBar.setStringPainted(true);
-            //progBar.setString(samplingGraph.peakWarning ? 
-            //		peakWarningLabel : "");
             if (samplingGraph.peakWarning)
             {
             	progBar.setBackground(Color.red);
@@ -1634,332 +1639,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		} 	
     }
 	
-	/*
-	 * from: http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java 
-	 * see: http://docs.oracle.com/javase/6/docs/api/java/nio/channels/FileChannel.html#transferTo(long,%20long,%20java.nio.channels.WritableByteChannel)
-	 */
-	public static void copyFile(File sourceFile, File destFile) throws IOException {
-	    if(!destFile.exists()) {
-	        destFile.createNewFile();
-	    }
-
-	    FileChannel source = null;
-	    FileChannel destination = null;
-
-	    try {
-	        source = new FileInputStream(sourceFile).getChannel();
-	        destination = new FileOutputStream(destFile).getChannel();
-	        destination.transferFrom(source, 0, source.size());
-	    }
-	    finally {
-	        if(source != null) {
-	            source.close();
-	        }
-	        if(destination != null) {
-	            destination.close();
-	        }
-	    }
-	}  
-
-    
-    /** 
-     * saves the submission locally
-     */
-    class ConvertAndSavelocally  implements Runnable {
-
-        Thread thread;
-        String targetDirectory;
-        
-        public void start(String targetDirectory) {
-            errStr = null;
-            thread = new Thread(this);
-            thread.setName("ConvertAndSavelocally");
-    		System.err.println("=== Save Local ===");
-    		this.targetDirectory = targetDirectory;
-            thread.start();
-        }
-
-        public void stop() {
-            thread = null;
-        }
-        
-		public void run() {
-            progBar.setVisible(true);
-            progBar.setStringPainted(true);
-            progBar.setMaximum(100);
-            progBar.setString("Saving locally");
-            progBar.setIndeterminate(false);
-            progBar.setMinimum(0);
-            sentBytes = 0;
-
-			//############ audio files ####################################
-			File[] files = new File[numberofPrompts + 4];
-	        for (int i = 0; i < numberofPrompts; i++) {
-				files[i] = uploadWavFileA[i];
-	        }
-			//############ prompt files #################################### 
-			try {
-				BufferedWriter out_prompts = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(promptsFile),"UTF-8"));
-		        for (int i = 0; i < numberofPrompts; i++) {
-					out_prompts.write(promptidA[i] + " " + promptA[i] + System.getProperty("line.separator"));
-		        }
-			    out_prompts.close();
-			} catch (IOException e) {
-				    System.err.println("Problems with prompts");
-			} 
-			files[numberofPrompts] = promptsFile;
-			//############ ReadMe file#################################### 
-			try {
-				BufferedWriter out_readme = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(readmeFile),"UTF-8"));
-				out_readme.write( userDataToString() );
-				out_readme.close();	
-			} catch (IOException e) {
-			    System.err.println("Problems with Gender, Age Range or Dialect");
-			} 
-			files[numberofPrompts + 1] = readmeFile;
-			//############ License Notice File ####################################    
-			try {
-				BufferedWriter out_licenseNoticeFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseNoticeFile),"UTF-8"));
-				out_licenseNoticeFile.write(licenseNotice);
-				out_licenseNoticeFile.close();	
-			} catch (IOException e) {
-				    System.err.println("Problems with licenseNoticeFile file");
-			} 
-			files[numberofPrompts + 2] = licenseNoticeFile;
-			//############ license file ####################################    
-			try {
-				BufferedWriter out_licenseFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseFile),"UTF-8"));
-				out_licenseFile.write(License.getGPLLicense());
-				out_licenseFile.close();	
-			} catch (IOException e) {
-				System.err.println("Problems with license file");
-			} 
-			files[numberofPrompts + 3] = licenseFile;
-			//############ create archive file #################################### 
-			File archiveFile;
-			Calendar cal = Calendar.getInstance();
-			int day = cal.get(Calendar.DATE);
-			int month = cal.get(Calendar.MONTH) + 1;
-			int year = cal.get(Calendar.YEAR);
-			StringBuffer sb = new StringBuffer(11);
-			sb.append(year);
-			if( month < 10 ) sb.append("0");
-			sb.append(month);
-			if( day < 10 ) sb.append("0");
-			sb.append(day);
-			String date = sb.toString();
-			
-			Random randomGenerator = new Random();
-			int SMALL_LETTERS_BASE_VALUE = 97;
-			StringBuffer randomID = new StringBuffer("");  // required for jvm 1.4.2
-			for ( int i = 0; i < 3; i++ )
-			{
-			   	int currentValue = randomGenerator.nextInt(26);
-				currentValue += SMALL_LETTERS_BASE_VALUE;//convert to ASCII value for a-z
-				randomID.append((char)currentValue);
-			}
-			
-			String zipfilename = tempdir + language + "-" + userName + "-" + date + "-" + randomID + ".zip";
-			if (userName != null){
-				archiveFile = new File(zipfilename);
-			} else {
-				archiveFile = new File(zipfilename);
-			}
-			
-			createZipArchive(archiveFile, files);
-			System.err.println("Archive file location:" + archiveFile);
-			totalBytes = ((int)archiveFile.length()) ; 
-			progBar.setMaximum((int)archiveFile.length());
-
-			File targetFile = new File(this.targetDirectory + language + "-" + userName + "-" + date + "-" + randomID + ".zip");
-	        try {
-	        	copyFile(archiveFile, targetFile);
-				System.err.println("target file location:" + targetFile);
-	        }
-	        catch (Exception e) {
-	            e.printStackTrace();
-	            System.out.println("Error: cant copy zip file to target folder" + e.getMessage());
-	        }
-
-	        setProgress((int)targetFile.length());
-        }
-    }
-    
-    protected void createZipArchive(File archiveFile, File[] tobeZippedFiles) {
-        try {
-          byte buffer[] = new byte[BUFFER_SIZE];
-          // Open archive file
-          FileOutputStream stream = new FileOutputStream(archiveFile);
-          ZipOutputStream out = new ZipOutputStream(stream);
-
-          for (int i = 0; i < tobeZippedFiles.length; i++) {
-            if (tobeZippedFiles[i] == null || !tobeZippedFiles[i].exists()
-                || tobeZippedFiles[i].isDirectory())
-              continue;
-            System.out.println("Adding " + tobeZippedFiles[i].getName());
-
-            // Add archive entry
-            ZipEntry zipAdd = new ZipEntry(tobeZippedFiles[i].getName());
-            zipAdd.setTime(tobeZippedFiles[i].lastModified());
-            out.putNextEntry(zipAdd);
-
-            // Read input & write to output
-            FileInputStream in = new FileInputStream(tobeZippedFiles[i]);
-            while (true) {
-              int nRead = in.read(buffer, 0, buffer.length);
-              if (nRead <= 0)
-                break;
-              out.write(buffer, 0, nRead);
-            }
-            in.close();
-          }
-
-          out.close();
-          stream.close();
-          System.out.println("Adding completed OK");
-        } catch (Exception e) {
-          e.printStackTrace();
-          System.out.println("Error: " + e.getMessage());
-          return;
-        }
-      }    
-    
-    /** 
-     * uploads the file
-     */
-    class ConvertAndUpload implements Runnable {
-
-        Thread thread;
-        String fileFieldName = "userfile";         
-        
-        public void start() {
-            errStr = null;
-            thread = new Thread(this);
-            thread.setName("ConvertAndUpload");
-    		System.err.println("=== Upload ===");
-    		System.err.println("destinationURL:" + destinationURL);
-            thread.start();
-        }
-
-        public void stop() {
-            thread = null;
-        }
-        
-		public void run() {
-            progBar.setVisible(true);
-            progBar.setStringPainted(true);
-            progBar.setMaximum(100);
-    		System.err.println("uploadingMessageLabel:" + uploadingMessageLabel);
-            progBar.setString(uploadingMessageLabel);
-            progBar.setIndeterminate(false);
-            progBar.setMinimum(0);
-            sentBytes = 0;
-			try {
-				destinationURL = new URL(destinationURL.toString());	  
-			}catch(Exception err){
-			    System.err.println(err);
-			}
-			System.err.println("Destination URL is " + destinationURL);
-
-			//############ audio files ####################################
-			File[] files = new File[numberofPrompts + 4];
-	        for (int i = 0; i < numberofPrompts; i++) {
-				files[i] = uploadWavFileA[i];
-	        }
-			//############ prompt files #################################### 
-			try {
-				BufferedWriter out_prompts = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(promptsFile),"UTF-8"));
-		        for (int i = 0; i < numberofPrompts; i++) {
-					out_prompts.write(promptidA[i] + " " + promptA[i] + System.getProperty("line.separator"));
-		        }
-			    out_prompts.close();
-			} catch (IOException e) {
-				    System.err.println("Problems with prompts");
-			} 
-			files[numberofPrompts] = promptsFile;
-			//############ ReadMe file#################################### 
-			try {
-				BufferedWriter out_readme = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(readmeFile),"UTF-8"));
-				out_readme.write( userDataToString() );
-				out_readme.close();	
-			} catch (IOException e) {
-			    System.err.println("Problems with Gender, Age Range or Dialect");
-			} 
-			files[numberofPrompts + 1] = readmeFile;
-			//############ License Notice File ####################################    
-			try {
-				BufferedWriter out_licenseNoticeFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseNoticeFile),"UTF-8"));
-				out_licenseNoticeFile.write(licenseNotice);
-				out_licenseNoticeFile.close();	
-			} catch (IOException e) {
-				    System.err.println("Problems with licenseNoticeFile file");
-			} 
-			files[numberofPrompts + 2] = licenseNoticeFile;
-			//############ license file ####################################    
-			try {
-				BufferedWriter out_licenseFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseFile),"UTF-8"));
-				out_licenseFile.write(License.getGPLLicense());
-				out_licenseFile.close();	
-			} catch (IOException e) {
-				System.err.println("Problems with license file");
-			} 
-			files[numberofPrompts + 3] = licenseFile;
-			//############ create archive file #################################### 
-			File archiveFile;
-			Calendar cal = Calendar.getInstance();
-			int day = cal.get(Calendar.DATE);
-			int month = cal.get(Calendar.MONTH) + 1;
-			int year = cal.get(Calendar.YEAR);
-			StringBuffer sb = new StringBuffer(11);
-			sb.append(year);
-			if( month < 10 ) sb.append("0");
-			sb.append(month);
-			if( day < 10 ) sb.append("0");
-			sb.append(day);
-			String date = sb.toString();
-			
-			Random randomGenerator = new Random();
-			int SMALL_LETTERS_BASE_VALUE = 97;
-			StringBuffer randomID = new StringBuffer("");  // required for jvm 1.4.2
-			for ( int i = 0; i < 3; i++ )
-			{
-			   	int currentValue = randomGenerator.nextInt(26);
-				currentValue += SMALL_LETTERS_BASE_VALUE;//convert to ASCII value for a-z
-				randomID.append((char)currentValue);
-			}
-			
-			String zipfilename = tempdir + language + "-" + userName + "-" + date + "-" + randomID + ".zip";
-			if (userName != null){
-				archiveFile = new File(zipfilename);
-			} else {
-				archiveFile = new File(zipfilename);
-			}
-			
-			createZipArchive(archiveFile, files);
-			System.err.println("Archive file location:" + archiveFile);
-			totalBytes = ((int)archiveFile.length()) ; 
-			progBar.setMaximum((int)archiveFile.length());
-
-			//############ Upload #################################### 
-			// Upload manager needs an array but JavaUpload.php script can only handle one file at a time
-			File[] archiveFiles = new File[1];
-			archiveFiles[0] = archiveFile;
-            UploadManager u;
-            try 
-            {
-                u = new UploadManager(archiveFiles, capturePlayback, destinationURL, 1, fileFieldName);
-            } 
-            catch(java.lang.NullPointerException npered)
-            {
-            	u = new UploadManager(archiveFiles, capturePlayback, destinationURL, fileFieldName);
-            }
-            System.err.println("Uploading to " + destinationURL);
-            u.start();
-
-        }
-    }
-    
-	private String userDataToString () {
+    public String userDataToString () {
 		String user = "";
 		
 		user = "User Name:" + userName + System.getProperty("line.separator");
