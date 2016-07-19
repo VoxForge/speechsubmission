@@ -10,6 +10,7 @@
   <property name="build.java" location="${build}"/>
   <property name="include"    location="include"/>
   <property name="dist"       location="dist"/>
+  <property name="packages"   location="packages"/>
   <property name="javafx.sdk.path"    location="/usr/lib/jdk/jdk1.8.0_77"/>
   <property name="version" value="0.3"/>
 
@@ -63,6 +64,9 @@
  
   <target name="clean" description="Clean up" >
     <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+    <delete dir="dist-vf"/>
+    <delete dir="${packages}"/>
   </target>
 
 
@@ -79,7 +83,7 @@ for ant; needed: sudo apt-get install ant-contrib
         uri="javafx:com.sun.javafx.tools.ant"
         classpath="${javafx.sdk.path}/lib/ant-javafx.jar"/>	
 	
-	<target name="package" depends="compile">
+	<target name="package_jar" depends="build">
 		<fx:jar destfile="dist-vf/speechrecorder.jar">
 		    <fx:application mainClass="speechrecorder.RecorderApplication"/>
 		      <fileset dir="${build.java}">
@@ -88,11 +92,13 @@ for ant; needed: sudo apt-get install ant-contrib
 		        <include name="**/speechrecorder/copyrights/*"/>
 		      </fileset>
 		</fx:jar>
+	</target>
 	
+	<target name="package" depends="package_jar">
 		<fx:deploy width="800" 
 		           height="1200"
 		           nativeBundles="deb"
-		           outdir="packages" 
+		           outdir="${packages}"
 		           outfile="SpeechSubmission">
 		    <fx:application name="voxforge_speechrecorder" 
 		    	mainClass="speechrecorder.RecorderApplication"/>
