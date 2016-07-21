@@ -20,7 +20,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.swing.JPanel;
 
-import speechrecorder.CapturePlayback.Capture;
+import speechrecorder.Capture;
 import speechrecorder.CapturePlayback.Playback;
 
 /**

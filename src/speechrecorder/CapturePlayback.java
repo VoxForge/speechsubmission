@@ -104,7 +104,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
     AudioFormat format = new AudioFormat(samplingRate, samplingRateFormat, numberChannels, true, false);
 
-    Capture capture = new Capture();
+    //Capture capture = new Capture();
+    Capture capture;
     Playback playback = new Playback();
     CapturePlayback capturePlayback; // Needed for referencing within the inner classes
 
@@ -318,6 +319,14 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    
 	    leftToRight = labels.getLeftToRight();
 
+	    
+	    capture = new Capture(
+	    	peakWarningLabel,
+    		sampleGraphFileLabel,
+            sampleGraphLengthLabel, 
+            sampleGraphPositionLabel
+	    );
+	    
 		JPanel userPanel = startApp();
 		JScrollPane scrollPane = new JScrollPane(userPanel);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -768,9 +777,18 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	            if (captA[x].getText().startsWith(recordButton)) {
 	                file = null;
 	                wavFile = wavFileA[x];  
-	        		System.err.println("=== Record " + (x+1) + " ==="); 
-	                capture.start(audioInputStream, uploadWavFileA[x]);  
 	                fileName = promptidA[x];
+	        		System.err.println("=== Record " + (x+1) + " ==="); 
+	                capture.start(
+	                		capturePlayback,
+	                		samplingGraph,
+	                		audioInputStream, 
+	                		format,
+	                		progBar,
+	                		uploadWavFileA[x],
+	                		wavFileA[x],
+	                		promptidA[x]
+	                );  
 	                samplingGraph.start();
 	                saveButtonState(); 
 	                setButtonsOff(); 
@@ -785,7 +803,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                } catch (InterruptedException ex) { 
 	        			System.err.println("Recording Thread - Interrupt Exception");
 	                }
-	                audioInputStream = capture.stop();
+	                
+	                CaptureResult result = capture.stop();
+	                audioInputStream = result.audioInputStream;
+	                duration = result.duration;
+	                totalBytesWritten = result.totalBytesWritten;
+	                
 	                totalBytesWrittenA[x] = totalBytesWritten; 
 	            	durationA[x]= totalBytesWritten / (double) (format.getSampleRate() * format.getSampleSizeInBits()/ 8);
 	        		System.err.println("duration1:" + durationA[x]);
@@ -1058,21 +1081,75 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             restoreButtonState(); 
         }
     } // End class Playback
-        
 
-    /** 
-     * Reads data from the input channel and writes to the output stream
+    /**
+     *  return multiple values from Capture class
+     * 
+     * @author daddy
+     *
      */
+    protected class CaptureResult {
+    	AudioInputStream audioInputStream;
+    	double duration;
+    	long totalBytesWritten;
+    }
+    
+    /* 
+     // Reads data from the input channel and writes to the output stream
+
     class Capture implements Runnable {
         TargetDataLine line;
         Thread thread;
-        File uploadWavFile;
 
+        CapturePlayback capturePlayback;
+        SamplingGraph samplingGraph;
         AudioInputStream audioInputStream;
-
-        public void start(AudioInputStream audioInputStream, File uploadWavFile) {
+    	AudioFormat format;
+    	JProgressBar progBar;
+        File uploadWavFile;  
+        File wavFile;
+        String fileName;
+        
+        String errStr;
+        long totalBytesWritten;
+        double duration;
+        
+        String peakWarningLabel; 
+        String sampleGraphFileLabel; 
+        String sampleGraphLengthLabel; 
+        String sampleGraphPositionLabel; 
+        
+        public Capture (
+        		String peakWarningLabel,
+        		String sampleGraphFileLabel,
+                String sampleGraphLengthLabel, 
+                String sampleGraphPositionLabel
+        		) 
+        {
+        	this.sampleGraphFileLabel=sampleGraphFileLabel;
+        	this.sampleGraphLengthLabel=sampleGraphLengthLabel;
+        	this.sampleGraphPositionLabel=sampleGraphPositionLabel;
+        }
+        public void start(
+        		CapturePlayback capturePlayback,
+        		SamplingGraph samplingGraph,
+        		AudioInputStream audioInputStream, 
+        		AudioFormat format,
+        		JProgressBar progBar,
+        		File uploadWavFile,
+        		File wavFile,
+        		String fileName
+        	) 
+        {
+        	this.capturePlayback = capturePlayback; 
+        	this.samplingGraph = samplingGraph; 
+           	this.audioInputStream = audioInputStream;
+        	this.format = format; 
+        	this.progBar = progBar; 
         	this.uploadWavFile = uploadWavFile; 
-           	this.audioInputStream = audioInputStream;         	
+        	this.wavFile = wavFile; 
+        	this.fileName = fileName; 
+        	
         	System.err.println("Capture uploadWavFile is:" + uploadWavFile);
 
             errStr = null;
@@ -1085,10 +1162,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             thread.start();
         }
        
-        public AudioInputStream stop() {
+        public CaptureResult stop() {
             thread = null;
             
-            return audioInputStream;
+            CaptureResult result = new CaptureResult();
+            result.audioInputStream = audioInputStream;
+            result.duration = duration;
+            result.totalBytesWritten = totalBytesWritten;
+            
+            return result;
         }
         
         private void shutDown(String message) {
@@ -1183,7 +1265,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             }
 
             // load bytes into the audio input stream for playback
-            audioInputStream = getAudioInputStream();
+            audioInputStream = capturePlayback.getAudioInputStream();
       	
             try {
                 if (AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, uploadWavFile) == -1) {
@@ -1207,7 +1289,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             );
             // debug System.err.println("Created samplingGraph");
             // This is the only way to "reset" long streams - re-grab
-            audioInputStream = getAudioInputStream();
+            audioInputStream = capturePlayback.getAudioInputStream();
 
             progBar.setStringPainted(true);
         	//progBar.setString(samplingGraph.peakWarning ? 
@@ -1219,7 +1301,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             }
             else
             {
-            	progBar.setBackground(getBackground());         	
+            	progBar.setBackground(capturePlayback.getBackground());         	
             	progBar.setString("");
             }
         }
@@ -1231,7 +1313,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	        }
 	    }
     } // End class Capture
- 
+ */
     /**
 	 * Will free audio input stream if exists, and grab a new version. This seems a bit silly but there's no other way to "rewind" large files.
 	 * @uml.property  name="audioInputStream"
