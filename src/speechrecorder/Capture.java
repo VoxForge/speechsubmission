@@ -44,19 +44,21 @@ class Capture implements Runnable {
     String sampleGraphPositionLabel; 
     
     public Capture (
+    		CapturePlayback capturePlayback,
     		String peakWarningLabel,
     		String sampleGraphFileLabel,
             String sampleGraphLengthLabel, 
             String sampleGraphPositionLabel
     		) 
     {
+    	this.capturePlayback = capturePlayback; 
     	this.peakWarningLabel=peakWarningLabel;
     	this.sampleGraphFileLabel=sampleGraphFileLabel;
     	this.sampleGraphLengthLabel=sampleGraphLengthLabel;
     	this.sampleGraphPositionLabel=sampleGraphPositionLabel;
     }
+    
     public void start(
-    		CapturePlayback capturePlayback,
     		SamplingGraph samplingGraph,
     		AudioInputStream audioInputStream, 
     		AudioFormat format,
@@ -66,7 +68,6 @@ class Capture implements Runnable {
     		String fileName
     	) 
     {
-    	this.capturePlayback = capturePlayback; 
     	this.samplingGraph = samplingGraph; 
        	this.audioInputStream = audioInputStream;
     	this.format = format; 

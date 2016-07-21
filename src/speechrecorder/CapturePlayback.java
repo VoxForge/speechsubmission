@@ -317,6 +317,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
 	    
 	    capture = new Capture(
+	    	capturePlayback,
 	    	peakWarningLabel,
     		sampleGraphFileLabel,
             sampleGraphLengthLabel, 
@@ -776,7 +777,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                fileName = promptidA[x];
 	        		System.err.println("=== Record " + (x+1) + " ==="); 
 	                capture.start(
-	                		capturePlayback,
 	                		samplingGraph,
 	                		audioInputStream, 
 	                		format,
