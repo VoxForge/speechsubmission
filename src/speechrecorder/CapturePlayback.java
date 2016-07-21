@@ -100,9 +100,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
     AudioFormat format = new AudioFormat(samplingRate, samplingRateFormat, numberChannels, true, false);
 
-    //Capture capture = new Capture();
     Capture capture;
-    Playback playback = new Playback();
+    //Playback playback = new Playback();
+    Playback playback;
     CapturePlayback capturePlayback; // Needed for referencing within the inner classes
 
     AudioInputStream audioInputStream;
@@ -315,6 +315,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    
 	    leftToRight = labels.getLeftToRight();
 
+	    playback = new Playback(
+		    	capturePlayback,
+        		numberofPrompts
+	    		);
 	    
 	    capture = new Capture(
 	    	capturePlayback,
@@ -750,7 +754,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                     duration = durationA[i];
                     totalBytesWritten = totalBytesWrittenA[i];
                     System.err.println("=== Play " + (i+1) + " ===");
-                    playback.start();
+                    playback.start(
+	                		samplingGraph,
+	                        playA, 
+	                        captA,
+	                        playButton
+                    );
             		System.err.println("duration:" + duration);
                     fileName = promptidA[i];  
                     samplingGraph.start();
@@ -929,16 +938,43 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
        }
     }
 
-
     /**
      * Write data to the OutputChannel.
      */
     public class Playback implements Runnable {
-
         SourceDataLine line;
         Thread thread;
 
-        public void start() {
+        CapturePlayback capturePlayback;
+        SamplingGraph samplingGraph;
+        int numberofPrompts;
+        JButton [] playA; 
+        JButton [] captA;
+        String playButton;
+
+        String errStr;
+
+        public Playback (
+        		CapturePlayback capturePlayback,  
+        		int numberofPrompts
+        	)
+        {
+        	this.capturePlayback = capturePlayback; 
+        	this.numberofPrompts = numberofPrompts;     
+        }
+        
+        public void start(
+        		SamplingGraph samplingGraph,
+                JButton [] playA, 
+                JButton [] captA,
+                String playButton
+        	) 
+        {
+        	this.samplingGraph = samplingGraph; 
+        	this.playA = playA; 
+        	this.captA = captA;
+        	this.playButton = playButton;
+        	
             errStr = null;
             thread = new Thread(this);
             thread.setName("Playback");
@@ -969,7 +1005,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
 
 		public void run() {
-			getAudioInputStream();
+			capturePlayback.getAudioInputStream();
 
             // get an AudioInputStream of the desired format for playback
             AudioInputStream playbackInputStream = AudioSystem.getAudioInputStream(format, audioInputStream);
@@ -1034,7 +1070,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             ); 
             samplingGraph.repaint();
             
-			getAudioInputStream();
+            capturePlayback.getAudioInputStream();
             playbackInputStream = AudioSystem.getAudioInputStream(format, audioInputStream);
             
             progBar.setStringPainted(true);
