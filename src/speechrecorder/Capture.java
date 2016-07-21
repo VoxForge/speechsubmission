@@ -45,6 +45,7 @@ class Capture implements Runnable {
     
     public Capture (
     		CapturePlayback capturePlayback,
+    		AudioFormat format,
     		String peakWarningLabel,
     		String sampleGraphFileLabel,
             String sampleGraphLengthLabel, 
@@ -52,6 +53,7 @@ class Capture implements Runnable {
     		) 
     {
     	this.capturePlayback = capturePlayback; 
+    	this.format = format; 
     	this.peakWarningLabel=peakWarningLabel;
     	this.sampleGraphFileLabel=sampleGraphFileLabel;
     	this.sampleGraphLengthLabel=sampleGraphLengthLabel;
@@ -61,7 +63,6 @@ class Capture implements Runnable {
     public void start(
     		SamplingGraph samplingGraph,
     		AudioInputStream audioInputStream, 
-    		AudioFormat format,
     		JProgressBar progBar,
     		File uploadWavFile,
     		File wavFile,
@@ -70,7 +71,6 @@ class Capture implements Runnable {
     {
     	this.samplingGraph = samplingGraph; 
        	this.audioInputStream = audioInputStream;
-    	this.format = format; 
     	this.progBar = progBar; 
     	this.uploadWavFile = uploadWavFile; 
     	this.wavFile = wavFile; 

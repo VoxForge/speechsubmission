@@ -318,6 +318,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    
 	    capture = new Capture(
 	    	capturePlayback,
+	    	format,
 	    	peakWarningLabel,
     		sampleGraphFileLabel,
             sampleGraphLengthLabel, 
@@ -779,7 +780,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                capture.start(
 	                		samplingGraph,
 	                		audioInputStream, 
-	                		format,
 	                		progBar,
 	                		uploadWavFileA[x],
 	                		wavFileA[x],
