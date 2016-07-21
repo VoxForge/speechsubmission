@@ -50,6 +50,7 @@ class Capture implements Runnable {
             String sampleGraphPositionLabel
     		) 
     {
+    	this.peakWarningLabel=peakWarningLabel;
     	this.sampleGraphFileLabel=sampleGraphFileLabel;
     	this.sampleGraphLengthLabel=sampleGraphLengthLabel;
     	this.sampleGraphPositionLabel=sampleGraphPositionLabel;
