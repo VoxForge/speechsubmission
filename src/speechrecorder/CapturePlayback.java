@@ -101,7 +101,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     public static final int samplingRate = 48000;// jre 1.4.2 only supports max of 44100
     public static final int samplingRateFormat = 16;      
     public static final int numberChannels = 1;      
-    
+
     AudioFormat format = new AudioFormat(samplingRate, samplingRateFormat, numberChannels, true, false);
 
     Capture capture = new Capture();
@@ -112,10 +112,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     SamplingGraph samplingGraph;
 
     int numberofPrompts = 3;
-    
+
     JButton [] playA = new JButton [numberofPrompts]; 
     JButton [] captA = new JButton [numberofPrompts];
-    
+
     JButton uploadB;
     //JButton saveLocalB;
     JButton moreInfoB;    
@@ -318,24 +318,17 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    
 	    leftToRight = labels.getLeftToRight();
 
-	    // !!!!!! original
-		//JPanel userPanel = startApp();
-	    //setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		//add(userPanel);
-	    // !!!!!!
 		JPanel userPanel = startApp();
 		JScrollPane scrollPane = new JScrollPane(userPanel);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(scrollPane, BorderLayout.CENTER);
-		setPreferredSize(new Dimension(500, 500));
-		// !!!!!!
+		setPreferredSize(new Dimension(300, 300));
 
 		// Load all settings that were saved from the last session
         loadSettings();
 	}
 
 	// methods
-	
 	/**
 	 * see http://stackoverflow.com/questions/14874613/how-to-replace-jpanel-with-another-jpanel
 	 */
@@ -913,21 +906,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                    "About VoxForge Speech Submission Application", JOptionPane.PLAIN_MESSAGE);
        }
     }
-   
-    private void reportStatus(String msg) {
-        if ((errStr = msg) != null) {
-            System.out.println(errStr);
-            //samplingGraph.repaint();
-            samplingGraph.repaintGraph(
-        			audioInputStream,
-            		sampleGraphFileLabel, 
-        		    fileName,
-        			sampleGraphLengthLabel,
-        			duration,
-        			sampleGraphPositionLabel
-            );
-        }
-    }
+
 
     /**
      * Write data to the OutputChannel.
@@ -1263,6 +1242,21 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             	progBar.setString("");
             }
         }
+
+		private void reportStatus(String msg) {
+	        if ((errStr = msg) != null) {
+	            System.out.println(errStr);
+	            //samplingGraph.repaint();
+	            samplingGraph.repaintGraph(
+	        			audioInputStream,
+	            		sampleGraphFileLabel, 
+	        		    fileName,
+	        			sampleGraphLengthLabel,
+	        			duration,
+	        			sampleGraphPositionLabel
+	            );
+	        }
+	    }
     } // End class Capture
  
     /**
