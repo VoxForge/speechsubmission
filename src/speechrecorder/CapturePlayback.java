@@ -1004,7 +1004,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         	// debug System.err.println("outbaos size:" + outbaos.size());            
         	outbaos.reset();
         	outbaos = null;
-            samplingGraph.createWaveForm(audioInputStream,audioBytes); 
+            samplingGraph.createWaveForm(
+            		audioInputStream, 
+            		audioBytes, 
+            	    sampleGraphFileLabel,
+        			sampleGraphLengthLabel,
+        			sampleGraphPositionLabel,
+        		    fileName,
+            		duration
+            ); 
             samplingGraph.repaint();
             
 			getAudioInputStream();
@@ -1062,17 +1070,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
         AudioInputStream audioInputStream;
 
-        public void start() {
-            errStr = null;
-            thread = new Thread(this);
-            thread.setName("Capture");
-            try {
-                thread.setPriority(Thread.MAX_PRIORITY);
-            } catch(Exception err){
-            }
-            thread.start();
-        }
-
         public void start(AudioInputStream audioInputStream, File uploadWavFile) {
         	this.uploadWavFile = uploadWavFile; 
            	this.audioInputStream = audioInputStream;         	
@@ -1104,14 +1101,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
 
 		public void run() {
-   	
         	duration = 0;
             audioInputStream = null;
             
             // define the required attributes for our line, 
             // and make sure a compatible line is supported.
 
-            //DEL            AudioFormat format = formatControls.getFormat();
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, 
                 format);
                         
@@ -1201,7 +1196,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         	duration = totalBytesWritten / (double) (format.getSampleRate() * format.getSampleSizeInBits()/ 8);
     		System.err.println("capture duration:" + duration);
         	// debug	System.err.println("Calculated duration");
-            samplingGraph.createWaveForm(audioInputStream, audioBytes);
+            samplingGraph.createWaveForm(
+            		audioInputStream, 
+            		audioBytes, 
+            	    sampleGraphFileLabel,
+        			sampleGraphLengthLabel,
+        			sampleGraphPositionLabel,
+        		    fileName,
+            		duration
+            );
             // debug System.err.println("Created samplingGraph");
             // This is the only way to "reset" long streams - re-grab
             audioInputStream = getAudioInputStream();

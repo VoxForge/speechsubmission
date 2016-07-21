@@ -46,8 +46,8 @@ class SamplingGraph extends JPanel implements Runnable {
 	String sampleGraphLengthLabel;
 	String sampleGraphPositionLabel;
     String fileName;
-
-	double duration;
+    double duration;
+    
     double seconds;	
 	String errStr;
 
@@ -65,8 +65,23 @@ class SamplingGraph extends JPanel implements Runnable {
         this.playback = playback;
     }   
     
-    public void createWaveForm(AudioInputStream audioInputStream, byte[] audioBytes) {
-
+    public void createWaveForm(
+    			AudioInputStream audioInputStream, 
+    			byte[] audioBytes, 
+    		    String sampleGraphFileLabel,
+    			String sampleGraphLengthLabel,
+    			String sampleGraphPositionLabel,
+    		    String fileName,
+    			double duration
+    		) 
+    {
+        this.audioInputStream = audioInputStream;    	
+        this.sampleGraphFileLabel = sampleGraphFileLabel;
+        this.sampleGraphLengthLabel = sampleGraphLengthLabel;       
+        this.sampleGraphPositionLabel = sampleGraphPositionLabel;
+        this.fileName = fileName;  
+        this.duration = duration;  
+        
         lines.removeAllElements();  // clear the old vector
 
         AudioFormat format = audioInputStream.getFormat();
