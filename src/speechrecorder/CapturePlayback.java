@@ -205,7 +205,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     String sampleGraphFileLabel; 
     String sampleGraphLengthLabel; 
     String sampleGraphPositionLabel; 
-    String uploadingMessageLabel;
     String uploadCompletedMessageLabel;
 //  ############ Localized Fields ####################################   
     private Boolean leftToRight; // direction of text
@@ -261,12 +260,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 				+ System.getProperty("line.separator") 
 				+ License.getBlanklicenseNotice();				
 		vflicense = License.getVFLicense();	 	
-		
+
         tempdir = getTempDir(); // creates new temp dir with every call
 		saveOrUpload = new SaveOrUpload(
 				capturePlayback,
 				destinationURL, 
-				uploadingMessageLabel, 
+				labels.getUploadingMessageLabel(), 
 				numberofPrompts,
 				uploadWavFileA,
 			    promptidA,
@@ -315,7 +314,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    sampleGraphLengthLabel = labels.getSampleGraphLengthLabel(); 
 	    sampleGraphPositionLabel = labels.getSampleGraphPositionLabel(); 
 	    
-	    uploadingMessageLabel = labels.getUploadingMessageLabel();
 	    uploadCompletedMessageLabel = labels.getUploadCompletedMessageLabel();
 	    
 	    leftToRight = labels.getLeftToRight();
@@ -775,7 +773,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                file = null;
 	                wavFile = wavFileA[x];  
 	        		System.err.println("=== Record " + (x+1) + " ==="); 
-	                capture.start(uploadWavFileA[x]);  
+	                capture.start(audioInputStream, uploadWavFileA[x]);  
 	                fileName = promptidA[x];
 	                samplingGraph.start();
 	                saveButtonState(); 
@@ -791,7 +789,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                } catch (InterruptedException ex) { 
 	        			System.err.println("Recording Thread - Interrupt Exception");
 	                }
-	                capture.stop();
+	                audioInputStream = capture.stop();
 	                totalBytesWrittenA[x] = totalBytesWritten; 
 	            	durationA[x]= totalBytesWritten / (double) (format.getSampleRate() * format.getSampleSizeInBits()/ 8);
 	        		System.err.println("duration1:" + durationA[x]);
@@ -1097,6 +1095,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         Thread thread;
         File uploadWavFile;
 
+        AudioInputStream audioInputStream;
+        
         public void start() {
             errStr = null;
             thread = new Thread(this);
@@ -1108,8 +1108,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             thread.start();
         }
  
-        public void start(File uploadWavFile) {
+        public void start(AudioInputStream audioInputStream, File uploadWavFile) {
         	this.uploadWavFile = uploadWavFile; 
+           	this.audioInputStream = audioInputStream;         	
         	System.err.println("Capture uploadWavFile is:" + uploadWavFile);
 
             errStr = null;
@@ -1122,8 +1123,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             thread.start();
         }
        
-        public void stop() {
+        public AudioInputStream stop() {
             thread = null;
+            
+            return audioInputStream;
         }
         
         private void shutDown(String message) {
@@ -1228,7 +1231,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             }
 
             // load bytes into the audio input stream for playback
-            getAudioInputStream();
+            audioInputStream = getAudioInputStream();
       	
             try {
                 if (AudioSystem.write(audioInputStream, AudioFileFormat.Type.WAVE, uploadWavFile) == -1) {
@@ -1244,7 +1247,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             samplingGraph.createWaveForm(audioInputStream, audioBytes);
             // debug System.err.println("Created samplingGraph");
             // This is the only way to "reset" long streams - re-grab
-            getAudioInputStream();
+            audioInputStream = getAudioInputStream();
 
             progBar.setStringPainted(true);
         	//progBar.setString(samplingGraph.peakWarning ? 
@@ -1266,14 +1269,14 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	 * Will free audio input stream if exists, and grab a new version. This seems a bit silly but there's no other way to "rewind" large files.
 	 * @uml.property  name="audioInputStream"
 	 */
-    private void getAudioInputStream(){
+    protected AudioInputStream getAudioInputStream(){
 		if (audioInputStream != null) {
 			try {
 				audioInputStream.close();
 			} catch (IOException err) {
 			}
 		}
-		// debug System.err.println("getAudioInputStream - totalBytesWritten:" + totalBytesWritten);
+		System.err.println("getAudioInputStream - totalBytesWritten:" + totalBytesWritten);
 		try {
 			audioInputStream = new AudioInputStream(new BufferedInputStream(
 					new FileInputStream(wavFile)), format, totalBytesWritten
@@ -1284,10 +1287,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		} catch (Exception err) {
 			System.err.println("Exception while reading cache file: " + err);
 		}
-		// debug System.err.println("Grabbed audio input stream from cache file");
+		System.err.println("Grabbed audio input stream from cache file");
+		
+		return audioInputStream;
 	}
-
-
 
     /**
      * always called by Postlet uploader

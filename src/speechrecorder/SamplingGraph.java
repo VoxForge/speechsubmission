@@ -142,7 +142,7 @@ class SamplingGraph extends JPanel implements Runnable {
         System.err.println("proportionPeakValues: " + proportionPeakValues);
         peakWarning = proportionPeakValues > 0.001f;
         
-        repaint(); 
+        repaint(); // calls paint
     }
 
 	public void repaintGraph(
@@ -154,7 +154,7 @@ class SamplingGraph extends JPanel implements Runnable {
 			String sampleGraphPositionLabel
 			
 		) 
-    {
+    { // should these be put in start?
 		
 		this.sampleGraphFileLabel = sampleGraphFileLabel;
 		this.fileName = fileName;
