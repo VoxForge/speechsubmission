@@ -43,11 +43,11 @@ class SamplingGraph extends JPanel implements Runnable {
 
     // paint vars
     String sampleGraphFileLabel;
-    String fileName;
 	String sampleGraphLengthLabel;
-	double duration;
 	String sampleGraphPositionLabel;
-    
+    String fileName;
+
+	double duration;
     double seconds;	
 	String errStr;
 
@@ -145,27 +145,6 @@ class SamplingGraph extends JPanel implements Runnable {
         repaint(); // calls paint
     }
 
-	public void repaintGraph(
-    		AudioInputStream audioInputStream,
-			String sampleGraphFileLabel,
-		    String fileName,
-			String sampleGraphLengthLabel,
-			double duration,
-			String sampleGraphPositionLabel
-			
-		) 
-    { // should these be put in start?
-		
-		this.sampleGraphFileLabel = sampleGraphFileLabel;
-		this.fileName = fileName;
-		this.sampleGraphLengthLabel = sampleGraphLengthLabel;
-		this.duration = duration;
-		this.sampleGraphPositionLabel = sampleGraphPositionLabel;
-		this.audioInputStream = audioInputStream;
-		
-		repaint(); // calls paint
-    }
-    
     @Override
 	public void paint(Graphics g) 
     {

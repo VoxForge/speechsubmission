@@ -361,7 +361,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         tempdir = getTempDir(); // creates new temp dir with every call
         
 		JPanel userPanel = startApp();
-        add(userPanel);  
+        //add(userPanel);  
+		JScrollPane scrollPane = new JScrollPane(userPanel);
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		add(scrollPane, BorderLayout.CENTER);
+		setPreferredSize(new Dimension(300, 300));
+        
         loadSettings();
         
         validate();
@@ -541,8 +546,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         DisclaimerPanel.add(DisclaimerInnerPanel);        
         p2.add(DisclaimerPanel); 
 	//#########################################################################   
- 	
-    	
     }
 	
     /**
@@ -930,15 +933,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         private void shutDown(String message) {
             if ((errStr = message) != null) {
                 System.err.println(errStr);
-                //samplingGraph.repaint();
-                samplingGraph.repaintGraph(
-                		audioInputStream,
-                		sampleGraphFileLabel, 
-            		    fileName,
-            			sampleGraphLengthLabel,
-            			duration,
-            			sampleGraphPositionLabel            		
-                );
+                samplingGraph.repaint();
             }
             if (thread != null) {
                 thread = null;
@@ -1010,15 +1005,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         	outbaos.reset();
         	outbaos = null;
             samplingGraph.createWaveForm(audioInputStream,audioBytes); 
-            //samplingGraph.repaint();
-            samplingGraph.repaintGraph(
-            		audioInputStream,
-            		sampleGraphFileLabel, 
-        		    fileName,
-        			sampleGraphLengthLabel,
-        			duration,
-        			sampleGraphPositionLabel            		
-            );
+            samplingGraph.repaint();
             
 			getAudioInputStream();
             playbackInputStream = AudioSystem.getAudioInputStream(format, audioInputStream);
@@ -1069,13 +1056,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      * Reads data from the input channel and writes to the output stream
      */
     class Capture implements Runnable {
-
         TargetDataLine line;
         Thread thread;
         File uploadWavFile;
 
         AudioInputStream audioInputStream;
-        
+
         public void start() {
             errStr = null;
             thread = new Thread(this);
@@ -1086,7 +1072,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             }
             thread.start();
         }
- 
+
         public void start(AudioInputStream audioInputStream, File uploadWavFile) {
         	this.uploadWavFile = uploadWavFile; 
            	this.audioInputStream = audioInputStream;         	
@@ -1113,15 +1099,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                 thread = null;
                 samplingGraph.stop();
                 System.err.println(errStr);
-                //samplingGraph.repaint();
-                samplingGraph.repaintGraph(
-                		audioInputStream,
-                		sampleGraphFileLabel, 
-            		    fileName,
-            			sampleGraphLengthLabel,
-            			duration,
-            			sampleGraphPositionLabel            		
-                );
+                samplingGraph.repaint();
             }
         }
 
@@ -1246,15 +1224,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		private void reportStatus(String msg) {
 	        if ((errStr = msg) != null) {
 	            System.out.println(errStr);
-	            //samplingGraph.repaint();
-	            samplingGraph.repaintGraph(
-	        			audioInputStream,
-	            		sampleGraphFileLabel, 
-	        		    fileName,
-	        			sampleGraphLengthLabel,
-	        			duration,
-	        			sampleGraphPositionLabel
-	            );
+	            samplingGraph.repaint();
 	        }
 	    }
     } // End class Capture
