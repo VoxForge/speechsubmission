@@ -915,27 +915,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                    "About VoxForge Speech Submission Application", JOptionPane.PLAIN_MESSAGE);
        }
     }
-
-    public void createAudioInputStream(File file, boolean updateComponents) {
-        if (file != null && file.isFile()) {
-            try {
-                this.file = file;
-                errStr = null;
-                audioInputStream = AudioSystem.getAudioInputStream(file);
-                fileName = file.getName();
-                long milliseconds = (long)((audioInputStream.getFrameLength() * 1000) / audioInputStream.getFormat().getFrameRate());
-                duration = milliseconds / 1000.0;
-        		System.err.println("createAudioInputStream duration:" + duration);
-                if (updateComponents) {
-                    samplingGraph.createWaveForm(audioInputStream, null);
-                }
-            } catch (Exception ex) { 
-                reportStatus(ex.toString());
-            }
-        } else {
-            reportStatus("Audio file required.");
-        }
-    }
    
     private void reportStatus(String msg) {
         if ((errStr = msg) != null) {
