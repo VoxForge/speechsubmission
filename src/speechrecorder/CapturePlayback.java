@@ -46,7 +46,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Line2D.Double;
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -56,10 +55,6 @@ import java.util.Vector;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -78,6 +73,8 @@ import javax.swing.border.SoftBevelBorder;
 import speechrecorder.ConfigReader;
 import speechrecorder.SaveOrUpload;
 import speechrecorder.SamplingGraph;
+import speechrecorder.Capture;
+import speechrecorder.Playback;
 
 /**
  * Capture/Playback sample.  Record audio in different formats and then playback the recorded audio.  The captured audio can  be saved either as a WAVE, AU or AIFF.  Or load an audio file for streaming playback.
@@ -734,7 +731,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
     }
     
-    private void restoreButtonState() {
+    protected void restoreButtonState() {
         for (int i = 0; i < numberofPrompts; i++) {
          	if (play_stateA[i]) {playA[i].setEnabled(true);} else {playA[i].setEnabled(false);}
         	if (capt_stateA[i]) {captA[i].setEnabled(true);} else {captA[i].setEnabled(false);}
@@ -767,6 +764,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                     playback.start(
                     		audioInputStream,
 	                		samplingGraph,
+	                		progBar,
 	                        playA, 
 	                        captA,
 	                        promptidA[i],
@@ -950,210 +948,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
        }
     }
 
-    /**
-     * Write data to the OutputChannel.
-     */
-    public class Playback implements Runnable {
-        SourceDataLine line;
-        Thread thread;
 
-        CapturePlayback capturePlayback;
-    	AudioFormat format;
-        int numberofPrompts;
-		String peakWarningLabel;
-		String sampleGraphFileLabel;
-        String sampleGraphLengthLabel; 
-        String sampleGraphPositionLabel;
-        String playButton;
-        String stopButton;
-        int bufSize;       
-        
-        AudioInputStream audioInputStream;
-        SamplingGraph samplingGraph;
-        JButton [] playA; 
-        JButton [] captA;
-        String fileName;
-        double duration;
-        
-        String errStr;
-
-        public Playback (
-        		CapturePlayback capturePlayback,  
-        		AudioFormat format,
-        		int numberofPrompts,
-        		String peakWarningLabel,
-        		String sampleGraphFileLabel,
-                String sampleGraphLengthLabel, 
-                String sampleGraphPositionLabel,
-                String playButton,
-                String stopButton,
-                int bufSize 
-        	)
-        {
-        	this.capturePlayback = capturePlayback; 
-        	this.format = format; 
-        	this.numberofPrompts = numberofPrompts;     
-        	this.peakWarningLabel = peakWarningLabel; 
-        	this.sampleGraphFileLabel = sampleGraphFileLabel;   
-        	this.sampleGraphLengthLabel = sampleGraphLengthLabel; 
-        	this.sampleGraphPositionLabel = sampleGraphPositionLabel; 
-        	this.playButton = playButton;
-        	this.stopButton = stopButton;
-        	this.bufSize = bufSize;
-        }
-        
-        public void start(
-                AudioInputStream audioInputStream, 
-        		SamplingGraph samplingGraph,
-                JButton [] playA, 
-                JButton [] captA,
-                String fileName,
-                double duration
-        	) 
-        {
-        	this.samplingGraph = samplingGraph; 
-        	this.playA = playA; 
-        	this.captA = captA;
-
-        	
-            errStr = null;
-            thread = new Thread(this);
-            thread.setName("Playback");
-            thread.start();
-        }
-      
-        public void stop() {
-            thread = null;
-        }
-        
-        private void shutDown(String message) {
-            if ((errStr = message) != null) {
-                System.err.println(errStr);
-                samplingGraph.repaint();
-            }
-            if (thread != null) {
-                thread = null;
-                samplingGraph.stop();
-    	        for (int i = 0; i < numberofPrompts; i++) {
-    	        	if (playA[i].getText().startsWith(stopButton)) { //play button gets set to "Stop" after play is pressed
-    	        		captA[i].setEnabled(true); 
-    	        	}
-    	        }
-    	      for (int i = 0; i < numberofPrompts; i++) {
-                  playA[i].setText(playButton);
-    	      }
-            } 
-        }
-
-		public void run() {
-			audioInputStream = capturePlayback.getAudioInputStream();
-
-            // get an AudioInputStream of the desired format for playback
-            AudioInputStream playbackInputStream = AudioSystem.getAudioInputStream(format, audioInputStream);
-                        
-            if (playbackInputStream == null) {
-                shutDown("Unable to convert stream of format " + audioInputStream + " to format " + format);
-                return;
-            }
-
-            // define the required attributes for our line, 
-            // and make sure a compatible line is supported.
-            DataLine.Info info = new DataLine.Info(SourceDataLine.class, 
-                format);
-            if (!AudioSystem.isLineSupported(info)) {
-                shutDown("Line matching " + info + " not supported.");
-                return;
-            }
-
-            // get and open the source data line for playback.
-            try {
-                line = (SourceDataLine) AudioSystem.getLine(info);
-                line.open(format, bufSize);
-            } catch (LineUnavailableException ex) { 
-                shutDown("Unable to open the line: " + ex);
-                return;
-            }
-
-            // play back the captured audio data
-            int frameSizeInBytes = format.getFrameSize();
-            int bufferLengthInFrames = line.getBufferSize() / 8;
-            int bufferLengthInBytes = bufferLengthInFrames * frameSizeInBytes;
-            byte[] data = new byte[bufferLengthInBytes];
-            int numBytesRead = 0;
-
-            // start the source data line
-            line.start();
-            ByteArrayOutputStream outbaos = new ByteArrayOutputStream();
-            while (thread != null) {
-                try {
-                    if ((numBytesRead = playbackInputStream.read(data)) == -1) {
-                        break;
-                    }
-					outbaos.write(data, 0, numBytesRead);
-		        	/// System.err.println("numBytesRead" + numBytesRead);
-                } catch (Exception e) {
-                    shutDown("Error during playback: " + e);
-                    break;
-                }
-            }       
-            byte audioBytes[] = outbaos.toByteArray();
-        	// debug System.err.println("outbaos size:" + outbaos.size());            
-        	outbaos.reset();
-        	outbaos = null;
-            samplingGraph.createWaveForm(
-            		audioInputStream, 
-            		audioBytes, 
-            	    sampleGraphFileLabel,
-        			sampleGraphLengthLabel,
-        			sampleGraphPositionLabel,
-        		    fileName,
-            		duration
-            ); 
-            samplingGraph.repaint();
-            
-            audioInputStream = capturePlayback.getAudioInputStream();
-            playbackInputStream = AudioSystem.getAudioInputStream(format, audioInputStream);
-            
-            progBar.setStringPainted(true);
-            if (samplingGraph.peakWarning)
-            {
-            	progBar.setBackground(Color.red);
-            	progBar.setString(peakWarningLabel);
-            }
-            else
-            {
-            	progBar.setBackground(getBackground());         	
-            	progBar.setString("");
-            }
-            
-            while (thread != null) {
-                try {
-                    if ((numBytesRead = playbackInputStream.read(data)) == -1) {
-                        break;
-                    }
-                    int numBytesRemaining = numBytesRead;
-                    while (numBytesRemaining > 0 ) {
-                        numBytesRemaining -= line.write(data, 0, numBytesRemaining);
-                    }
-                } catch (Exception e) {
-                    shutDown("Error during playback: " + e);
-                    break;
-                }
-            }
-            // we reached the end of the stream.  let the data play out, then
-            // stop and close the line.
-            if (thread != null) {
-                line.drain();
-            }
-            line.stop();
-            line.close();
-            line = null;
-            System.err.println("reached end of file");
-
-            shutDown(null);
-            restoreButtonState(); 
-        }
-    } // End class Playback
 
     /**
      *  return multiple values from Capture class

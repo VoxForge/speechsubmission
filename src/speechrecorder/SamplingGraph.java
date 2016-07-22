@@ -21,7 +21,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.swing.JPanel;
 
 import speechrecorder.Capture;
-import speechrecorder.CapturePlayback.Playback;
+import speechrecorder.Playback;
 
 /**
  * Render a WaveForm.

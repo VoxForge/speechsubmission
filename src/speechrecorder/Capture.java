@@ -238,5 +238,5 @@ class Capture implements Runnable {
             samplingGraph.repaint();
         }
     }
-} // End class Capture
+} 
 
