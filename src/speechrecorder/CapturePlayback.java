@@ -324,7 +324,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                 sampleGraphLengthLabel, 
                 sampleGraphPositionLabel,
                 playButton,
-                stopButton
+                stopButton,
+                bufSize
 	    );
 	    
 	    capture = new Capture(
@@ -761,13 +762,18 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                     duration = durationA[i];
                     totalBytesWritten = totalBytesWrittenA[i];
                     System.err.println("=== Play " + (i+1) + " ===");
+
+                    fileName = promptidA[i];  
                     playback.start(
+                    		audioInputStream,
 	                		samplingGraph,
 	                        playA, 
-	                        captA
+	                        captA,
+	                        promptidA[i],
+	                        duration
                     );
             		System.err.println("duration:" + duration);
-                    fileName = promptidA[i];  
+
                     samplingGraph.start();
 	                saveButtonState(); 
 	                setButtonsOff();
@@ -953,18 +959,21 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
         CapturePlayback capturePlayback;
     	AudioFormat format;
-        SamplingGraph samplingGraph;
-        AudioInputStream audioInputStream;
-        
         int numberofPrompts;
-        JButton [] playA; 
-        JButton [] captA;
-        String playButton;
-        String stopButton;
 		String peakWarningLabel;
 		String sampleGraphFileLabel;
         String sampleGraphLengthLabel; 
         String sampleGraphPositionLabel;
+        String playButton;
+        String stopButton;
+        int bufSize;       
+        
+        AudioInputStream audioInputStream;
+        SamplingGraph samplingGraph;
+        JButton [] playA; 
+        JButton [] captA;
+        String fileName;
+        double duration;
         
         String errStr;
 
@@ -977,7 +986,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                 String sampleGraphLengthLabel, 
                 String sampleGraphPositionLabel,
                 String playButton,
-                String stopButton
+                String stopButton,
+                int bufSize 
         	)
         {
         	this.capturePlayback = capturePlayback; 
@@ -989,12 +999,16 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         	this.sampleGraphPositionLabel = sampleGraphPositionLabel; 
         	this.playButton = playButton;
         	this.stopButton = stopButton;
+        	this.bufSize = bufSize;
         }
         
         public void start(
+                AudioInputStream audioInputStream, 
         		SamplingGraph samplingGraph,
                 JButton [] playA, 
-                JButton [] captA
+                JButton [] captA,
+                String fileName,
+                double duration
         	) 
         {
         	this.samplingGraph = samplingGraph; 
