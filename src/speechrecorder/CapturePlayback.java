@@ -954,6 +954,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         CapturePlayback capturePlayback;
     	AudioFormat format;
         SamplingGraph samplingGraph;
+        AudioInputStream audioInputStream;
+        
         int numberofPrompts;
         JButton [] playA; 
         JButton [] captA;
@@ -1030,7 +1032,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
 
 		public void run() {
-			capturePlayback.getAudioInputStream();
+			audioInputStream = capturePlayback.getAudioInputStream();
 
             // get an AudioInputStream of the desired format for playback
             AudioInputStream playbackInputStream = AudioSystem.getAudioInputStream(format, audioInputStream);
@@ -1095,7 +1097,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             ); 
             samplingGraph.repaint();
             
-            capturePlayback.getAudioInputStream();
+            audioInputStream = capturePlayback.getAudioInputStream();
             playbackInputStream = AudioSystem.getAudioInputStream(format, audioInputStream);
             
             progBar.setStringPainted(true);
