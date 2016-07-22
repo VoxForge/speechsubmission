@@ -948,8 +948,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
        }
     }
 
-
-
     /**
      *  return multiple values from Capture class
      * 
