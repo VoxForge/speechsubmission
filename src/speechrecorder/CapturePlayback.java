@@ -317,8 +317,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
 	    playback = new Playback(
 		    	capturePlayback,
-        		numberofPrompts
-	    		);
+		    	format,
+        		numberofPrompts,
+    	    	peakWarningLabel,
+        		sampleGraphFileLabel,
+                sampleGraphLengthLabel, 
+                sampleGraphPositionLabel,
+                playButton,
+                stopButton
+	    );
 	    
 	    capture = new Capture(
 	    	capturePlayback,
@@ -757,8 +764,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                     playback.start(
 	                		samplingGraph,
 	                        playA, 
-	                        captA,
-	                        playButton
+	                        captA
                     );
             		System.err.println("duration:" + duration);
                     fileName = promptidA[i];  
@@ -946,34 +952,53 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         Thread thread;
 
         CapturePlayback capturePlayback;
+    	AudioFormat format;
         SamplingGraph samplingGraph;
         int numberofPrompts;
         JButton [] playA; 
         JButton [] captA;
         String playButton;
-
+        String stopButton;
+		String peakWarningLabel;
+		String sampleGraphFileLabel;
+        String sampleGraphLengthLabel; 
+        String sampleGraphPositionLabel;
+        
         String errStr;
 
         public Playback (
         		CapturePlayback capturePlayback,  
-        		int numberofPrompts
+        		AudioFormat format,
+        		int numberofPrompts,
+        		String peakWarningLabel,
+        		String sampleGraphFileLabel,
+                String sampleGraphLengthLabel, 
+                String sampleGraphPositionLabel,
+                String playButton,
+                String stopButton
         	)
         {
         	this.capturePlayback = capturePlayback; 
+        	this.format = format; 
         	this.numberofPrompts = numberofPrompts;     
+        	this.peakWarningLabel = peakWarningLabel; 
+        	this.sampleGraphFileLabel = sampleGraphFileLabel;   
+        	this.sampleGraphLengthLabel = sampleGraphLengthLabel; 
+        	this.sampleGraphPositionLabel = sampleGraphPositionLabel; 
+        	this.playButton = playButton;
+        	this.stopButton = stopButton;
         }
         
         public void start(
         		SamplingGraph samplingGraph,
                 JButton [] playA, 
-                JButton [] captA,
-                String playButton
+                JButton [] captA
         	) 
         {
         	this.samplingGraph = samplingGraph; 
         	this.playA = playA; 
         	this.captA = captA;
-        	this.playButton = playButton;
+
         	
             errStr = null;
             thread = new Thread(this);
