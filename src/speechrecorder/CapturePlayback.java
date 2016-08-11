@@ -44,14 +44,12 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.Line2D.Double;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Vector;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -131,7 +129,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     long totalBytesWritten = 0L;
      
     File file;
-	Vector<Double> lines = new Vector<Double>();
   
     private File wavFile;
     private final File[] wavFileA = new File [numberofPrompts];
@@ -486,7 +483,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         samplingPanel.setBorder(new CompoundBorder(eb, sbb));
         
         samplingGraph = new SamplingGraph(
-        				lines,
         				capture,
         				playback
         );
@@ -808,7 +804,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                moreInfoB.setEnabled(false);  
 	                aboutB.setEnabled(false); 
 	            } else {
-	                lines.removeAllElements();  
+	            	samplingGraph.removeAllLinesElements();
 	                try {  
 	                	Thread.sleep(1000);
 	                } catch (InterruptedException ex) { 

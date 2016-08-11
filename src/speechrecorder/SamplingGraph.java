@@ -51,13 +51,11 @@ class SamplingGraph extends JPanel implements Runnable {
 	String errStr;
 
     public SamplingGraph (
-    		Vector<Double> lines,
     		Capture capture,
     		Playback playback
-    		) 
+    	) 
     {
     	setBackground(new Color(20, 20, 20));
-        this.lines = lines;
         this.capture = capture;
         this.playback = playback;
     }   
@@ -266,5 +264,10 @@ class SamplingGraph extends JPanel implements Runnable {
             this.repaint();
         }
     }
+    
+    public void removeAllLinesElements() {
+            lines.removeAllElements();  
+    }
+    
 } 
 
