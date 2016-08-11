@@ -98,7 +98,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     AudioFormat format = new AudioFormat(samplingRate, samplingRateFormat, numberChannels, true, false);
 
     Capture capture;
-    //Playback playback = new Playback();
     Playback playback;
     CapturePlayback capturePlayback; // Needed for referencing within the inner classes
 
