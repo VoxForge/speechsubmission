@@ -35,7 +35,6 @@ class SamplingGraph extends JPanel implements Runnable {
     protected boolean peakWarning = false;
     
     // constructor vars
-    CapturePlayback capturePlayback;
 	Vector<Double> lines = new Vector<Double>();
 	AudioInputStream audioInputStream;    
 	Capture capture;
@@ -52,14 +51,12 @@ class SamplingGraph extends JPanel implements Runnable {
 	String errStr;
 
     public SamplingGraph (
-    		CapturePlayback capturePlayback,
     		Vector<Double> lines,
     		Capture capture,
     		Playback playback
     		) 
     {
     	setBackground(new Color(20, 20, 20));
-        this.capturePlayback = capturePlayback;
         this.lines = lines;
         this.capture = capture;
         this.playback = playback;

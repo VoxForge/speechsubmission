@@ -353,7 +353,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
         addUserInfo(userPanel);
         addPromptInfo(userPanel, numberofPrompts);
-        
 
 	    createWavFiles(numberofPrompts, this.promptidA ); // promptidA array gets assigned in addPromptInfo
         addGraph(userPanel); 
@@ -388,40 +387,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         repaint();
         setVisible(true);
     }	
-    
-    /**
-     * Sampling Graph
-     * progress bar
-     * 
-     * @param userPanel
-     */
-    private void addGraph(JPanel userPanel) 
-    { 
-        //EmptyBorder eb = new EmptyBorder(25,25,25,25);
-        
-        SoftBevelBorder sbb = new SoftBevelBorder(SoftBevelBorder.LOWERED);
-        EmptyBorder eb = new EmptyBorder(10,20,5,20);
-
-        JPanel samplingPanel = new JPanel(new BorderLayout());
-        samplingPanel.setBorder(new CompoundBorder(eb, sbb));
-        
-        samplingGraph = new SamplingGraph(
-        				capturePlayback,
-        				lines,
-        				capture,
-        				playback
-        );
-        samplingGraph.setPreferredSize(new Dimension(50, 100));
-        samplingPanel.add(samplingGraph);
-        
-        userPanel.add(samplingPanel);
-        
-    	//		############ Upload Progress bar ####################################
-        progBar = new JProgressBar();
-        progBar.setStringPainted(true);
-        progBar.setString("Ready to Record");
-        userPanel.add(progBar);    
-    }
 
 	/**
 	 * add prompts to GUI
@@ -505,7 +470,39 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			System.err.println("CapturePlayback's WAV file for recording uploadWavFile" + i + "is:" + uploadWavFileA[i]);
 	    }    	
     }
-	
+    
+    /**
+     * Sampling Graph
+     * progress bar
+     * 
+     * @param userPanel
+     */
+    private void addGraph(JPanel userPanel) 
+    { 
+        SoftBevelBorder sbb = new SoftBevelBorder(SoftBevelBorder.LOWERED);
+        EmptyBorder eb = new EmptyBorder(10,20,5,20);
+
+        JPanel samplingPanel = new JPanel(new BorderLayout());
+        samplingPanel.setBorder(new CompoundBorder(eb, sbb));
+        
+        samplingGraph = new SamplingGraph(
+        				lines,
+        				capture,
+        				playback
+        );
+        samplingGraph.setPreferredSize(new Dimension(50, 100));
+        samplingPanel.add(samplingGraph);
+        
+        userPanel.add(samplingPanel);
+        
+    	//		############ Upload Progress bar ####################################
+        progBar = new JProgressBar();
+        progBar.setStringPainted(true);
+        progBar.setString("Ready to Record");
+        userPanel.add(progBar);    
+    }
+
+    
     /**
      * Add remaining Panel Information
      * - upload text & button
