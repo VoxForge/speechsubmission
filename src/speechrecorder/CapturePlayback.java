@@ -148,38 +148,38 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     
 //  ############ Localized Fields ####################################   
     JTextField usernameTextField;  
-    String usernamePanelLabel;
+//    String usernamePanelLabel;
     String userName;
-    String usernamePanelText;
+//    String usernamePanelText;
     
-    String copyrightName;
-    String gplAccepted;
+//    String copyrightName;
+//    String gplAccepted;
     
     String pleaseSelect;
-    String notApplicable;
+//    String notApplicable;
     
-    String genderPanelLabel;
+//    String genderPanelLabel;
 	JComboBox<String[]> genderChooser;       
-    String[] genderSelection;
+//    String[] genderSelection;
     String gender;
     
-    String ageRangePanelLabel;
+//    String ageRangePanelLabel;
     JComboBox<String[]> ageRangeChooser; 
-    String[] ageSelection;
+//    String[] ageSelection;
     String ageRange;
 
-    String dialectPanelLabel;
+//    String dialectPanelLabel;
     JComboBox<String[]> dialectChooser;
-    String[] dialectSelection;
+//    String[] dialectSelection;
     String dialect;  
     
-    String microphonePanelLabel;
+//    String microphonePanelLabel;
     JComboBox<String[]> microphoneChooser;     
-    String[] microphoneSelection;
+//    String[] microphoneSelection;
     String microphone;  
     
-    String uploadText;
-    String uploadButtonLabel;
+//    String uploadText;
+//    String uploadButtonLabel;
     
     String moreInfoText;
     String moreInfoButtonLabel;    
@@ -191,10 +191,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     String stopButton; 
     String playButton; 
     
-    String peakWarningLabel; 
-    String sampleGraphFileLabel; 
-    String sampleGraphLengthLabel; 
-    String sampleGraphPositionLabel; 
     String uploadCompletedMessageLabel;
 //  ############ Localized Fields ####################################   
     private Boolean leftToRight; // direction of text
@@ -217,6 +213,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	
     Color voxforgeColour 	= new Color(197, 216, 234);
     
+    LabelLocalizer labels;
+    
     // constructor
     public CapturePlayback(String lang, String targetDirectory, String destination) 
 	{    	
@@ -238,15 +236,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		
 		this.capturePlayback = this;
 		
-	    LabelLocalizer labels = new LabelLocalizer(this.language);
-	    usernamePanelLabel = labels.getUsernamePanelLabel();
-	    usernamePanelText = labels.getUsernamePanelText();
+	    this.labels = new LabelLocalizer(this.language);
+//	    usernamePanelLabel = labels.getUsernamePanelLabel();
+//	    usernamePanelText = labels.getUsernamePanelText();
 	    
-	    copyrightName = labels.getCopyrightName();
-	    gplAccepted = labels.getGplAccepted();
+//	    copyrightName = labels.getCopyrightName();
+//	    gplAccepted = labels.getGplAccepted();
 
 		Calendar cal = Calendar.getInstance();
-		licenseNotice = "Copyright " + cal.get(Calendar.YEAR) + " " + copyrightName + System.getProperty("line.separator") 
+		licenseNotice = "Copyright " + cal.get(Calendar.YEAR) + " " + labels.getCopyrightName() + System.getProperty("line.separator") 
 				+ System.getProperty("line.separator") 
 				+ License.getBlanklicenseNotice();				
 		vflicense = License.getVFLicense();	 	
@@ -268,26 +266,26 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		//convertAndSavelocally = new ConvertAndSavelocally();
 		
 	    pleaseSelect = labels.getPleaseSelect();
-	    notApplicable = labels.getNotApplicable();
+//	    notApplicable = labels.getNotApplicable();
 	    
-	    genderPanelLabel = labels.getGenderPanelLabel();
-	    genderSelection = labels.getGenderSelection();
-	    gender = notApplicable; // default selection
+//	    genderPanelLabel = labels.getGenderPanelLabel();
+//	    genderSelection = labels.getGenderSelection();
+	    gender = labels.getNotApplicable(); // default selection
 	    
-	    ageRangePanelLabel = labels.getAgeRangePanelLabel();
-	    ageSelection = labels.getAgeSelection();
-	    ageRange = notApplicable; // default selection
+//	    ageRangePanelLabel = labels.getAgeRangePanelLabel();
+//	    ageSelection = labels.getAgeSelection();
+	    ageRange = labels.getNotApplicable(); // default selection
 	
-	    dialectPanelLabel = labels.getDialectPanelLabel();
-	    dialectSelection = labels.getDialectSelection();
-	    dialect = notApplicable;  // default selection
+//	    dialectPanelLabel = labels.getDialectPanelLabel();
+//	    dialectSelection = labels.getDialectSelection();
+	    dialect = labels.getNotApplicable();  // default selection
 	    
-	    microphonePanelLabel = labels.getMicrophonePanelLabel();
-	    microphoneSelection = labels.getMicrophoneSelection();
-	    microphone = notApplicable;  // default selection
+//	    microphonePanelLabel = labels.getMicrophonePanelLabel();
+//	    microphoneSelection = labels.getMicrophoneSelection();
+	    microphone = labels.getNotApplicable();  // default selection
 	    
-	    uploadText = labels.getUploadText();
-	    uploadButtonLabel = labels.getUploadButtonLabel();
+//	    uploadText = labels.getUploadText();
+//	    uploadButtonLabel = labels.getUploadButtonLabel();
 	    
 	    moreInfoText = labels.getMoreInfoText();
 	    moreInfoButtonLabel = labels.getMoreInfoButtonLabel();    
@@ -299,11 +297,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    stopButton = labels.getStopButton(); 
 	    playButton = labels.getPlayButton(); 
 	    
-	    peakWarningLabel = labels.getPeakWarningLabel(); 
-	    sampleGraphFileLabel = labels.getSampleGraphFileLabel(); 
-	    sampleGraphLengthLabel = labels.getSampleGraphLengthLabel(); 
-	    sampleGraphPositionLabel = labels.getSampleGraphPositionLabel(); 
-	    
 	    uploadCompletedMessageLabel = labels.getUploadCompletedMessageLabel();
 	    
 	    leftToRight = labels.getLeftToRight();
@@ -312,10 +305,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		    	capturePlayback,
 		    	format,
         		numberofPrompts,
-    	    	peakWarningLabel,
-        		sampleGraphFileLabel,
-                sampleGraphLengthLabel, 
-                sampleGraphPositionLabel,
+        		labels.getPeakWarningLabel(),
+    	    	labels.getSampleGraphFileLabel(),
+    	    	labels.getSampleGraphLengthLabel(), 
+    	    	labels.getSampleGraphPositionLabel(),
                 playButton,
                 stopButton,
                 bufSize
@@ -324,10 +317,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    capture = new Capture(
 	    	capturePlayback,
 	    	format,
-	    	peakWarningLabel,
-    		sampleGraphFileLabel,
-            sampleGraphLengthLabel, 
-            sampleGraphPositionLabel
+    		labels.getPeakWarningLabel(),
+	    	labels.getSampleGraphFileLabel(),
+	    	labels.getSampleGraphLengthLabel(), 
+	    	labels.getSampleGraphPositionLabel()
 	    );
 	    
 		JPanel userPanel = startApp();
@@ -512,12 +505,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     { 
 	//      ############ Upload Text ####################################             
         JPanel uploadTextPanel = new JPanel();
-        uploadTextPanel.add(new JLabel(uploadText));               
+        uploadTextPanel.add(new JLabel(labels.getUploadText()));               
         p2.add(uploadTextPanel);
 	//		############ Upload ####################################          
         JPanel uploadButtonPanel = new JPanel();
         uploadButtonPanel.setBorder(new EmptyBorder(5,0,5,0));
-        uploadB = addButton("upload to VoxForge", uploadButtonPanel, false); // upload all submissions
+        uploadB = addButton(labels.getUploadButtonLabel(), uploadButtonPanel, false); // upload all submissions
         p2.add(uploadButtonPanel);
     	//		############ Save Local ####################################          
         //saveLocalB = addButton("save on your computer", uploadButtonPanel, false); // upload all submissions
@@ -571,28 +564,28 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         usernamePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         if (leftToRight)
         {
-	        usernamePanel.add(new JLabel(usernamePanelLabel));
+	        usernamePanel.add(new JLabel(labels.getUsernamePanelLabel()));
 	        usernamePanel.add(usernameTextField = new JTextField(20));
         }
         else
         {
             usernamePanel.add(usernameTextField = new JTextField(20));        	
-            usernamePanel.add(new JLabel(usernamePanelLabel));        	
+            usernamePanel.add(new JLabel(labels.getUsernamePanelLabel()));        	
         }
-        usernamePanel.add(new JLabel(usernamePanelText));     
+        usernamePanel.add(new JLabel(labels.getUsernamePanelText()));     
         p2.add(usernamePanel);  
     // 		############ Gender ####################################             
         JPanel genderPanel = new JPanel();
         genderPanel.setLayout(new FlowLayout(FlowLayout.CENTER));  
         if (leftToRight)
         {
-	        genderPanel.add(new JLabel(genderPanelLabel));
-	        genderPanel.add(genderChooser = new JComboBox(genderSelection));
+	        genderPanel.add(new JLabel(labels.getGenderPanelLabel()));
+	        genderPanel.add(genderChooser = new JComboBox(labels.getGenderSelection()));
         }
         else
         {
-            genderPanel.add(genderChooser = new JComboBox(genderSelection));   
-        	genderPanel.add(new JLabel(genderPanelLabel));
+            genderPanel.add(genderChooser = new JComboBox(labels.getGenderSelection()));   
+        	genderPanel.add(new JLabel(labels.getGenderPanelLabel()));
     	
         }
         genderChooser.setSelectedIndex(0);       
@@ -607,13 +600,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         ageRangePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         if (leftToRight)
         {
-	        ageRangePanel.add(new JLabel(ageRangePanelLabel));
-			ageRangePanel.add(ageRangeChooser = new JComboBox(ageSelection));
+	        ageRangePanel.add(new JLabel(labels.getAgeRangePanelLabel()));
+			ageRangePanel.add(ageRangeChooser = new JComboBox(labels.getAgeSelection()));
         }
         else
         {
-    		ageRangePanel.add(ageRangeChooser = new JComboBox(ageSelection));       	
-            ageRangePanel.add(new JLabel(ageRangePanelLabel));
+    		ageRangePanel.add(ageRangeChooser = new JComboBox(labels.getAgeSelection()));       	
+            ageRangePanel.add(new JLabel(labels.getAgeRangePanelLabel()));
         }
         ageRangeChooser.setSelectedIndex(0);          
         ageRangeChooser.addActionListener(new ActionListener(){
@@ -627,13 +620,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         dialectPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         if (leftToRight)
         {
-        	dialectPanel.add(new JLabel(dialectPanelLabel));
-        	dialectPanel.add(dialectChooser = new JComboBox(dialectSelection));
+        	dialectPanel.add(new JLabel(labels.getDialectPanelLabel()));
+        	dialectPanel.add(dialectChooser = new JComboBox(labels.getDialectSelection()));
         }
         else
         {
-        	dialectPanel.add(dialectChooser = new JComboBox(dialectSelection));       
-        	dialectPanel.add(new JLabel(dialectPanelLabel));
+        	dialectPanel.add(dialectChooser = new JComboBox(labels.getDialectSelection()));       
+        	dialectPanel.add(new JLabel(labels.getDialectPanelLabel()));
         }
         dialectChooser.setSelectedIndex(0);  
         dialectChooser.addActionListener(new ActionListener(){
@@ -647,13 +640,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         microphonePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         if (leftToRight)
         {
-	        microphonePanel.add(new JLabel(microphonePanelLabel));
-	        microphonePanel.add(microphoneChooser = new JComboBox(microphoneSelection));
+	        microphonePanel.add(new JLabel(labels.getMicrophonePanelLabel()));
+	        microphonePanel.add(microphoneChooser = new JComboBox(labels.getMicrophoneSelection()));
         }
         else
         {
-            microphonePanel.add(microphoneChooser = new JComboBox(microphoneSelection));
-            microphonePanel.add(new JLabel(microphonePanelLabel));            
+            microphonePanel.add(microphoneChooser = new JComboBox(labels.getMicrophoneSelection()));
+            microphonePanel.add(new JLabel(labels.getMicrophonePanelLabel()));            
         }
         microphoneChooser.setSelectedIndex(0);  
         // microphoneChooser.setEditable(true); // user can add whatever they want ...

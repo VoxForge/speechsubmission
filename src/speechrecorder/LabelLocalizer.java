@@ -11,8 +11,7 @@ class LabelLocalizer  {
     private String usernamePanelText;
     
     private String copyrightName;
-    private String gplAccepted;
-    
+   
     private String pleaseSelect;
     private String other;
     private String notApplicable;
@@ -104,7 +103,6 @@ class LabelLocalizer  {
 	     usernamePanelText = "(leave blank to submit anonymously)";
 	     
 	     copyrightName = "Free Software Foundation";
-	     gplAccepted = "Yes";
 	    
 	     pleaseSelect = "Please Select";
 	     notApplicable = "unknown";
@@ -150,7 +148,7 @@ class LabelLocalizer  {
 	    
 	     uploadText = "<html>By clicking the \"Upload\" button, you agree to assign the Copyright to your recorded speech to <br> "
 	        + "the Free Software Foundation, and to license your submission under the GNU Public Licence (\"GPL\"):" ;
-	     uploadButtonLabel = "Upload";
+	     uploadButtonLabel = "Upload To VoxForge";
 	    
 	     moreInfoText = "For more information on Copyright and GPL, click here:";
 	     moreInfoButtonLabel = "More Information";    
@@ -182,7 +180,6 @@ class LabelLocalizer  {
 	     usernamePanelText = "(можно не указывать)";
 	     
 	     copyrightName = "Ассоциация свободного ПО";
-	     gplAccepted = "Принять";
 	    
 	     pleaseSelect = "Выберите";
 	     notApplicable = "другое";
@@ -254,7 +251,6 @@ class LabelLocalizer  {
 		usernamePanelText = "(für anonymen Beitrag leer lassen)";
 		   
 	    copyrightName = "Free Software Foundation";
-		gplAccepted = "Ja";
 		 
 	    pleaseSelect = "Bitte wählen";
 		notApplicable = "unbekannt";
@@ -330,7 +326,6 @@ class LabelLocalizer  {
 	     usernamePanelText = "(laat leeg voor een anonieme bijdrage)";
 	    
 	     copyrightName = "Free Software Foundation";
-	     gplAccepted = "Yes";
 	    
 	     pleaseSelect = "Maak een keuze";
 	     other = "anders";
@@ -410,7 +405,6 @@ class LabelLocalizer  {
          usernamePanelText = "(lasciare in bianco se si vuole inviare come anonimo)";
          
          copyrightName = "Free Software Foundation";
-         gplAccepted = "Si";
         
          pleaseSelect = "Selezionare";
          notApplicable = "non definito";
@@ -485,7 +479,6 @@ class LabelLocalizer  {
         usernamePanelText = "(השאר ריק על מנת לשלוח כאנונימי)";
        
         copyrightName = "Free Software Foundation - קרן התוכנה החופשית";
-        gplAccepted = "כן";
       
         pleaseSelect = "אנא בחר";
         notApplicable = "לא ידוע";
@@ -557,7 +550,6 @@ class LabelLocalizer  {
 	     usernamePanelText = "(deixe em branco para submeter anonimamente)";
 	     
 	     copyrightName = "Fundação de Software Livre";
-	     gplAccepted = "Sim";
 	    
 	     pleaseSelect = "Selecione";
 	     notApplicable = "desconhecido";
@@ -634,7 +626,6 @@ class LabelLocalizer  {
 	     usernamePanelText = "(dejar en blanco para enviar anonimamente)";
 	     
 	     copyrightName = "Free Software Foundation";
-	     gplAccepted = "Si";
 	    
 	     pleaseSelect = "Por favor Seleccione";
 	     notApplicable = "desconocido";
@@ -707,7 +698,6 @@ class LabelLocalizer  {
         usernamePanelText = "(ne pas remplir pour un envoi anonyme)";
       
         copyrightName = "Free Software Foundation";
-        gplAccepted = "Oui";
      
         pleaseSelect = "Sélectionnez";
         notApplicable = "inconnu";
@@ -779,7 +769,6 @@ class LabelLocalizer  {
         usernamePanelText = "(Αφήστε το κενό αν θέλετε να στείλετε τα αρχεία ανώνυμα)";
       
         copyrightName = "Free Software Foundation";
-        gplAccepted = "Ναί";
      
         pleaseSelect = "Παρακαλώ Επιλέξτε";
         notApplicable = "άγνωστο";
@@ -854,7 +843,6 @@ class LabelLocalizer  {
 	     usernamePanelText = "(anonim olarak yollamak için boş bırakın)";
 	     
 	     copyrightName = "Özgür Yazılım Vakfı";
-	     gplAccepted = "Evet";
 	    
 	     pleaseSelect = "Lütfen Seçin";
 	     notApplicable = "bilinmiyor";
@@ -923,7 +911,6 @@ class LabelLocalizer  {
 	         usernamePanelText = "(оставете празно, за да попълните анонимно)"; 
 	          
 	         copyrightName = "Асоциация за свободен софтуеър"; 
-	         gplAccepted = "Да"; 
 	         
 	         pleaseSelect = "Изберете"; 
 	         notApplicable = "неизвестен"; 
@@ -998,7 +985,6 @@ class LabelLocalizer  {
 	     usernamePanelText = "(залишити пустим, щоб залити анонімно)";
 	     
 	     copyrightName = "Асоціація Вільного Програмного Забезпечення";
-	     gplAccepted = "Так";
 	    
 	     pleaseSelect = "Оберіть:";
 	     notApplicable = "невідомо";
@@ -1068,7 +1054,6 @@ class LabelLocalizer  {
 	     usernamePanelText = "(deixeu-lo buit per remandre anònim)";
 	     
 	     copyrightName = "Free Software Foundation";
-	     gplAccepted = "Sí";
 	    
 	     pleaseSelect = "Trieu-ne un";
 	     notApplicable = "desconegut";
@@ -1140,7 +1125,6 @@ class LabelLocalizer  {
 	     usernamePanelText = "(ako želite biti anonimni ostavite prazno)";
 	     
 	     copyrightName = "Free Software Foundation";
-	     gplAccepted = "Da";
 	    
 	     pleaseSelect = "Odaberite";
 	     notApplicable = "nepoznato";
@@ -1210,7 +1194,6 @@ class LabelLocalizer  {
 		usernamePanelText = "(lëre bosh për t'u paraqitur në mënyrë anonime)";
 		
 		copyrightName = "Free Software Foundation";
-		gplAccepted = "Po";
 		
 		pleaseSelect = "Ju letemi zgjedhni";
 		notApplicable = "i panjohur";
@@ -1277,7 +1260,6 @@ class LabelLocalizer  {
 	     usernamePanelText = "(برای ارسال به صورت ناشناس لطفا چیزی ننویسید)";
 	     
 	     copyrightName = "بنیاد نرم‌افزار‌های آزاد";
-	     gplAccepted = "بله";
 	    
 	     pleaseSelect = "لطفا انتخاب کنید";
 	     notApplicable = "نامشخص";
@@ -1374,10 +1356,6 @@ class LabelLocalizer  {
 
 	public String getCopyrightName() {
 		return copyrightName;
-	}
-
-	public String getGplAccepted() {
-		return gplAccepted;
 	}
 
 	public String getPleaseSelect() {
