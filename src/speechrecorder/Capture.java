@@ -50,7 +50,7 @@ class Capture implements Runnable {
     		String sampleGraphFileLabel,
             String sampleGraphLengthLabel, 
             String sampleGraphPositionLabel
-    		) 
+    	) 
     {
     	this.capturePlayback = capturePlayback; 
     	this.format = format; 
@@ -90,7 +90,7 @@ class Capture implements Runnable {
         thread = null;
         
         CaptureResult result = (capturePlayback.new CaptureResult() );
-        result.audioInputStream = audioInputStream;
+//        result.audioInputStream = audioInputStream;
         result.duration = duration;
         result.totalBytesWritten = totalBytesWritten;
         

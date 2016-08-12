@@ -44,13 +44,13 @@ public class Playback implements Runnable {
     		CapturePlayback capturePlayback,  
     		AudioFormat format,
     		int numberofPrompts,
+            int bufSize,
     		String peakWarningLabel,
     		String sampleGraphFileLabel,
             String sampleGraphLengthLabel, 
             String sampleGraphPositionLabel,
             String playButton,
-            String stopButton,
-            int bufSize 
+            String stopButton
     	)
     {
     	this.capturePlayback = capturePlayback; 

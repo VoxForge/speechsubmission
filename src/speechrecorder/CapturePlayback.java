@@ -234,13 +234,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		    	capturePlayback,
 		    	format,
         		numberofPrompts,
+                bufSize,
         		labels.getPeakWarningLabel(),
     	    	labels.getSampleGraphFileLabel(),
     	    	labels.getSampleGraphLengthLabel(), 
     	    	labels.getSampleGraphPositionLabel(),
     	    	labels.getPlayButton(),
-                labels.getStopButton(),
-                bufSize
+                labels.getStopButton()
 	    );
 	    
 	    capture = new Capture(
@@ -737,7 +737,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                }
 	                
 	                CaptureResult result = capture.stop();
-	                audioInputStream = result.audioInputStream;
+//	                audioInputStream = result.audioInputStream;
 	                duration = result.duration;
 	                totalBytesWritten = result.totalBytesWritten;
 	                
@@ -872,7 +872,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      *
      */
     protected class CaptureResult {
-    	AudioInputStream audioInputStream;
+//    	AudioInputStream audioInputStream;
     	double duration;
     	long totalBytesWritten;
     }
