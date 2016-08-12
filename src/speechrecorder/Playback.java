@@ -66,7 +66,6 @@ public class Playback implements Runnable {
     }
     
     public void start(
-            AudioInputStream audioInputStream, 
     		SamplingGraph samplingGraph,
     		JProgressBar progBar,
             JButton [] playA, 
@@ -75,7 +74,6 @@ public class Playback implements Runnable {
             double duration
     	) 
     {
-    	this.audioInputStream = audioInputStream; 
     	this.samplingGraph = samplingGraph; 
     	this.progBar = progBar;
     	this.playA = playA; 

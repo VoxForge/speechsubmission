@@ -62,7 +62,6 @@ class Capture implements Runnable {
     
     public void start(
     		SamplingGraph samplingGraph,
-    		AudioInputStream audioInputStream, 
     		JProgressBar progBar,
     		File uploadWavFile,
     		File wavFile,
@@ -70,7 +69,6 @@ class Capture implements Runnable {
     	) 
     {
     	this.samplingGraph = samplingGraph; 
-       	this.audioInputStream = audioInputStream;
     	this.progBar = progBar; 
     	this.uploadWavFile = uploadWavFile; 
     	this.wavFile = wavFile; 

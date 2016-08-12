@@ -131,9 +131,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     File file;
   
     private File wavFile;
-    private final File[] wavFileA = new File [numberofPrompts];
- 
-    private final File [] uploadWavFileA = new File [numberofPrompts];
+    private final File[] wavFileA = new File [numberofPrompts]; // raw audio
+    private final File [] uploadWavFileA = new File [numberofPrompts]; // wav file with header
 
     JProgressBar progBar;
     int sentBytes;
@@ -320,8 +319,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    String [][] promptArray = (new Prompts(numberofPrompts,this.language)).getPrompts();
 	    for (int i = 0; i < numberofPrompts; i++) 
 	    {
-	    	this.promptidA [i] = promptArray[0][i];
-	    	this.promptA [i] = promptArray[1][i];
+	    	this.promptidA[i] = promptArray[0][i];
+	    	this.promptA[i] = promptArray[1][i];
 	    }
     	
     	//		############ Prompt container ####################################   
@@ -343,10 +342,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         for (int i = startPromptCount; i < promptsPerPane; i++) 
         {
         	promptPanelA[i] = new JPanel();
-        	promptPanelA[i].setLayout(new FlowLayout(FlowLayout.RIGHT));            	
-        	promptInnerPanelA [i]= new JPanel(); 
+        	promptPanelA[i].setLayout(new FlowLayout(FlowLayout.RIGHT));
+        	promptInnerPanelA [i]= new JPanel();
 	        promptInnerPanelA[i].setBorder(BorderFactory.createLineBorder (voxforgeColour, 1));
-	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, leftToRight));     
+	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, leftToRight));
 	        promptPanelA[i].add(promptInnerPanelA[i]);
 	        playA[i] = addButton(labels.getPlayButton(), promptPanelA[i], false);
 	        if (i==0) {
@@ -373,7 +372,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		try {
 	        for (int i = 0; i < numberofPrompts; i++) 
 	        {
-	        	wavFileA [i] = new File(tempdir + "wavFile" + i + ".wav");
+	        	wavFileA[i] = new File(tempdir + "wavFile" + i + ".wav");
 	        	wavFileA[i].deleteOnExit();
 	        }
 	        for (int i = 0; i < numberofPrompts; i++) 
@@ -387,7 +386,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		}
 	    for (int i = 0; i < numberofPrompts; i++) 
 	    {			
-			System.err.println("CapturePlayback's WAV file for recording uploadWavFile" + i + "is:" + uploadWavFileA[i]);
+			System.err.println("CapturePlayback's WAV file for recording uploadWavFile" + i + " is: " + uploadWavFileA[i]);
+			//System.err.println("CapturePlayback's raw file for recording wavFileA" + i + " is: " + wavFileA[i]);
 	    }    	
     }
     
@@ -681,7 +681,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
                     fileName = promptidA[i];  
                     playback.start(
-                    		audioInputStream,
 	                		samplingGraph,
 	                		progBar,
 	                        playA, 
@@ -717,7 +716,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	        		System.err.println("=== Record " + (x+1) + " ==="); 
 	                capture.start(
 	                		samplingGraph,
-	                		audioInputStream, 
 	                		progBar,
 	                		uploadWavFileA[x],
 	                		wavFileA[x],
