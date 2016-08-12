@@ -148,50 +148,16 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     
 //  ############ Localized Fields ####################################   
     JTextField usernameTextField;  
-//    String usernamePanelLabel;
     String userName;
-//    String usernamePanelText;
-    
-//    String copyrightName;
-//    String gplAccepted;
-    
-    String pleaseSelect;
-//    String notApplicable;
-    
-//    String genderPanelLabel;
 	JComboBox<String[]> genderChooser;       
-//    String[] genderSelection;
     String gender;
-    
-//    String ageRangePanelLabel;
     JComboBox<String[]> ageRangeChooser; 
-//    String[] ageSelection;
     String ageRange;
-
-//    String dialectPanelLabel;
     JComboBox<String[]> dialectChooser;
-//    String[] dialectSelection;
     String dialect;  
-    
-//    String microphonePanelLabel;
     JComboBox<String[]> microphoneChooser;     
-//    String[] microphoneSelection;
     String microphone;  
-    
-//    String uploadText;
-//    String uploadButtonLabel;
-    
-//    String moreInfoText;
-//    String moreInfoButtonLabel;    
 
-//    String disclaimerText;
-//    String aboutButtonLabel;
-    
-//    String recordButton; 
-//    String stopButton; 
-//    String playButton; 
-    
-    String uploadCompletedMessageLabel;
 //  ############ Localized Fields ####################################   
     private Boolean leftToRight; // direction of text
     
@@ -199,8 +165,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     URL destinationURL;
     
     String language;
-    String endpage;
-    String helppage;
     String cookie;
     
     String licenseNotice;
@@ -237,11 +201,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		this.capturePlayback = this;
 		
 	    this.labels = new LabelLocalizer(this.language);
-//	    usernamePanelLabel = labels.getUsernamePanelLabel();
-//	    usernamePanelText = labels.getUsernamePanelText();
-	    
-//	    copyrightName = labels.getCopyrightName();
-//	    gplAccepted = labels.getGplAccepted();
 
 		Calendar cal = Calendar.getInstance();
 		licenseNotice = "Copyright " + cal.get(Calendar.YEAR) + " " + labels.getCopyrightName() + System.getProperty("line.separator") 
@@ -249,7 +208,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 				+ License.getBlanklicenseNotice();				
 		vflicense = License.getVFLicense();	 	
 
-        tempdir = getTempDir(); // creates new temp dir with every call
+        tempdir = getTempDir(); // 
 		saveOrUpload = new SaveOrUpload(
 				capturePlayback,
 				destinationURL, 
@@ -265,39 +224,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		);
 		//convertAndSavelocally = new ConvertAndSavelocally();
 		
-	    pleaseSelect = labels.getPleaseSelect();
-//	    notApplicable = labels.getNotApplicable();
-	    
-//	    genderPanelLabel = labels.getGenderPanelLabel();
-//	    genderSelection = labels.getGenderSelection();
 	    gender = labels.getNotApplicable(); // default selection
-	    
-//	    ageRangePanelLabel = labels.getAgeRangePanelLabel();
-//	    ageSelection = labels.getAgeSelection();
 	    ageRange = labels.getNotApplicable(); // default selection
-	
-//	    dialectPanelLabel = labels.getDialectPanelLabel();
-//	    dialectSelection = labels.getDialectSelection();
 	    dialect = labels.getNotApplicable();  // default selection
-	    
-//	    microphonePanelLabel = labels.getMicrophonePanelLabel();
-//	    microphoneSelection = labels.getMicrophoneSelection();
 	    microphone = labels.getNotApplicable();  // default selection
-	    
-//	    uploadText = labels.getUploadText();
-//	    uploadButtonLabel = labels.getUploadButtonLabel();
-	    
-//	    moreInfoText = labels.getMoreInfoText();
-//	    moreInfoButtonLabel = labels.getMoreInfoButtonLabel();    
-	
-//	    disclaimerText = labels.getDisclaimerText() ;
-//	    aboutButtonLabel = labels.getAboutButtonLabel();
-	    
-//	    recordButton = labels.getRecordButton(); 
-//	    stopButton = labels.getStopButton(); 
-//	    playButton = labels.getPlayButton(); 
-	    
-	    uploadCompletedMessageLabel = labels.getUploadCompletedMessageLabel();
 	    
 	    leftToRight = labels.getLeftToRight();
 
@@ -557,7 +487,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      * Pronunciation Dialect,
      * Microphone Type
      **/
-    private void addUserInfo(JPanel p2) 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	private void addUserInfo(JPanel p2) 
     { 
         p2.setLayout(new BoxLayout(p2, BoxLayout.Y_AXIS));
 	// 		############ User name ####################################             
@@ -660,7 +591,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     }	
 
     /**
-     * create temporary directory and return path as a string
+     * create temporary directory and return path as a string; 
+     * 
+     * creates new temp dir with every call
      * 
      * @return
      */
@@ -982,7 +915,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
          if (sentBytes == totalBytes)
          {
             progBar.setStringPainted(true);
-           	progBar.setString(uploadCompletedMessageLabel);
+           	progBar.setString(labels.getUploadCompletedMessageLabel());
             progBar.setIndeterminate(false);
             System.err.println("Finished! submission uploaded to VoxForge repository");
             // Reset the applet
