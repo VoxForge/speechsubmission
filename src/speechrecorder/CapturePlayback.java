@@ -181,15 +181,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 //    String uploadText;
 //    String uploadButtonLabel;
     
-    String moreInfoText;
-    String moreInfoButtonLabel;    
+//    String moreInfoText;
+//    String moreInfoButtonLabel;    
 
-    String disclaimerText;
-    String aboutButtonLabel;
+//    String disclaimerText;
+//    String aboutButtonLabel;
     
-    String recordButton; 
-    String stopButton; 
-    String playButton; 
+//    String recordButton; 
+//    String stopButton; 
+//    String playButton; 
     
     String uploadCompletedMessageLabel;
 //  ############ Localized Fields ####################################   
@@ -287,15 +287,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 //	    uploadText = labels.getUploadText();
 //	    uploadButtonLabel = labels.getUploadButtonLabel();
 	    
-	    moreInfoText = labels.getMoreInfoText();
-	    moreInfoButtonLabel = labels.getMoreInfoButtonLabel();    
+//	    moreInfoText = labels.getMoreInfoText();
+//	    moreInfoButtonLabel = labels.getMoreInfoButtonLabel();    
 	
-	    disclaimerText = labels.getDisclaimerText() ;
-	    aboutButtonLabel = labels.getAboutButtonLabel();
+//	    disclaimerText = labels.getDisclaimerText() ;
+//	    aboutButtonLabel = labels.getAboutButtonLabel();
 	    
-	    recordButton = labels.getRecordButton(); 
-	    stopButton = labels.getStopButton(); 
-	    playButton = labels.getPlayButton(); 
+//	    recordButton = labels.getRecordButton(); 
+//	    stopButton = labels.getStopButton(); 
+//	    playButton = labels.getPlayButton(); 
 	    
 	    uploadCompletedMessageLabel = labels.getUploadCompletedMessageLabel();
 	    
@@ -309,8 +309,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     	    	labels.getSampleGraphFileLabel(),
     	    	labels.getSampleGraphLengthLabel(), 
     	    	labels.getSampleGraphPositionLabel(),
-                playButton,
-                stopButton,
+    	    	labels.getPlayButton(),
+                labels.getStopButton(),
                 bufSize
 	    );
 	    
@@ -418,11 +418,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	        promptInnerPanelA[i].setBorder(BorderFactory.createLineBorder (voxforgeColour, 1));
 	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, leftToRight));     
 	        promptPanelA[i].add(promptInnerPanelA[i]);
-	        playA[i] = addButton(playButton, promptPanelA[i], false);
+	        playA[i] = addButton(labels.getPlayButton(), promptPanelA[i], false);
 	        if (i==0) {
-	        	captA[i] = addButton(recordButton, promptPanelA[i], true); // only turn on first record button 
+	        	captA[i] = addButton(labels.getRecordButton(), promptPanelA[i], true); // only turn on first record button 
 	        } else {
-		        captA[i] = addButton(recordButton, promptPanelA[i], false);
+		        captA[i] = addButton(labels.getRecordButton(), promptPanelA[i], false);
 	        }
 	        prompts.add(promptPanelA[i]);  
         }
@@ -520,29 +520,30 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         JPanel moreInfoButtonPanel = new JPanel();
         if (leftToRight)
         {
-	        moreInfoButtonPanel.add(new JLabel(moreInfoText));
-	        moreInfoB = addButton(moreInfoButtonLabel, moreInfoButtonPanel, true); 
+	        moreInfoButtonPanel.add(new JLabel(labels.getMoreInfoText()));
+	        moreInfoB = addButton(labels.getMoreInfoButtonLabel(), moreInfoButtonPanel, true); 
         }
         else
         {
-       	    moreInfoB = addButton(moreInfoButtonLabel, moreInfoButtonPanel, true); 
-            moreInfoButtonPanel.add(new JLabel(moreInfoText));     	 
+       	    moreInfoB = addButton(labels.getMoreInfoButtonLabel(), moreInfoButtonPanel, true); 
+            moreInfoButtonPanel.add(new JLabel(labels.getMoreInfoText()));     	 
         }
         p2.add(moreInfoButtonPanel);   
 // 		############ Disclaimer ####################################  
         JPanel DisclaimerPanel = new JPanel();
         DisclaimerPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         JPanel DisclaimerInnerPanel = new JPanel(); 
-        if (leftToRight)
-        {
-        	//DisclaimerInnerPanel.add(new JLabel(disclaimerText));
-        	aboutB = addButton(aboutButtonLabel, DisclaimerInnerPanel, true); 
-        }
-        else
-        {
-            aboutB = addButton(aboutButtonLabel, DisclaimerInnerPanel, true); 
-            DisclaimerInnerPanel.add(new JLabel(disclaimerText));
-        }
+        //if (leftToRight)
+        //{
+        //	DisclaimerInnerPanel.add(new JLabel(labels.getDisclaimerText()));
+        //	aboutB = addButton(aboutButtonLabel, DisclaimerInnerPanel, true); 
+        //}
+        //else
+        //{
+        //    aboutB = addButton(aboutButtonLabel, DisclaimerInnerPanel, true); 
+        //    DisclaimerInnerPanel.add(new JLabel(disclaimerText));
+        //}
+    	aboutB = addButton(labels.getAboutButtonLabel(), DisclaimerInnerPanel, true); 
         DisclaimerInnerPanel.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
         DisclaimerPanel.add(DisclaimerInnerPanel);        
         p2.add(DisclaimerPanel); 
@@ -739,7 +740,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 // ################### Play #######################################       
         for (int i = 0; i < numberofPrompts; i++) {
             if (obj.equals(playA[i])) {
-                if (playA[i].getText().startsWith(playButton)) {
+                if (playA[i].getText().startsWith(labels.getPlayButton())) {
                     wavFile = wavFileA[i];      
                     duration = durationA[i];
                     totalBytesWritten = totalBytesWrittenA[i];
@@ -762,13 +763,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                setButtonsOff();
                     captA[i].setEnabled(false);
                     playA[i].setEnabled(true);
-                    playA[i].setText(stopButton);
+                    playA[i].setText(labels.getStopButton());
                 } else {
                     playback.stop();
                     samplingGraph.stop();
 	                restoreButtonState(); 
                     captA[i].setEnabled(true);
-                    playA[i].setText(playButton);
+                    playA[i].setText(labels.getPlayButton());
                 }
             }
         }
@@ -776,7 +777,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 // ################### Record (capture) #######################################        
 	    for (int x = 0; x < numberofPrompts; x++) {
 	        if (obj.equals(captA[x])) {
-	            if (captA[x].getText().startsWith(recordButton)) {
+	            if (captA[x].getText().startsWith(labels.getRecordButton())) {
 	                file = null;
 	                wavFile = wavFileA[x];  
 	                fileName = promptidA[x];
@@ -793,7 +794,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                saveButtonState(); 
 	                setButtonsOff(); 
 	                captA[x].setEnabled(true);    
-	                captA[x].setText(stopButton);
+	                captA[x].setText(labels.getStopButton());
 	                moreInfoB.setEnabled(false);  
 	                aboutB.setEnabled(false); 
 	            } else {
@@ -815,7 +816,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	            	samplingGraph.stop();
 	                restoreButtonState(); 
 	                playA[x].setEnabled(true);
-	                captA[x].setText(recordButton);
+	                captA[x].setText(labels.getRecordButton());
 	                moreInfoB.setEnabled(true);  
 	                aboutB.setEnabled(true); 
 	                captA[x].setEnabled(true);
