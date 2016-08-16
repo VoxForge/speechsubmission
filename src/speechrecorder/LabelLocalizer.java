@@ -12,14 +12,14 @@ class LabelLocalizer  {
     
     private String copyrightName;
    
-    private String pleaseSelect;
+    private String pleaseSelect = "Please Select";
     private String other;
     private String notApplicable;
     
     private String genderPanelLabel;
     private String genderSelection [];
     
-    private String languagePanelLabel;
+    private String languagePanelLabel = "Language";
     private String languageSelection [];
     
     private String ageRangePanelLabel;
@@ -55,6 +55,24 @@ class LabelLocalizer  {
     private Boolean leftToRight = true; // direction of text
 	
 	public LabelLocalizer (String language) {
+	    languageSelection = new String [16];
+	    languageSelection[0] = pleaseSelect;   
+	    languageSelection[1] = "EN";  
+	    languageSelection[2] = "NL";   
+	    languageSelection[3] = "DE"; 
+	    languageSelection[4] = "RU";    
+	    languageSelection[5] = "IT"; 		
+	    languageSelection[6] = "HE"; 
+	    languageSelection[7] = "PT";    
+	    languageSelection[8] = "ES"; 			
+	    languageSelection[9] = "FR"; 		
+	    languageSelection[10] = "EL"; 
+	    languageSelection[11] = "BG";    
+	    languageSelection[12] = "CA"; 
+	    languageSelection[13] = "UK"; 
+	    languageSelection[14] = "SQ";    
+	    languageSelection[15] = "FA"; 	    
+	    
 		// debug System.err.println("LabelLocalizerLanguage:" + language + ":");
 		if (language.equals("EN")) {
 			English();
@@ -111,10 +129,6 @@ class LabelLocalizer  {
 	     notApplicable = "unknown";
 	  
 	     languagePanelLabel = "Language:";
-	     languageSelection = new String [3];
-	     languageSelection[0] = pleaseSelect;   
-	     languageSelection[1] = "EN";    
-	     languageSelection[2] = "FR"; 
 	     
 	     genderPanelLabel = "Gender:";
 	     genderSelection = new String [3];
@@ -710,7 +724,9 @@ class LabelLocalizer  {
      
         pleaseSelect = "Sélectionnez";
         notApplicable = "inconnu";
-      
+        	  
+	    languagePanelLabel = "Langue:";
+        
         genderPanelLabel = "Sexe:";
         genderSelection = new String [3];
         genderSelection[0] = pleaseSelect; 
