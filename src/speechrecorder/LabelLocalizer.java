@@ -19,6 +19,9 @@ class LabelLocalizer  {
     private String genderPanelLabel;
     private String genderSelection [];
     
+    private String languagePanelLabel;
+    private String languageSelection [];
+    
     private String ageRangePanelLabel;
     private String ageSelection [];
 
@@ -106,6 +109,12 @@ class LabelLocalizer  {
 	    
 	     pleaseSelect = "Please Select";
 	     notApplicable = "unknown";
+	  
+	     languagePanelLabel = "Language:";
+	     languageSelection = new String [3];
+	     languageSelection[0] = pleaseSelect;   
+	     languageSelection[1] = "EN";    
+	     languageSelection[2] = "FR"; 
 	     
 	     genderPanelLabel = "Gender:";
 	     genderSelection = new String [3];
@@ -1370,8 +1379,16 @@ class LabelLocalizer  {
 		return genderPanelLabel;
 	}
 
+	public String getLanguagePanelLabel() {
+		return languagePanelLabel;
+	}
+	
 	public String[] getGenderSelection() {
 		return genderSelection;
+	}
+	
+	public String[] getLanguageSelection() {
+		return languageSelection;
 	}
 
 	public String getAgeRangePanelLabel() {

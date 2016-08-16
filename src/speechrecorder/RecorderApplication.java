@@ -26,9 +26,7 @@ import javax.swing.JFrame;
 public class RecorderApplication extends JFrame {
 
     private CapturePlayback theRecorder;
-    String subject;
-    String fileFieldName;
-    String language = "EN";
+//    String language = "EN";
    	String targetDirectory = ""; // blank target directory means current
     String destination = "http://read.voxforge1.org/r0_2_4b/javaUploadServer.php";
    	
@@ -40,7 +38,8 @@ public class RecorderApplication extends JFrame {
 	}
 	
     public void init() {
-    	theRecorder = new CapturePlayback( language, targetDirectory, destination); 
+    	//theRecorder = new CapturePlayback( language, targetDirectory, destination); 
+    	theRecorder = new CapturePlayback( targetDirectory, destination); 
         getContentPane().add("Center", theRecorder);
     }
 

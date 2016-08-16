@@ -147,6 +147,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     
 //  ############ Localized Fields ####################################   
     JTextField usernameTextField;  
+	JComboBox<String[]> languageChooser;       
+    String language = "EN";
+    
     String userName;
 	JComboBox<String[]> genderChooser;       
     String gender;
@@ -163,7 +166,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     String targetDirectory;
     URL destinationURL;
     
-    String language;
+    //String language;
     String cookie;
     
     String licenseNotice;
@@ -179,10 +182,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     LabelLocalizer labels;
     
     // constructor
-    public CapturePlayback(String lang, String targetDirectory, String destination) 
+    //public CapturePlayback(String lang, String targetDirectory, String destination) 
+    public CapturePlayback(String targetDirectory, String destination) 
 	{    	
 		// ############ Localized Fields ####################################
-		this.language = lang;
+		//this.language = lang;
 		this.targetDirectory = targetDirectory;
         try 
         {
@@ -198,10 +202,31 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
 		
 		this.capturePlayback = this;
-		
-	    this.labels = new LabelLocalizer(this.language);
 
-		Calendar cal = Calendar.getInstance();
+	    languageDependent(language);
+	    
+		JPanel userPanel = startApp();
+		
+		JScrollPane scrollPane = new JScrollPane(userPanel);
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		add(scrollPane, BorderLayout.CENTER);
+		setPreferredSize(new Dimension(300, 300));
+
+		// Load all settings that were saved from the last session
+        loadSettings();
+	}
+
+	// methods
+
+    /**
+     * 
+     * 
+     */
+    private void languageDependent(String language) 
+    { 	
+	    this.labels = new LabelLocalizer(language);
+
+    	Calendar cal = Calendar.getInstance();
 		licenseNotice = "Copyright " + cal.get(Calendar.YEAR) + " " + labels.getCopyrightName() + System.getProperty("line.separator") 
 				+ System.getProperty("line.separator") 
 				+ License.getBlanklicenseNotice();				
@@ -218,8 +243,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			    promptA,
 			    tempdir,
 			    licenseNotice,
-			    BUFFER_SIZE,
-			    language
+			    BUFFER_SIZE
 		);
 		//convertAndSavelocally = new ConvertAndSavelocally();
 		
@@ -251,25 +275,18 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    	labels.getSampleGraphLengthLabel(), 
 	    	labels.getSampleGraphPositionLabel()
 	    );
-	    
-		JPanel userPanel = startApp();
-		JScrollPane scrollPane = new JScrollPane(userPanel);
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		add(scrollPane, BorderLayout.CENTER);
-		setPreferredSize(new Dimension(300, 300));
 
-		// Load all settings that were saved from the last session
-        loadSettings();
-	}
-
-	// methods
-	/**
+    }
+    
+    /**
 	 * see http://stackoverflow.com/questions/14874613/how-to-replace-jpanel-with-another-jpanel
 	 */
     private JPanel startApp() 
     { 	
 		JPanel userPanel = new JPanel();
-
+		
+		getLanguage(userPanel);
+		
         addUserInfo(userPanel);
         addPromptInfo(userPanel, numberofPrompts);
 
@@ -306,7 +323,42 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         repaint();
         setVisible(true);
     }	
-
+    
+    /**
+     * 
+     * @param p2
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	private void getLanguage(JPanel p2) 
+    { 
+        JPanel languagePanel = new JPanel();
+        languagePanel.setLayout(new FlowLayout(FlowLayout.CENTER));  
+        if (leftToRight)
+        {
+        	languagePanel.add(new JLabel(labels.getLanguagePanelLabel()));
+        	languagePanel.add(languageChooser = new JComboBox(labels.getLanguageSelection()));
+        }
+        else
+        {
+        	languagePanel.add(languageChooser = new JComboBox(labels.getLanguageSelection()));   
+        	languagePanel.add(new JLabel(labels.getLanguagePanelLabel()));
+        }
+        languageChooser.setSelectedIndex(0);       
+        languageChooser.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+                     language = (String)languageChooser.getSelectedItem();
+                     languageDependent(language);
+                     if ( ! language.equals("Please Select") )
+	                     {
+	         			 //saveSettings();
+	        			 //restartApp();
+	                     System.err.println("changing language to: " + language);
+                     }
+				}
+        	});
+        p2.add(languagePanel);
+    }
+    
 	/**
 	 * add prompts to GUI
 	 * 
@@ -669,7 +721,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      */
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
-         
 // ################### Play #######################################       
         for (int i = 0; i < numberofPrompts; i++) {
             if (obj.equals(playA[i])) {
@@ -796,7 +847,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
 			saveSettings();
 
-			totalBytes = saveOrUpload.start(progBar, userName, userDataToString() );
+			totalBytes = saveOrUpload.start(progBar, language, userName, userDataToString() );
 			restartApp();
         }
 //      ################### SaveLocally #######################################   
@@ -931,7 +982,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     {	
     	try {
 			ConfigReader cr = new ConfigReader(CONFIGURATION_FILE);
-
+			
+			cr.put("language", languageChooser.getSelectedIndex());
 			cr.put("gender", genderChooser.getSelectedIndex());
 			cr.put("age", ageRangeChooser.getSelectedIndex());
 			cr.put("dialect", dialectChooser.getSelectedIndex());
@@ -952,6 +1004,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		try {
+			languageChooser.setSelectedIndex(
+					cr.getInt("language",languageChooser.getSelectedIndex()));
+		} catch (Exception e) { // to catch IndexOutOfBoundsException or any other exceptions
+			languageChooser.setSelectedIndex(-1); // -1 mean no selection			
+		}
+		
 		try {
 			genderChooser.setSelectedIndex(
 					cr.getInt("gender",genderChooser.getSelectedIndex()));

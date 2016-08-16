@@ -60,8 +60,7 @@ class SaveOrUpload implements Runnable {
 		    String [] promptA,
 		    String tempdir,
 		    String licenseNotice,
-		    int buffer_size,
-		    String language
+		    int buffer_size
     	) 
 	{   
     	this.capturePlayback = capturePlayback;   
@@ -75,8 +74,6 @@ class SaveOrUpload implements Runnable {
     	this.licenseNotice = licenseNotice;       	
     	this.buffer_size = buffer_size;      
 
-    	this.language = language;   
-    	
 		promptsFile = new File(tempdir + "prompts.txt");			
 		promptsFile.deleteOnExit();		
 		readmeFile = new File(tempdir + "readme.txt");			
@@ -87,16 +84,23 @@ class SaveOrUpload implements Runnable {
 		licenseNoticeFile.deleteOnExit();	
 	}
     
-    public int start(JProgressBar progBar, String userName, String userData) {
+    public int start(
+    		JProgressBar progBar, 
+		    String language,
+    		String userName, 
+    		String userData
+    	) 
+    {
         thread = new Thread(this);
         thread.setName("ConvertAndUpload");
 		System.err.println("=== Upload ===");
 		System.err.println("destinationURL:" + destinationURL);
         thread.start();
-        
+
+        this.progBar = progBar;
+    	this.language = language;   
     	this.userName = userName;   
     	this.userData = userData;   
-        this.progBar = progBar;
         
         return totalBytes;
     }
