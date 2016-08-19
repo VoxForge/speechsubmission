@@ -168,7 +168,8 @@ class Prompts  {
 	    String [] words= new String [st.countTokens()];
 		int i = 0;
 		while (st.hasMoreTokens()) { 
-			words[i] = st.nextToken(); i++; 
+			words[i] = st.nextToken(); 
+			i++; 
 		}
 		promptID = words[0];
 	

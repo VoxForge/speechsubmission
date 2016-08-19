@@ -49,7 +49,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.text.BreakIterator;
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -67,6 +70,7 @@ import javax.swing.JTextField;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
+import java.lang.StringBuffer.*;
 
 import speechrecorder.ConfigReader;
 import speechrecorder.SaveOrUpload;
@@ -178,13 +182,16 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     Color voxforgeColour 	= new Color(197, 216, 234);
     
     LabelLocalizer labels;
+    ResourceBundle messages;
     
     // constructor
     //public CapturePlayback(String lang, String targetDirectory, String destination) 
-    public CapturePlayback(String targetDirectory, String destination) 
+    public CapturePlayback(ResourceBundle messages, String targetDirectory, String destination) 
 	{    	
 		// ############ Localized Fields ####################################
 		//this.language = lang;
+    	this.messages = messages;
+    	
 		this.targetDirectory = targetDirectory;
         try 
         {
@@ -273,7 +280,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    this.labels = new LabelLocalizer(language);
 
     	Calendar cal = Calendar.getInstance();
-		licenseNotice = "Copyright " + cal.get(Calendar.YEAR) + " " + labels.getCopyrightName() + System.getProperty("line.separator") 
+		licenseNotice = "Copyright " + cal.get(Calendar.YEAR) + " " + messages.getString("copyrightName") + System.getProperty("line.separator") 
 				+ System.getProperty("line.separator") 
 				+ License.getBlanklicenseNotice();				
 		vflicense = License.getVFLicense();	 	
@@ -468,7 +475,39 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         progBar.setString("Ready to Record");
         userPanel.add(progBar);    
     }
+    
+    static String formatLines(
+    	    String target, 
+    	    int maxLength,
+    	    Locale currentLocale) 
+    {
+    	String result;
+    	StringBuffer sb = new StringBuffer();
+    	
+	    BreakIterator boundary = BreakIterator.
+	        getLineInstance(currentLocale);
+	    boundary.setText(target);
+	    int start = boundary.first();
+	    int end = boundary.next();
+	    int lineLength = 0;
 
+	    while (end != BreakIterator.DONE) {
+	        String word = target.substring(start,end);
+	        lineLength = lineLength + word.length();
+	        if (lineLength >= maxLength) {
+	        	sb.append(System.getProperty("line.separator"));
+	            lineLength = word.length();
+	        }
+	        
+	        sb.append(word);
+	        start = end;
+	        end = boundary.next();
+	    }
+	    
+	    result = sb.toString();
+	    
+	    return result;
+	}
     
     /**
      * Add remaining Panel Information
@@ -483,7 +522,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     { 
 	//      ############ Upload Text ####################################             
         JPanel uploadTextPanel = new JPanel();
-        uploadTextPanel.add(new JLabel(labels.getUploadText()));               
+        //uploadTextPanel.add(new JLabel(labels.getUploadText())); 
+        Locale currentLocale = new Locale("EN", "us");
+        uploadTextPanel.add(new JLabel(messages.getString("uploadText")) ); 
+        
         p2.add(uploadTextPanel);
 	//		############ Upload ####################################          
         JPanel uploadButtonPanel = new JPanel();

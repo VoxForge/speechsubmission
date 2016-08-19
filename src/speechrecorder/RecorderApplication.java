@@ -13,11 +13,8 @@
 
 package speechrecorder;
 
-import java.awt.Container;
-import java.net.URL;
-
 import javax.swing.JFrame;
-
+import java.util.*;
 
 /**
  * 
@@ -26,12 +23,13 @@ import javax.swing.JFrame;
 public class RecorderApplication extends JFrame {
 
     private CapturePlayback theRecorder;
-//    String language = "EN";
    	String targetDirectory = ""; // blank target directory means current
     String destination = "http://read.voxforge1.org/r0_2_4b/javaUploadServer.php";
-   	
-	public RecorderApplication()
+    ResourceBundle labels;
+    
+	public RecorderApplication(ResourceBundle labels)
 	{
+		this.labels = labels;
 		init();						// simulate browser call(1)
 		setSize(800,800);   		// Set the size of the frame
 		setVisible(true);   		// Show the frame 
@@ -39,7 +37,7 @@ public class RecorderApplication extends JFrame {
 	
     public void init() {
     	//theRecorder = new CapturePlayback( language, targetDirectory, destination); 
-    	theRecorder = new CapturePlayback( targetDirectory, destination); 
+    	theRecorder = new CapturePlayback( labels, targetDirectory, destination ); 
         getContentPane().add("Center", theRecorder);
     }
 
@@ -58,6 +56,26 @@ public class RecorderApplication extends JFrame {
     
     public static void main(String[] args) 
     {
-    	new RecorderApplication();
+    	String language;
+        String country;
+
+        if (args.length != 2) 
+        {
+            language = new String("en");
+            country = new String("US");
+        } 
+        else 
+        {
+            language = new String(args[0]);
+            country = new String(args[1]);
+        }
+
+        Locale currentLocale;
+        ResourceBundle labels;
+        currentLocale = new Locale(language, country);
+        //labels = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale);
+        labels = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale, new UTF8Control() );
+        
+    	new RecorderApplication(labels);
     }
 }
