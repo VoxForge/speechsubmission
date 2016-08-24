@@ -392,11 +392,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	        promptInnerPanelA[i].setBorder(BorderFactory.createLineBorder (voxforgeColour, 1));
 	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, labels.getLeftToRight()));
 	        promptPanelA[i].add(promptInnerPanelA[i]);
-	        playA[i] = addButton(labels.getPlayButton(), promptPanelA[i], false);
+	        playA[i] = addButton(messages.getString("playButton"), promptPanelA[i], false);
 	        if (i==0) {
-	        	captA[i] = addButton(labels.getRecordButton(), promptPanelA[i], true); // only turn on first record button 
+	        	captA[i] = addButton(messages.getString("recordButton"), promptPanelA[i], true); // only turn on first record button 
 	        } else {
-		        captA[i] = addButton(labels.getRecordButton(), promptPanelA[i], false);
+		        captA[i] = addButton(messages.getString("recordButton"), promptPanelA[i], false);
 	        }
 	        prompts.add(promptPanelA[i]);  
         }
@@ -487,7 +487,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	//		############ Upload ####################################          
         JPanel uploadButtonPanel = new JPanel();
         uploadButtonPanel.setBorder(new EmptyBorder(5,0,5,0));
-        uploadB = addButton(labels.getUploadButtonLabel(), uploadButtonPanel, false); // upload all submissions
+        uploadB = addButton(messages.getString("uploadButtonLabel"), uploadButtonPanel, false); // upload all submissions
         p2.add(uploadButtonPanel);
     	//		############ Save Local ####################################          
         //saveLocalB = addButton("save on your computer", uploadButtonPanel, false); // upload all submissions
@@ -498,12 +498,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         if (labels.getLeftToRight())
         {
 	        moreInfoButtonPanel.add(new JLabel(labels.getMoreInfoText()));
-	        moreInfoB = addButton(labels.getMoreInfoButtonLabel(), moreInfoButtonPanel, true); 
+	        moreInfoB = addButton(messages.getString("moreInfoButtonLabel"), moreInfoButtonPanel, true); 
         }
         else
         {
-       	    moreInfoB = addButton(labels.getMoreInfoButtonLabel(), moreInfoButtonPanel, true); 
-            moreInfoButtonPanel.add(new JLabel(labels.getMoreInfoText()));     	 
+       	    moreInfoB = addButton(messages.getString("moreInfoButtonLabel"), moreInfoButtonPanel, true); 
+            moreInfoButtonPanel.add(new JLabel(messages.getString("moreInfoText")));     	 
         }
         p2.add(moreInfoButtonPanel);   
 // 		############ Disclaimer ####################################  
@@ -512,7 +512,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         JPanel DisclaimerInnerPanel = new JPanel(); 
         //if (labels.getLeftToRight())
         //{
-        //	DisclaimerInnerPanel.add(new JLabel(labels.getDisclaimerText()));
+        //	DisclaimerInnerPanel.add(new JLabel(messages.getString("disclaimerText")));
         //	aboutB = addButton(aboutButtonLabel, DisclaimerInnerPanel, true); 
         //}
         //else
@@ -520,7 +520,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         //    aboutB = addButton(aboutButtonLabel, DisclaimerInnerPanel, true); 
         //    DisclaimerInnerPanel.add(new JLabel(disclaimerText));
         //}
-    	aboutB = addButton(labels.getAboutButtonLabel(), DisclaimerInnerPanel, true); 
+    	aboutB = addButton(messages.getString("aboutButtonLabel"), DisclaimerInnerPanel, true); 
         DisclaimerInnerPanel.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
         DisclaimerPanel.add(DisclaimerInnerPanel);        
         p2.add(DisclaimerPanel); 
