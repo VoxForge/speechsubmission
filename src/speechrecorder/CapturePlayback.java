@@ -155,7 +155,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	JComboBox<String[]> languageChooser;       
     String language = "EN";
     
-    String userName;
+    String userName = "unknown";
 	JComboBox<String[]> genderChooser;       
     String gender;
     JComboBox<String[]> ageRangeChooser; 
@@ -169,7 +169,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     String targetDirectory;
     URL destinationURL;
     
-    //String language;
     String cookie;
     
     String licenseNotice;
@@ -190,11 +189,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public CapturePlayback(ResourceBundle messages, String targetDirectory, String destination) 
 	{    	
-		// ############ Localized Fields ####################################
-		//this.language = lang;
     	this.messages = messages;
-    	
-		this.targetDirectory = targetDirectory;
+    	this.targetDirectory = targetDirectory;
         try 
         {
         	this.destinationURL = new URL(destination);
@@ -207,7 +203,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         {
             System.out.println( "destination is null" );
         }
-		
 		this.capturePlayback = this;
 
 	    languageDependent(language);
@@ -222,7 +217,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		add(scrollPane, BorderLayout.CENTER);
 		setPreferredSize(new Dimension(300, 300));
 
-		// Load all settings that were saved from the last session
         //loadSettings();
 	}
 
@@ -234,7 +228,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     private JPanel startApp() 
     { 	
 		JPanel userPanel = new JPanel();
-
         
 		getLanguage(userPanel);
 		
@@ -253,11 +246,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	 */
     private void restartApp() 
     { 	
-    	//try {
-		//	Thread.sleep(2000);
-		//} catch (InterruptedException e) {
-		//	e.printStackTrace();
-		//}
 		removeAll();  //Removes all the components from this container
         tempdir = getTempDir(); // creates new temp dir with every call
         
@@ -270,7 +258,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		add(scrollPane, BorderLayout.CENTER);
 		setPreferredSize(new Dimension(300, 300));
         
-        //loadSettings();
+        loadSettings();
         
         validate();
         repaint();
@@ -280,6 +268,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     /**
      * 
      * 
+     * @param language
      */
     private void languageDependent(String language) 
     { 	
@@ -291,11 +280,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 				+ License.getBlanklicenseNotice();				
 		vflicense = License.getVFLicense();	 	
 
-        tempdir = getTempDir(); // 
+        //tempdir = getTempDir();  
 		saveOrUpload = new SaveOrUpload(
 				capturePlayback,
 				destinationURL, 
-				//labels.getUploadingMessageLabel(), 
 				messages.getString("uploadingMessageLabel"),
 				numberofPrompts,
 				uploadWavFileA,
@@ -307,22 +295,16 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		);
 		//convertAndSavelocally = new ConvertAndSavelocally();
 		
-	    gender = labels.getNotApplicable(); // default selection
-	    ageRange = labels.getNotApplicable(); // default selection
-	    dialect = labels.getNotApplicable();  // default selection
-	    microphone = labels.getNotApplicable();  // default selection
+	    gender = messages.getString("notApplicable"); // default selection
+	    ageRange = messages.getString("notApplicable"); // default selection
+	    dialect = messages.getString("notApplicable");  // default selection
+	    microphone = messages.getString("notApplicable");  // default selection
 	    
 	    playback = new Playback(
 		    	capturePlayback,
 		    	format,
         		numberofPrompts,
                 bufSize,
-        		//labels.getPeakWarningLabel(),
-    	    	//labels.getSampleGraphFileLabel(),
-    	    	//labels.getSampleGraphLengthLabel(), 
-    	    	//labels.getSampleGraphPositionLabel(),
-    	    	//labels.getPlayButton(),
-                //labels.getStopButton()
                 messages.getString("peakWarningLabel"),
                 messages.getString("sampleGraphFileLabel"),
                 messages.getString("sampleGraphLengthLabel"),
@@ -334,10 +316,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    capture = new Capture(
 	    	capturePlayback,
 	    	format,
-    		//labels.getPeakWarningLabel(),
-	    	//labels.getSampleGraphFileLabel(),
-	    	//labels.getSampleGraphLengthLabel(), 
-	    	//labels.getSampleGraphPositionLabel()
             messages.getString("peakWarningLabel"),
             messages.getString("sampleGraphFileLabel"),
             messages.getString("sampleGraphLengthLabel"),
@@ -349,7 +327,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      * 
      * @param p2
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
 	private void getLanguage(JPanel p2) 
     { 
         JPanel languagePanel = new JPanel();
@@ -358,22 +335,16 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		System.err.println("!!!!!!language:" + language);
         
 	
-       	//languagePanel.add(new JLabel(labels.getLanguagePanelLabel()));
        	languagePanel.add(new JLabel(messages.getString("languagePanelLabel")));       	
-       	//languagePanel.add(languageChooser = new JComboBox(labels.getLanguageSelection()));
        	languagePanel.add( languageChooser );
-        //languageChooser.setSelectedIndex(0);       
         languageChooser.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e)
 				{
 					String tempLang = (String)languageChooser.getSelectedItem();
-                    //if ( ! tempLang.equals(labels.getPleaseSelect()) )
                     if ( ! tempLang.equals(messages.getString("pleaseSelect")) )
 	                {
                     	 language = tempLang.split("\\s*-\\s*")[0];
-                         //languageDependent(language);
 	                     System.err.println("changing language to: " + language);
-	         			 //saveSettings();
 	        			 restartApp();
                     }
 				}
@@ -494,39 +465,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         progBar.setString("Ready to Record");
         userPanel.add(progBar);    
     }
-    
-    static String formatLines(
-    	    String target, 
-    	    int maxLength,
-    	    Locale currentLocale) 
-    {
-    	String result;
-    	StringBuffer sb = new StringBuffer();
-    	
-	    BreakIterator boundary = BreakIterator.
-	        getLineInstance(currentLocale);
-	    boundary.setText(target);
-	    int start = boundary.first();
-	    int end = boundary.next();
-	    int lineLength = 0;
 
-	    while (end != BreakIterator.DONE) {
-	        String word = target.substring(start,end);
-	        lineLength = lineLength + word.length();
-	        if (lineLength >= maxLength) {
-	        	sb.append(System.getProperty("line.separator"));
-	            lineLength = word.length();
-	        }
-	        
-	        sb.append(word);
-	        start = end;
-	        end = boundary.next();
-	    }
-	    
-	    result = sb.toString();
-	    
-	    return result;
-	}
     
     /**
      * Add remaining Panel Information
@@ -542,7 +481,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	//      ############ Upload Text ####################################             
         JPanel uploadTextPanel = new JPanel();
         //uploadTextPanel.add(new JLabel(labels.getUploadText())); 
-        Locale currentLocale = new Locale("EN", "us");
         uploadTextPanel.add(new JLabel(messages.getString("uploadText")) ); 
         
         p2.add(uploadTextPanel);
@@ -980,13 +918,14 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      *
      */
     protected class CaptureResult {
-//    	AudioInputStream audioInputStream;
     	double duration;
     	long totalBytesWritten;
     }
     
     /**
-	 * Will free audio input stream if exists, and grab a new version. This seems a bit silly but there's no other way to "rewind" large files.
+	 * Will free audio input stream if exists, and grab a new version. 
+	 * This seems a bit silly but there's no other way to "rewind" large files.
+	 * 
 	 * @uml.property  name="audioInputStream"
 	 */
     protected AudioInputStream getAudioInputStream(){
@@ -1013,7 +952,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	}
 
     /**
-     * always called by Postlet uploader
+     * called by Postlet uploader
      */
  	public synchronized void setProgress(int a) {
          sentBytes += a;
@@ -1034,7 +973,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
          }
  	}    
     
-    
+    /**
+     * save speech submission settings to user's computer
+     */
     public void saveSettings()
     {	
     	try {
@@ -1045,13 +986,19 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			cr.put("age", ageRangeChooser.getSelectedIndex());
 			cr.put("dialect", dialectChooser.getSelectedIndex());
 			cr.put("microphone", microphoneChooser.getSelectedIndex());
-			cr.put("username", usernameTextField.getText());
+			//cr.put("username", usernameTextField.getText());
+			System.out.println("username:" +  userName);
+			cr.put("username", userName);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
     
+    /**
+     *  Load all settings that were saved from the last session
+     * 
+     */
     public void loadSettings()
     {	
 		ConfigReader cr=null;
@@ -1097,13 +1044,21 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		}
 		
 		try {		
-			usernameTextField.setText(
-					cr.getString("username", usernameTextField.getText()));
+			userName = cr.getString("username", usernameTextField.getText());
+			//usernameTextField.setText(
+			//		cr.getString("username", usernameTextField.getText()));
+			usernameTextField.setText(userName);
+			
 		} catch (Exception e) {
 			usernameTextField.setText("");
 		} 	
     }
 	
+    /**
+     * convert user data to a String
+     * 
+     * @return
+     */
     public String userDataToString () {
 		String user = "";
 		
@@ -1137,4 +1092,46 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	
 		return user;
 	}
+    
+    /**
+     * returns a String with line breaks at maxLength
+     * 
+     * @param target
+     * @param maxLength
+     * @param currentLocale
+     * @return
+     */
+    static String formatLines(
+    	    String target, 
+    	    int maxLength,
+    	    Locale currentLocale) 
+    {
+    	String result;
+    	StringBuffer sb = new StringBuffer();
+    	
+	    BreakIterator boundary = BreakIterator.
+	        getLineInstance(currentLocale);
+	    boundary.setText(target);
+	    int start = boundary.first();
+	    int end = boundary.next();
+	    int lineLength = 0;
+
+	    while (end != BreakIterator.DONE) {
+	        String word = target.substring(start,end);
+	        lineLength = lineLength + word.length();
+	        if (lineLength >= maxLength) {
+	        	sb.append(System.getProperty("line.separator"));
+	            lineLength = word.length();
+	        }
+	        
+	        sb.append(word);
+	        start = end;
+	        end = boundary.next();
+	    }
+	    
+	    result = sb.toString();
+	    
+	    return result;
+	}
+    
 } 
