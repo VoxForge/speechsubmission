@@ -73,7 +73,7 @@ public class RecorderApplication extends JFrame {
         Locale currentLocale;
         ResourceBundle labels;
         currentLocale = new Locale(language, country);
-        //labels = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale);
+
         labels = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale, new UTF8Control() );
         
     	new RecorderApplication(labels);

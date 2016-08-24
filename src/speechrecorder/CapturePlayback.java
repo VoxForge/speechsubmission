@@ -53,6 +53,7 @@ import java.text.BreakIterator;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -186,7 +187,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     
     // constructor
     //public CapturePlayback(String lang, String targetDirectory, String destination) 
-    public CapturePlayback(ResourceBundle messages, String targetDirectory, String destination) 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public CapturePlayback(ResourceBundle messages, String targetDirectory, String destination) 
 	{    	
 		// ############ Localized Fields ####################################
 		//this.language = lang;
@@ -210,6 +212,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
 	    languageDependent(language);
 	    
+	    languageChooser = new JComboBox( (messages.getString("languageSelection")).split(",\\s*") );
+        languageChooser.setSelectedIndex(0);  
+        
 		JPanel userPanel = startApp();
 		
 		JScrollPane scrollPane = new JScrollPane(userPanel);
@@ -229,7 +234,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     private JPanel startApp() 
     { 	
 		JPanel userPanel = new JPanel();
-		
+
+        
 		getLanguage(userPanel);
 		
         addUserInfo(userPanel);
@@ -289,7 +295,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		saveOrUpload = new SaveOrUpload(
 				capturePlayback,
 				destinationURL, 
-				labels.getUploadingMessageLabel(), 
+				//labels.getUploadingMessageLabel(), 
+				messages.getString("uploadingMessageLabel"),
 				numberofPrompts,
 				uploadWavFileA,
 			    promptidA,
@@ -310,24 +317,33 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		    	format,
         		numberofPrompts,
                 bufSize,
-        		labels.getPeakWarningLabel(),
-    	    	labels.getSampleGraphFileLabel(),
-    	    	labels.getSampleGraphLengthLabel(), 
-    	    	labels.getSampleGraphPositionLabel(),
-    	    	labels.getPlayButton(),
-                labels.getStopButton()
+        		//labels.getPeakWarningLabel(),
+    	    	//labels.getSampleGraphFileLabel(),
+    	    	//labels.getSampleGraphLengthLabel(), 
+    	    	//labels.getSampleGraphPositionLabel(),
+    	    	//labels.getPlayButton(),
+                //labels.getStopButton()
+                messages.getString("peakWarningLabel"),
+                messages.getString("sampleGraphFileLabel"),
+                messages.getString("sampleGraphLengthLabel"),
+                messages.getString("sampleGraphPositionLabel"),
+                messages.getString("playButton"),
+                messages.getString("stopButton")
 	    );
 	    
 	    capture = new Capture(
 	    	capturePlayback,
 	    	format,
-    		labels.getPeakWarningLabel(),
-	    	labels.getSampleGraphFileLabel(),
-	    	labels.getSampleGraphLengthLabel(), 
-	    	labels.getSampleGraphPositionLabel()
+    		//labels.getPeakWarningLabel(),
+	    	//labels.getSampleGraphFileLabel(),
+	    	//labels.getSampleGraphLengthLabel(), 
+	    	//labels.getSampleGraphPositionLabel()
+            messages.getString("peakWarningLabel"),
+            messages.getString("sampleGraphFileLabel"),
+            messages.getString("sampleGraphLengthLabel"),
+            messages.getString("sampleGraphPositionLabel")
 	    );
     }
-
     
     /**
      * 
@@ -341,22 +357,25 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         
 		System.err.println("!!!!!!language:" + language);
         
-       	languagePanel.add(new JLabel(labels.getLanguagePanelLabel()));
-       	languagePanel.add(languageChooser = new JComboBox(labels.getLanguageSelection()));
-
-        languageChooser.setSelectedIndex(0);       
+	
+       	//languagePanel.add(new JLabel(labels.getLanguagePanelLabel()));
+       	languagePanel.add(new JLabel(messages.getString("languagePanelLabel")));       	
+       	//languagePanel.add(languageChooser = new JComboBox(labels.getLanguageSelection()));
+       	languagePanel.add( languageChooser );
+        //languageChooser.setSelectedIndex(0);       
         languageChooser.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e)
 				{
 					String tempLang = (String)languageChooser.getSelectedItem();
-                     if ( ! tempLang.equals(labels.getPleaseSelect()) )
-	                 {
-                    	 language = tempLang;
+                    //if ( ! tempLang.equals(labels.getPleaseSelect()) )
+                    if ( ! tempLang.equals(messages.getString("pleaseSelect")) )
+	                {
+                    	 language = tempLang.split("\\s*-\\s*")[0];
                          //languageDependent(language);
 	                     System.err.println("changing language to: " + language);
 	         			 //saveSettings();
 	        			 restartApp();
-                     }
+                    }
 				}
         	});
         p2.add(languagePanel);
