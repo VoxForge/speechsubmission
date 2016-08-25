@@ -49,6 +49,7 @@
         <include name="**/*.class"/>
         <include name="**/speechrecorder/prompts/*"/>
         <include name="**/speechrecorder/copyrights/*"/>
+        <include name="**/speechrecorder/languages/*"/>
       </fileset>
       <metainf dir="${include}/metainf/"/>
       <manifest>
