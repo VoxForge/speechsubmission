@@ -207,7 +207,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
 	    languageDependent(language);
 	    
-	    languageChooser = new JComboBox( (messages.getString("languageSelection")).split(",\\s*") );
+	    languageChooser = new JComboBox( convertMessage2Array("languageSelection") );
         languageChooser.setSelectedIndex(0);  
         
 		JPanel userPanel = startApp();
@@ -257,8 +257,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(scrollPane, BorderLayout.CENTER);
 		setPreferredSize(new Dimension(300, 300));
-        
-        loadSettings();
         
         validate();
         repaint();
@@ -324,6 +322,18 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     }
     
     /**
+     * extracts two character Language ID from language string<br>
+     * e.g. EN - English - will extract 'EN'
+     * 
+     * @param languageString
+     * @return
+     */
+	private String extractLanguageID(String languageString) 
+    { 
+		return languageString.split("\\s*-\\s*")[0];
+    }
+    
+    /**
      * 
      * @param p2
      */
@@ -334,16 +344,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         
 		System.err.println("!!!!!!language:" + language);
         
-	
        	languagePanel.add(new JLabel(messages.getString("languagePanelLabel")));       	
        	languagePanel.add( languageChooser );
         languageChooser.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e)
 				{
-					String tempLang = (String)languageChooser.getSelectedItem();
-                    if ( ! tempLang.equals(messages.getString("pleaseSelect")) )
+					String languageString = (String)languageChooser.getSelectedItem();
+                    if ( ! languageString.equals(messages.getString("pleaseSelect")) )
 	                {
-                    	 language = tempLang.split("\\s*-\\s*")[0];
+                    	 language = extractLanguageID(languageString);
 	                     System.err.println("changing language to: " + language);
 	        			 restartApp();
                     }
@@ -375,7 +384,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         int startPromptCount = 0;
         int promptsPerPane = numberofPrompts;
 	
-	//      ############ Prompts panel ####################################         
+        //      ############ Prompts panel ####################################         
         JPanel prompts = new JPanel(); 
         prompts.setLayout(new BoxLayout(prompts, BoxLayout.Y_AXIS));
         prompts.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
@@ -400,6 +409,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	        }
 	        prompts.add(promptPanelA[i]);  
         }
+        
 		//############ Prompt container ####################################   	
         promptsContainer.add(prompts);
 
@@ -480,7 +490,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     { 
 	//      ############ Upload Text ####################################             
         JPanel uploadTextPanel = new JPanel();
-        //uploadTextPanel.add(new JLabel(labels.getUploadText())); 
         uploadTextPanel.add(new JLabel(messages.getString("uploadText")) ); 
         
         p2.add(uploadTextPanel);
@@ -497,7 +506,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         JPanel moreInfoButtonPanel = new JPanel();
         if (labels.getLeftToRight())
         {
-	        moreInfoButtonPanel.add(new JLabel(labels.getMoreInfoText()));
+	        moreInfoButtonPanel.add(new JLabel(messages.getString("moreInfoText")));
 	        moreInfoB = addButton(messages.getString("moreInfoButtonLabel"), moreInfoButtonPanel, true); 
         }
         else
@@ -528,6 +537,17 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     }
 	
     /**
+     * convert a localizable, comma separated, string into a string array
+     * 
+     * @param key
+     * @return
+     */
+	private String[] convertMessage2Array(String key) 
+    { 
+		return (messages.getString(key)).split(",\\s*");
+    }
+    
+    /**
      * User name,
      * Gender,
      * Age Range,
@@ -543,28 +563,28 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         usernamePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         if (labels.getLeftToRight())
         {
-	        usernamePanel.add(new JLabel(labels.getUsernamePanelLabel()));
+	        usernamePanel.add(new JLabel(messages.getString("usernamePanelLabel")));
 	        usernamePanel.add(usernameTextField = new JTextField(20));
         }
         else
         {
             usernamePanel.add(usernameTextField = new JTextField(20));        	
-            usernamePanel.add(new JLabel(labels.getUsernamePanelLabel()));        	
+            usernamePanel.add(new JLabel(messages.getString("usernamePanelLabel")));        	
         }
-        usernamePanel.add(new JLabel(labels.getUsernamePanelText()));     
+        usernamePanel.add(new JLabel(messages.getString("usernamePanelText")));     
         p2.add(usernamePanel);  
     // 		############ Gender ####################################             
         JPanel genderPanel = new JPanel();
         genderPanel.setLayout(new FlowLayout(FlowLayout.CENTER));  
         if (labels.getLeftToRight())
         {
-	        genderPanel.add(new JLabel(labels.getGenderPanelLabel()));
-	        genderPanel.add(genderChooser = new JComboBox(labels.getGenderSelection()));
+	        genderPanel.add(new JLabel(messages.getString("genderPanelLabel")));
+	        genderPanel.add(genderChooser = new JComboBox( convertMessage2Array("genderSelection") ));
         }
         else
         {
-            genderPanel.add(genderChooser = new JComboBox(labels.getGenderSelection()));   
-        	genderPanel.add(new JLabel(labels.getGenderPanelLabel()));
+	        genderPanel.add(genderChooser = new JComboBox( convertMessage2Array("genderSelection")  ));
+        	genderPanel.add(new JLabel(messages.getString("genderPanelLabel")));
     	
         }
         genderChooser.setSelectedIndex(0);       
@@ -579,13 +599,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         ageRangePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         if (labels.getLeftToRight())
         {
-	        ageRangePanel.add(new JLabel(labels.getAgeRangePanelLabel()));
-			ageRangePanel.add(ageRangeChooser = new JComboBox(labels.getAgeSelection()));
+        	ageRangePanel.add(new JLabel(messages.getString("ageRangePanelLabel")));
+			ageRangePanel.add(ageRangeChooser = new JComboBox(convertMessage2Array("ageSelection")) );
         }
         else
         {
-    		ageRangePanel.add(ageRangeChooser = new JComboBox(labels.getAgeSelection()));       	
-            ageRangePanel.add(new JLabel(labels.getAgeRangePanelLabel()));
+			ageRangePanel.add(ageRangeChooser = new JComboBox(convertMessage2Array("ageSelection")) );
+	       	ageRangePanel.add(new JLabel(messages.getString("ageRangePanelLabel")));
         }
         ageRangeChooser.setSelectedIndex(0);          
         ageRangeChooser.addActionListener(new ActionListener(){
@@ -599,13 +619,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         dialectPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         if (labels.getLeftToRight())
         {
-        	dialectPanel.add(new JLabel(labels.getDialectPanelLabel()));
-        	dialectPanel.add(dialectChooser = new JComboBox(labels.getDialectSelection()));
+        	dialectPanel.add(new JLabel(messages.getString("dialectPanelLabel")));
+        	dialectPanel.add(dialectChooser = new JComboBox(convertMessage2Array("dialectSelection")));
         }
         else
         {
-        	dialectPanel.add(dialectChooser = new JComboBox(labels.getDialectSelection()));       
-        	dialectPanel.add(new JLabel(labels.getDialectPanelLabel()));
+        	dialectPanel.add(dialectChooser = new JComboBox(convertMessage2Array("dialectSelection")));    
+        	dialectPanel.add(new JLabel(messages.getString("dialectPanelLabel")));
         }
         dialectChooser.setSelectedIndex(0);  
         dialectChooser.addActionListener(new ActionListener(){
@@ -619,13 +639,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         microphonePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         if (labels.getLeftToRight())
         {
-	        microphonePanel.add(new JLabel(labels.getMicrophonePanelLabel()));
-	        microphonePanel.add(microphoneChooser = new JComboBox(labels.getMicrophoneSelection()));
+	        microphonePanel.add(new JLabel(messages.getString("microphonePanelLabel")));
+	        microphonePanel.add(microphoneChooser = new JComboBox(convertMessage2Array("microphoneSelection")));
         }
         else
         {
-            microphonePanel.add(microphoneChooser = new JComboBox(labels.getMicrophoneSelection()));
-            microphonePanel.add(new JLabel(labels.getMicrophonePanelLabel()));            
+	        microphonePanel.add(microphoneChooser = new JComboBox(convertMessage2Array("microphoneSelection")));
+	        microphonePanel.add(new JLabel(messages.getString("microphonePanelLabel")));          
         }
         microphoneChooser.setSelectedIndex(0);  
         // microphoneChooser.setEditable(true); // user can add whatever they want ...
@@ -719,7 +739,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 // ################### Play #######################################       
         for (int i = 0; i < numberofPrompts; i++) {
             if (obj.equals(playA[i])) {
-                if (playA[i].getText().startsWith(labels.getPlayButton())) {
+                //if (playA[i].getText().startsWith(labels.getPlayButton())) {
+                if (playA[i].getText().startsWith(messages.getString("playButton"))) {
                     wavFile = wavFileA[i];      
                     duration = durationA[i];
                     totalBytesWritten = totalBytesWrittenA[i];
@@ -741,13 +762,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                setButtonsOff();
                     captA[i].setEnabled(false);
                     playA[i].setEnabled(true);
-                    playA[i].setText(labels.getStopButton());
+                    playA[i].setText(messages.getString("stopButton"));
                 } else {
                     playback.stop();
                     samplingGraph.stop();
 	                restoreButtonState(); 
                     captA[i].setEnabled(true);
-                    playA[i].setText(labels.getPlayButton());
+                    playA[i].setText(messages.getString("playButton"));
                 }
             }
         }
@@ -755,7 +776,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 // ################### Record (capture) #######################################        
 	    for (int x = 0; x < numberofPrompts; x++) {
 	        if (obj.equals(captA[x])) {
-	            if (captA[x].getText().startsWith(labels.getRecordButton())) {
+	            //if (captA[x].getText().startsWith(labels.getRecordButton())) {
+	            if (captA[x].getText().startsWith(messages.getString("recordButton"))) {
 	                file = null;
 	                wavFile = wavFileA[x];  
 	                fileName = promptidA[x];
@@ -771,7 +793,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                saveButtonState(); 
 	                setButtonsOff(); 
 	                captA[x].setEnabled(true);    
-	                captA[x].setText(labels.getStopButton());
+	                captA[x].setText(messages.getString("stopButton"));
 	                moreInfoB.setEnabled(false);  
 	                aboutB.setEnabled(false); 
 	            } else {
@@ -793,7 +815,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	            	samplingGraph.stop();
 	                restoreButtonState(); 
 	                playA[x].setEnabled(true);
-	                captA[x].setText(labels.getRecordButton());
+	                captA[x].setText(messages.getString("recordButton"));
 	                moreInfoB.setEnabled(true);  
 	                aboutB.setEnabled(true); 
 	                captA[x].setEnabled(true);
@@ -840,7 +862,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                userName = "anonymous";
             }
 
-			saveSettings();
+			//saveSettings();
 
 			totalBytes = saveOrUpload.start(progBar, language, userName, userDataToString() );
 			restartApp();
@@ -960,7 +982,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
          if (sentBytes == totalBytes)
          {
             progBar.setStringPainted(true);
-           	progBar.setString(labels.getUploadCompletedMessageLabel());
+           	progBar.setString(messages.getString("uploadCompletedMessageLabel"));
             progBar.setIndeterminate(false);
             System.err.println("Finished! submission uploaded to VoxForge repository");
             // Reset the applet
@@ -994,6 +1016,17 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			e.printStackTrace();
 		}
     }
+    
+    /**
+     *  return multiple values from Capture class
+     * 
+     *
+     */
+    protected class UserInfo {
+    	double duration;
+    	long totalBytesWritten;
+    }
+    
     
     /**
      *  Load all settings that were saved from the last session
