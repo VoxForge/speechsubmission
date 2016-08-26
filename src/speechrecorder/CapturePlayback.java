@@ -208,7 +208,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		rightToLeft = messages.getString("rightToLeft").equals("true") ?  true :  false;
 		tempdir = getTempDir(); 
 
-
 	    languageDependent(language);
 	    
 	    languageChooser = new JComboBox( convertLanguage2Array("languageSelection") );
