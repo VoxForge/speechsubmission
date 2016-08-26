@@ -53,7 +53,19 @@ public class RecorderApplication extends JFrame {
         out.println("***"+message+"***");
     }
 
-    
+    /**
+     * 
+     * 
+     * see: https://docs.oracle.com/javase/tutorial/i18n/locale/create.html<br>
+     * 
+     * Language codes<br>
+     * http://www.loc.gov/standards/iso639-2/php/code_list.php
+     * 
+     * country codes<br>
+     * http://www.chemie.fu-berlin.de/diverse/doc/ISO_3166.html
+     * 
+     * @param args
+     */
     public static void main(String[] args) 
     {
     	String language;
