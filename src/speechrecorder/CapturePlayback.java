@@ -182,7 +182,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     Color voxforgeColour 	= new Color(197, 216, 234);
     
     ResourceBundle messages;
-    Boolean leftToRight = true;
+    Boolean rightToLeft = false;
     
     // constructor
     //public CapturePlayback(String lang, String targetDirectory, String destination) 
@@ -205,7 +205,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         {
             System.out.println( "destination is null" );
         }
-		leftToRight = messages.getString("leftToRight").equals("true") ?  true :  false;
+		rightToLeft = messages.getString("rightToLeft").equals("true") ?  true :  false;
 		tempdir = getTempDir(); 
 
 
@@ -346,14 +346,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         
 		System.out.println("language:" + language);
         
-        if (leftToRight)
-        {
-           	languagePanel.add(new JLabel(messages.getString("languagePanelLabel")));       	
-           	languagePanel.add( languageChooser );        }
-        else
+        if (rightToLeft)
         {
            	languagePanel.add( languageChooser ); 
         	languagePanel.add(new JLabel(messages.getString("languagePanelLabel")));       	
+        }
+        else
+        {
+           	languagePanel.add(new JLabel(messages.getString("languagePanelLabel")));       	
+           	languagePanel.add( languageChooser );
         }
        	
         languageChooser.addActionListener(new ActionListener(){
@@ -409,7 +410,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         	promptPanelA[i].setLayout(new FlowLayout(FlowLayout.RIGHT));
         	promptInnerPanelA [i]= new JPanel();
 	        promptInnerPanelA[i].setBorder(BorderFactory.createLineBorder (voxforgeColour, 1));
-	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, leftToRight));
+	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, rightToLeft));
 	        promptPanelA[i].add(promptInnerPanelA[i]);
 	        playA[i] = addButton(messages.getString("playButton"), promptPanelA[i], false);
 	        if (i==0) {
@@ -514,15 +515,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
            
 	// 		############ More Information Button ####################################          
         JPanel moreInfoButtonPanel = new JPanel();
-        if (leftToRight)
+        if (rightToLeft)
         {
-	        moreInfoButtonPanel.add(new JLabel(messages.getString("moreInfoText")));
-	        moreInfoB = addButton(messages.getString("moreInfoButtonLabel"), moreInfoButtonPanel, true); 
+       	    moreInfoB = addButton(messages.getString("moreInfoButtonLabel"), moreInfoButtonPanel, true); 
+            moreInfoButtonPanel.add(new JLabel(messages.getString("moreInfoText"))); 
         }
         else
         {
-       	    moreInfoB = addButton(messages.getString("moreInfoButtonLabel"), moreInfoButtonPanel, true); 
-            moreInfoButtonPanel.add(new JLabel(messages.getString("moreInfoText")));     	 
+	        moreInfoButtonPanel.add(new JLabel(messages.getString("moreInfoText")));
+	        moreInfoB = addButton(messages.getString("moreInfoButtonLabel"), moreInfoButtonPanel, true);     	 
         }
         p2.add(moreInfoButtonPanel);   
 // 		############ Disclaimer ####################################  
@@ -583,31 +584,30 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	// 		############ User name ####################################             
         JPanel usernamePanel = new JPanel();
         usernamePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
-        if (leftToRight)
+        if (rightToLeft)
         {
-	        usernamePanel.add(new JLabel(messages.getString("usernamePanelLabel")));
-	        usernamePanel.add(usernameTextField = new JTextField(20));
+            usernamePanel.add(usernameTextField = new JTextField(20));        	
+            usernamePanel.add(new JLabel(messages.getString("usernamePanelLabel")));  
         }
         else
         {
-            usernamePanel.add(usernameTextField = new JTextField(20));        	
-            usernamePanel.add(new JLabel(messages.getString("usernamePanelLabel")));        	
+	        usernamePanel.add(new JLabel(messages.getString("usernamePanelLabel")));
+	        usernamePanel.add(usernameTextField = new JTextField(20));     	
         }
         usernamePanel.add(new JLabel(messages.getString("usernamePanelText")));     
         p2.add(usernamePanel);  
     // 		############ Gender ####################################             
         JPanel genderPanel = new JPanel();
         genderPanel.setLayout(new FlowLayout(FlowLayout.CENTER));  
-        if (leftToRight)
-        {
-	        genderPanel.add(new JLabel(messages.getString("genderPanelLabel")));
-	        genderPanel.add(genderChooser = new JComboBox( convertMessage2Array("genderSelection") ));
-        }
-        else
+        if (rightToLeft)
         {
 	        genderPanel.add(genderChooser = new JComboBox( convertMessage2Array("genderSelection")  ));
         	genderPanel.add(new JLabel(messages.getString("genderPanelLabel")));
-    	
+        }
+        else
+        {
+	        genderPanel.add(new JLabel(messages.getString("genderPanelLabel")));
+	        genderPanel.add(genderChooser = new JComboBox( convertMessage2Array("genderSelection") ));
         }
         genderChooser.setSelectedIndex(0);       
         genderChooser.addActionListener(new ActionListener(){
@@ -619,15 +619,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	// 		############ Age Range ####################################             
         JPanel ageRangePanel = new JPanel();
         ageRangePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
-        if (leftToRight)
-        {
-        	ageRangePanel.add(new JLabel(messages.getString("ageRangePanelLabel")));
-			ageRangePanel.add(ageRangeChooser = new JComboBox(convertMessage2Array("ageSelection")) );
-        }
-        else
+        if (rightToLeft)
         {
 			ageRangePanel.add(ageRangeChooser = new JComboBox(convertMessage2Array("ageSelection")) );
 	       	ageRangePanel.add(new JLabel(messages.getString("ageRangePanelLabel")));
+        }
+        else
+        {
+        	ageRangePanel.add(new JLabel(messages.getString("ageRangePanelLabel")));
+			ageRangePanel.add(ageRangeChooser = new JComboBox(convertMessage2Array("ageSelection")) );
         }
         ageRangeChooser.setSelectedIndex(0);          
         ageRangeChooser.addActionListener(new ActionListener(){
@@ -639,15 +639,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	//      ############ Pronunciation Dialect ####################################       
         JPanel dialectPanel = new JPanel();
         dialectPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        if (leftToRight)
-        {
-        	dialectPanel.add(new JLabel(messages.getString("dialectPanelLabel")));
-        	dialectPanel.add(dialectChooser = new JComboBox(convertMessage2Array("dialectSelection")));
-        }
-        else
+        if (rightToLeft)
         {
         	dialectPanel.add(dialectChooser = new JComboBox(convertMessage2Array("dialectSelection")));    
         	dialectPanel.add(new JLabel(messages.getString("dialectPanelLabel")));
+        }
+        else
+        {
+        	dialectPanel.add(new JLabel(messages.getString("dialectPanelLabel")));
+        	dialectPanel.add(dialectChooser = new JComboBox(convertMessage2Array("dialectSelection")));
         }
         dialectChooser.setSelectedIndex(0);  
         dialectChooser.addActionListener(new ActionListener(){
@@ -659,15 +659,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	//      ############ Microphone Type ####################################       
         JPanel microphonePanel = new JPanel();
         microphonePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        if (leftToRight)
+        if (rightToLeft)
         {
-	        microphonePanel.add(new JLabel(messages.getString("microphonePanelLabel")));
 	        microphonePanel.add(microphoneChooser = new JComboBox(convertMessage2Array("microphoneSelection")));
+	        microphonePanel.add(new JLabel(messages.getString("microphonePanelLabel")));       
         }
         else
         {
-	        microphonePanel.add(microphoneChooser = new JComboBox(convertMessage2Array("microphoneSelection")));
-	        microphonePanel.add(new JLabel(messages.getString("microphonePanelLabel")));          
+        	microphonePanel.add(new JLabel(messages.getString("microphonePanelLabel")));
+	        microphonePanel.add(microphoneChooser = new JComboBox(convertMessage2Array("microphoneSelection"))); 
         }
         microphoneChooser.setSelectedIndex(0);  
         // microphoneChooser.setEditable(true); // user can add whatever they want ...

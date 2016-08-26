@@ -10,7 +10,7 @@ import javax.swing.JTextArea;
 public  class MultiLineLabel extends JTextArea {
 
   public MultiLineLabel(Container parent, String text,
-                        int maxWidth, boolean labelFont, boolean leftToRight) {
+                        int maxWidth, boolean labelFont, boolean rightToLeft) {
      super();
      JLabel lbl = new JLabel();
      setFocusable(false);
@@ -18,14 +18,14 @@ public  class MultiLineLabel extends JTextArea {
      setBackground(lbl.getBackground());
      setLineWrap(true);
      setWrapStyleWord(true);
-     if ( leftToRight )
-     {
-         setFont(lbl.getFont());
-     }
-     else
+     if ( rightToLeft )
      {
     	 setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
          setFont(lbl.getFont().deriveFont(14.0f));
+     }
+     else
+     {
+    	 setFont(lbl.getFont());
      }
      setHighlighter(null);
      if (maxWidth > 0) {
@@ -35,8 +35,8 @@ public  class MultiLineLabel extends JTextArea {
      append((text == null || text.length() == 0) ? " " : text);
   }
 
-  public MultiLineLabel(Container parent, String text, int maxWidth, boolean leftToRight) {
-     this(parent, text, maxWidth, true, leftToRight);
+  public MultiLineLabel(Container parent, String text, int maxWidth, boolean rightToLeft) {
+     this(parent, text, maxWidth, true, rightToLeft);
   }
   
 }
