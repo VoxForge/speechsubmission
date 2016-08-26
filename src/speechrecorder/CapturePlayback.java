@@ -211,8 +211,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
 	    languageDependent(language);
 	    
-	    languageChooser = new JComboBox( convertMessage2Array("languageSelection") );
-        languageChooser.setSelectedIndex(0);  
+	    languageChooser = new JComboBox( convertLanguage2Array("languageSelection") );
+        languageChooser.setSelectedIndex(0); // ???
         
 		JPanel userPanel = startApp();
 		
@@ -543,10 +543,32 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      * @return
      */
 	private String[] convertMessage2Array(String key) 
-    { 
-		return (messages.getString(key)).split(",\\s*");
+    {
+		String [] result;
+		
+       	String [] messageArray = (messages.getString(key)).split("\\s*,\\s*");
+       	
+       	result = new String[messageArray.length + 1];
+       	result[0] = messages.getString("pleaseSelect");
+       	for (int i=0; i<messageArray.length; i++)
+        {
+          result[i+1] = messageArray[i];
+        }
+       	
+       	return result;
     }
-    
+
+    /**
+     * convert comma separated Language List string into a string array
+     * 
+     * @param key
+     * @return
+     */
+	private String[] convertLanguage2Array(String key) 
+    {
+       	return (messages.getString(key)).split("\\s*,\\s*");
+    }	
+	
     /**
      * User name,
      * Gender,

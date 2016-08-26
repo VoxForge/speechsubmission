@@ -71,20 +71,26 @@ public class RecorderApplication extends JFrame {
     	String language;
         String country;
 
-        if (args.length != 2) 
+        Locale currentLocale;
+        ResourceBundle labels;
+        
+        if  (args.length == 1) 
         {
-            language = new String("en");
-            country = new String("US");
-        } 
-        else 
+            language = new String(args[0]);
+            currentLocale = new Locale(language);
+        }
+        else if  (args.length == 2) 
         {
             language = new String(args[0]);
             country = new String(args[1]);
+            currentLocale = new Locale(language, country);
+        }
+        else
+        {
+            currentLocale = new Locale("EN");
         }
 
-        Locale currentLocale;
-        ResourceBundle labels;
-        currentLocale = new Locale(language, country);
+        
 
         labels = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale, new UTF8Control() );
         
