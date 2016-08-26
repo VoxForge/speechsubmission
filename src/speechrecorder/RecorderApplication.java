@@ -90,8 +90,6 @@ public class RecorderApplication extends JFrame {
             currentLocale = new Locale("EN");
         }
 
-        
-
         labels = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale, new UTF8Control() );
         
     	new RecorderApplication(labels);

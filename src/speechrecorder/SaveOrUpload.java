@@ -159,15 +159,6 @@ class SaveOrUpload implements Runnable {
 			    System.err.println("Problems with licenseNoticeFile file");
 		} 
 		files[numberofPrompts + 2] = licenseNoticeFile;
-		//############ license file ####################################    
-		try {
-			BufferedWriter out_licenseFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseFile),"UTF-8"));
-			out_licenseFile.write(License.getGPLLicense());
-			out_licenseFile.close();	
-		} catch (IOException e) {
-			System.err.println("Problems with license file");
-		} 
-		files[numberofPrompts + 3] = licenseFile;
 		//############ create archive file #################################### 
 		File archiveFile;
 		Calendar cal = Calendar.getInstance();
