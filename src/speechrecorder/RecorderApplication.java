@@ -25,19 +25,21 @@ public class RecorderApplication extends JFrame {
     private CapturePlayback theRecorder;
    	String targetDirectory = ""; // blank target directory means current
     String destination = "http://read.voxforge1.org/r0_2_4b/javaUploadServer.php";
-    ResourceBundle labels;
+    ResourceBundle messages;
+    Prompts prompts;
+    static int numberOfPrompts = 3;
     
-	public RecorderApplication(ResourceBundle labels)
+	public RecorderApplication(ResourceBundle messages, Prompts prompts)
 	{
-		this.labels = labels;
+		this.messages = messages;
+		this.prompts = prompts;
 		init();						// simulate browser call(1)
 		setSize(800,800);   		// Set the size of the frame
 		setVisible(true);   		// Show the frame 
 	}
 	
     public void init() {
-    	//theRecorder = new CapturePlayback( language, targetDirectory, destination); 
-    	theRecorder = new CapturePlayback( labels, targetDirectory, destination ); 
+    	theRecorder = new CapturePlayback( messages, prompts, targetDirectory, destination ); 
         getContentPane().add("Center", theRecorder);
     }
 
@@ -68,15 +70,17 @@ public class RecorderApplication extends JFrame {
      */
     public static void main(String[] args) 
     {
-    	String language;
-        String country;
+    	String language="en";
+        String country="US";
 
         Locale currentLocale;
-        ResourceBundle labels;
+        ResourceBundle messages;
+        Prompts prompts;
         
         if  (args.length == 1) 
         {
             language = new String(args[0]);
+            country = null;
             currentLocale = new Locale(language);
         }
         else if  (args.length == 2) 
@@ -89,9 +93,10 @@ public class RecorderApplication extends JFrame {
         {
             currentLocale = new Locale("EN");
         }
-
-        labels = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale, new UTF8Control() );
         
-    	new RecorderApplication(labels);
+	    prompts = new Prompts(language, numberOfPrompts);
+	    messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale, new UTF8Control() );
+        
+    	new RecorderApplication(messages, prompts);
     }
 }

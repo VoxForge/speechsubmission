@@ -53,7 +53,6 @@ import java.text.BreakIterator;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.StringTokenizer;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -71,7 +70,6 @@ import javax.swing.JTextField;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.SoftBevelBorder;
-import java.lang.StringBuffer.*;
 
 import speechrecorder.ConfigReader;
 import speechrecorder.SaveOrUpload;
@@ -88,7 +86,6 @@ import speechrecorder.Playback;
 @SuppressWarnings("serial")
 public class CapturePlayback extends JPanel implements ActionListener, net.sf.postlet.PostletInterface {
 
-	// TODO need some way to create same session config file - by date and time???
 	private static final File CONFIGURATION_FILE = new File(System.getProperty("user.home"), "VoxForge.properties");
 
     final int bufSize = 16384;
@@ -107,37 +104,35 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     AudioInputStream audioInputStream;
     SamplingGraph samplingGraph;
 
-    int numberofPrompts = 3;
-
-    JButton [] playA = new JButton [numberofPrompts]; 
-    JButton [] captA = new JButton [numberofPrompts];
+    JButton [] playA; 
+    JButton [] captA;
 
     JButton uploadB;
     //JButton saveLocalB;
     JButton moreInfoB;    
     JButton aboutB; 
 
-    boolean [] play_stateA = new boolean [numberofPrompts];
-    boolean [] capt_stateA = new boolean [numberofPrompts];
+    boolean [] play_stateA;
+    boolean [] capt_stateA;
 
     JTextField textField;
 
     String fileName = "untitled";
     String errStr;
 
-    double [] durationA= new double [numberofPrompts];
+    double [] durationA;
     double duration = 0;
 
     double seconds;
 
-    long [] totalBytesWrittenA= new long [numberofPrompts];
+    long [] totalBytesWrittenA;
     long totalBytesWritten = 0L;
      
     File file;
   
     private File wavFile;
-    private final File[] wavFileA = new File [numberofPrompts]; // raw audio
-    private final File [] uploadWavFileA = new File [numberofPrompts]; // wav file with header
+    private File[] wavFileA; // raw audio
+    private File [] uploadWavFileA; // wav file with header
 
     JProgressBar progBar;
     int sentBytes;
@@ -147,8 +142,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     JTextField subjectBox;
     String subject;
 
-    String [] promptA = new String [numberofPrompts];
-    String [] promptidA = new String [numberofPrompts];
+    String [] promptA;
+    String [] promptidA;
     
 //  ############ Localized Fields ####################################   
     JTextField usernameTextField;  
@@ -164,8 +159,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     String dialect;  
     JComboBox<String[]> microphoneChooser;     
     String microphone;  
-
 //  ############ Localized Fields ####################################   
+
     String targetDirectory;
     URL destinationURL;
     
@@ -179,19 +174,21 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	SaveOrUpload saveOrUpload; 
 	//ConvertAndSavelocally convertAndSavelocally; 
 	
-    Color voxforgeColour 	= new Color(197, 216, 234);
+    Color voxforgeColour = new Color(197, 216, 234);
     
     ResourceBundle messages;
+    Prompts prompts;
     Boolean rightToLeft = false;
     
     // constructor
     //public CapturePlayback(String lang, String targetDirectory, String destination) 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-	public CapturePlayback(ResourceBundle messages, String targetDirectory, String destination) 
+	public CapturePlayback(ResourceBundle messages, Prompts prompts, String targetDirectory, String destination) 
 	{    	
 		this.capturePlayback = this;
 		
     	this.messages = messages;
+    	this.prompts = prompts;
     	this.targetDirectory = targetDirectory;
         try 
         {
@@ -205,10 +202,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         {
             System.out.println( "destination is null" );
         }
-		rightToLeft = messages.getString("rightToLeft").equals("true") ?  true :  false;
 		tempdir = getTempDir(); 
 
-	    languageDependent(language);
+		initPromptNumArrays(prompts);
+		
+		rightToLeft = messages.getString("rightToLeft").equals("true") ?  true :  false;
+		languageDependent(messages);
 	    
 	    languageChooser = new JComboBox( convertLanguage2Array("languageSelection") );
         languageChooser.setSelectedIndex(0); // ???
@@ -224,6 +223,30 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	}
 
 	// methods
+  
+    /**
+     * initialize arrays whose size is dependent on the number of prompts
+     * the user has selected
+     * 
+     */
+    private void initPromptNumArrays(Prompts prompts) 
+    { 	
+		int numberofPrompts = prompts.getNumberOfPrompts();
+	    playA = new JButton [numberofPrompts]; 
+	    captA = new JButton [numberofPrompts];
+
+	    play_stateA = new boolean [numberofPrompts];
+	    capt_stateA = new boolean [numberofPrompts];
+
+	    durationA= new double [numberofPrompts];
+	    totalBytesWrittenA= new long [numberofPrompts];
+	    wavFileA = new File [numberofPrompts]; // raw audio
+	    uploadWavFileA = new File [numberofPrompts]; // wav file with header
+
+	    promptA = new String [numberofPrompts];
+	    promptidA = new String [numberofPrompts];
+    }
+    
     
     /**
 	 * see http://stackoverflow.com/questions/14874613/how-to-replace-jpanel-with-another-jpanel
@@ -235,9 +258,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		getLanguage(userPanel);
 		
         addUserInfo(userPanel);
-        addPromptInfo(userPanel, numberofPrompts);
+        addPromptInfo(userPanel);
 
-	    createWavFiles(numberofPrompts, this.promptidA ); // promptidA array gets assigned in addPromptInfo
+	    createWavFiles(prompts.getNumberOfPrompts(), this.promptidA ); // promptidA array gets assigned in addPromptInfo
         addGraph(userPanel); 
         addRemainingPanelInfo(userPanel); 
 
@@ -252,7 +275,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		removeAll();  //Removes all the components from this container
         tempdir = getTempDir(); // creates new temp dir with every call
         
-	    languageDependent(language);
+        languageDependent(messages);
         
 		JPanel userPanel = startApp();
 		
@@ -267,11 +290,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     }	
     
     /**
+     * updates language dependent objects and variables
      * 
+     * message object is language dependent
      * 
      * @param language
      */
-    private void languageDependent(String language) 
+    private void languageDependent(ResourceBundle messages) 
     { 	
     	Calendar cal = Calendar.getInstance();
 		licenseNotice = "Copyright " + cal.get(Calendar.YEAR) + " " + messages.getString("copyrightName") + System.getProperty("line.separator") 
@@ -279,12 +304,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 				+ License.getBlanklicenseNotice();				
 		vflicense = License.getVFLicense();	 	
 
-        //tempdir = getTempDir();  
 		saveOrUpload = new SaveOrUpload(
 				capturePlayback,
 				destinationURL, 
 				messages.getString("uploadingMessageLabel"),
-				numberofPrompts,
+				prompts.getNumberOfPrompts(),
 				uploadWavFileA,
 			    promptidA,
 			    promptA,
@@ -302,7 +326,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    playback = new Playback(
 		    	capturePlayback,
 		    	format,
-        		numberofPrompts,
+        		prompts.getNumberOfPrompts(),
                 bufSize,
                 messages.getString("peakWarningLabel"),
                 messages.getString("sampleGraphFileLabel"),
@@ -377,10 +401,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	 * @param userPanel
 	 * @param numberofPrompts
 	 */
-    private void addPromptInfo(JPanel userPanel, int numberofPrompts) 
+    private void addPromptInfo(JPanel userPanel) 
     { 
     	JPanel promptsContainer = new JPanel();
-	    String [][] promptArray = (new Prompts(numberofPrompts,this.language)).getPrompts();
+	    String [][] promptArray = prompts.getPrompts();
+	    int numberofPrompts = prompts.getNumberOfPrompts();
 	    for (int i = 0; i < numberofPrompts; i++) 
 	    {
 	    	this.promptidA[i] = promptArray[0][i];
@@ -485,7 +510,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         progBar.setString("Ready to Record");
         userPanel.add(progBar);    
     }
-
     
     /**
      * Add remaining Panel Information
@@ -705,12 +729,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     
     public void close() {
         if (playback.thread != null) {
-            for (int i = 0; i < numberofPrompts; i++) {
+            for (int i = 0; i < prompts.getNumberOfPrompts(); i++) {
             	playA[i].doClick(0);
             }
         }
         if (capture.thread != null) {
-            for (int i = 0; i < numberofPrompts; i++) {
+            for (int i = 0; i < prompts.getNumberOfPrompts(); i++) {
             	captA[i].doClick(0);
             }
         }
@@ -725,21 +749,21 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     }
     
     private void setButtonsOff() {
-        for (int i = 0; i < numberofPrompts; i++) {
+        for (int i = 0; i < prompts.getNumberOfPrompts(); i++) {
         	playA[i].setEnabled(false); 
         	captA[i].setEnabled(false); 
         }
     }
     
     private void saveButtonState() {
-        for (int i = 0; i < numberofPrompts; i++) {
+        for (int i = 0; i < prompts.getNumberOfPrompts(); i++) {
         	if (playA[i].isEnabled()) {play_stateA [i] = true;} else {play_stateA [i] = false;}
         	if (captA[i].isEnabled()) {capt_stateA [i] = true;} else {capt_stateA [i] = false;}
         }
     }
     
     protected void restoreButtonState() {
-        for (int i = 0; i < numberofPrompts; i++) {
+        for (int i = 0; i < prompts.getNumberOfPrompts(); i++) {
          	if (play_stateA[i]) {playA[i].setEnabled(true);} else {playA[i].setEnabled(false);}
         	if (capt_stateA[i]) {captA[i].setEnabled(true);} else {captA[i].setEnabled(false);}
         }
@@ -758,7 +782,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
 // ################### Play #######################################       
-        for (int i = 0; i < numberofPrompts; i++) {
+        for (int i = 0; i < prompts.getNumberOfPrompts(); i++) {
             if (obj.equals(playA[i])) {
                 if (playA[i].getText().startsWith(messages.getString("playButton"))) {
                     wavFile = wavFileA[i];      
@@ -794,7 +818,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
 
 // ################### Record (capture) #######################################        
-	    for (int x = 0; x < numberofPrompts; x++) {
+	    for (int x = 0; x < prompts.getNumberOfPrompts(); x++) {
 	        if (obj.equals(captA[x])) {
 	            if (captA[x].getText().startsWith(messages.getString("recordButton"))) {
 	                file = null;
@@ -838,11 +862,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                moreInfoB.setEnabled(true);  
 	                aboutB.setEnabled(true); 
 	                captA[x].setEnabled(true);
-	                if (x < numberofPrompts-1) {
+	                if (x < prompts.getNumberOfPrompts()-1) {
 	                	captA[x+1].setEnabled(true);
 	                }
-	        		System.err.println("x " + x +"numberofPrompts " +numberofPrompts);
-	                if (x == numberofPrompts-1) {
+	        		System.err.println("x " + x +"numberofPrompts " + prompts.getNumberOfPrompts());
+	                if (x == prompts.getNumberOfPrompts()-1) {
 	                	uploadB.setEnabled(true);
 	                	//saveLocalB.setEnabled(true);
 	                }
@@ -853,7 +877,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 //          ################### Upload #######################################               
 	    if (obj.equals(uploadB)) 
 	    { 
-	        for (int i = 0; i < numberofPrompts; i++) 
+	        for (int i = 0; i < prompts.getNumberOfPrompts(); i++) 
 	        {
 	        	playA[i].setEnabled(false);
 	            captA[i].setEnabled(false);
@@ -1036,16 +1060,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		}
     }
     
-    /**
-     *  return multiple values from Capture class
-     * 
-     *
-     */
-    protected class UserInfo {
-    	double duration;
-    	long totalBytesWritten;
-    }
-    
+
     
     /**
      *  Load all settings that were saved from the last session
