@@ -148,7 +148,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 //  ############ Localized Fields ####################################   
     JTextField usernameTextField;  
 	JComboBox<String[]> languageChooser;       
-    String language = "EN";
+    String language = "en";
     
     String userName = "unknown";
 	JComboBox<String[]> genderChooser;       
@@ -183,12 +183,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     // constructor
     //public CapturePlayback(String lang, String targetDirectory, String destination) 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-	public CapturePlayback(ResourceBundle messages, Prompts prompts, String targetDirectory, String destination) 
+	public CapturePlayback( Locale currentLocale, String targetDirectory, String destination) 
 	{    	
 		this.capturePlayback = this;
-		
-    	this.messages = messages;
-    	this.prompts = prompts;
     	this.targetDirectory = targetDirectory;
         try 
         {
@@ -196,21 +193,23 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         } 
         catch(java.net.MalformedURLException malurlex)
         {
-            System.out.println( "Badly formed destination URL: " + destination);
+            System.err.println( "Badly formed destination URL: " + destination);
         } 
         catch(java.lang.NullPointerException npe)
         {
-            System.out.println( "destination is null" );
+            System.err.println( "destination is null" );
         }
-		tempdir = getTempDir(); 
-
-		initPromptNumArrays(prompts);
+        int numberOfPrompts = 3;
+        prompts = new Prompts(language, numberOfPrompts);
+	    messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale, new UTF8Control() );
+        
+        tempdir = getTempDir(); 
+		
+		initPromptNumArrays(prompts.getNumberOfPrompts());
 		
 		rightToLeft = messages.getString("rightToLeft").equals("true") ?  true :  false;
 		languageDependent(messages);
 	    
-	    languageChooser = new JComboBox( convertLanguage2Array("languageSelection") );
-        languageChooser.setSelectedIndex(0); // ???
         
 		JPanel userPanel = startApp();
 		
@@ -223,38 +222,14 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	}
 
 	// methods
-  
     /**
-     * initialize arrays whose size is dependent on the number of prompts
-     * the user has selected
-     * 
+     * see http://stackoverflow.com/questions/14874613/how-to-replace-jpanel-with-another-jpanel
      */
-    private void initPromptNumArrays(Prompts prompts) 
-    { 	
-		int numberofPrompts = prompts.getNumberOfPrompts();
-	    playA = new JButton [numberofPrompts]; 
-	    captA = new JButton [numberofPrompts];
-
-	    play_stateA = new boolean [numberofPrompts];
-	    capt_stateA = new boolean [numberofPrompts];
-
-	    durationA= new double [numberofPrompts];
-	    totalBytesWrittenA= new long [numberofPrompts];
-	    wavFileA = new File [numberofPrompts]; // raw audio
-	    uploadWavFileA = new File [numberofPrompts]; // wav file with header
-
-	    promptA = new String [numberofPrompts];
-	    promptidA = new String [numberofPrompts];
-    }
-    
-    /**
-	 * see http://stackoverflow.com/questions/14874613/how-to-replace-jpanel-with-another-jpanel
-	 */
     private JPanel startApp() 
     { 	
 		JPanel userPanel = new JPanel();
         
-		getLanguage(userPanel);
+		addLangSel(userPanel);
 		
         addUserInfo(userPanel);
         addPromptInfo(userPanel);
@@ -273,6 +248,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     { 	
 		removeAll();  //Removes all the components from this container
         tempdir = getTempDir(); // creates new temp dir with every call
+
+        int numberOfPrompts = prompts.getNumberOfPrompts();
+        prompts = new Prompts(language, numberOfPrompts);
+        messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", new Locale(language), new UTF8Control() );
         
         languageDependent(messages);
         
@@ -287,6 +266,30 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         repaint();
         setVisible(true);
     }	
+    
+    
+    /**
+     * initialize arrays whose size is dependent on the number of prompts
+     * the user has selected
+     * 
+     */
+    private void initPromptNumArrays(int numberofPrompts) 
+    { 	
+	    playA = new JButton [numberofPrompts]; 
+	    captA = new JButton [numberofPrompts];
+
+	    play_stateA = new boolean [numberofPrompts];
+	    capt_stateA = new boolean [numberofPrompts];
+
+	    durationA= new double [numberofPrompts];
+	    totalBytesWrittenA= new long [numberofPrompts];
+	    wavFileA = new File [numberofPrompts]; // raw audio
+	    uploadWavFileA = new File [numberofPrompts]; // wav file with header
+
+	    promptA = new String [numberofPrompts];
+	    promptidA = new String [numberofPrompts];
+    }
+    
     
     /**
      * updates language dependent objects and variables
@@ -358,35 +361,41 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     }
     
     /**
+     * add language selector
      * 
      * @param p2
      */
-	private void getLanguage(JPanel p2) 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void addLangSel(JPanel p2) 
     { 
         JPanel languagePanel = new JPanel();
         languagePanel.setLayout(new FlowLayout(FlowLayout.CENTER));  
         
 		System.out.println("language:" + language);
-        
+
         if (rightToLeft)
         {
-           	languagePanel.add( languageChooser ); 
+           	languagePanel.add( languageChooser = new JComboBox( convertLanguage2Array("languageSelection") ) ); 
         	languagePanel.add(new JLabel(messages.getString("languagePanelLabel")));       	
         }
         else
         {
            	languagePanel.add(new JLabel(messages.getString("languagePanelLabel")));       	
-           	languagePanel.add( languageChooser );
+           	languagePanel.add( languageChooser = new JComboBox( convertLanguage2Array("languageSelection") ) );
         }
-       	
+        
+        languageChooser.setSelectedIndex(0); 
         languageChooser.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e)
 				{
 					String languageString = (String)languageChooser.getSelectedItem();
+					
+					System.err.println("languageString " + languageString);
+					
                     if ( ! languageString.equals(messages.getString("pleaseSelect")) )
 	                {
                     	 language = extractLanguageID(languageString);
-	                     System.err.println("changing language to: " + language);
+	                     System.out.println("changing language to: " + language);
 	        			 restartApp();
                     }
 				}
@@ -475,7 +484,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		}
 	    for (int i = 0; i < numberofPrompts; i++) 
 	    {			
-			System.err.println("CapturePlayback's WAV file for recording uploadWavFile" + i + " is: " + uploadWavFileA[i]);
+			System.out.println("CapturePlayback's WAV file for recording uploadWavFile" + i + " is: " + uploadWavFileA[i]);
 			//System.err.println("CapturePlayback's raw file for recording wavFileA" + i + " is: " + wavFileA[i]);
 	    }    	
     }
@@ -790,7 +799,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                     wavFile = wavFileA[i];      
                     duration = durationA[i];
                     totalBytesWritten = totalBytesWrittenA[i];
-                    System.err.println("=== Play " + (i+1) + " ===");
+                    System.out.println("=== Play " + (i+1) + " ===");
 
                     fileName = promptidA[i];  
                     playback.start(
@@ -801,7 +810,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                        promptidA[i],
 	                        duration
                     );
-            		System.err.println("duration:" + duration);
+            		System.out.println("duration:" + duration);
 
                     samplingGraph.start();
 	                saveButtonState(); 
@@ -826,7 +835,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                file = null;
 	                wavFile = wavFileA[x];  
 	                fileName = promptidA[x];
-	        		System.err.println("=== Record " + (x+1) + " ==="); 
+	        		System.out.println("=== Record " + (x+1) + " ==="); 
 	                capture.start(
 	                		samplingGraph,
 	                		progBar,
@@ -846,7 +855,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                try {  
 	                	Thread.sleep(1000);
 	                } catch (InterruptedException ex) { 
-	        			System.err.println("Recording Thread - Interrupt Exception");
+	        			System.out.println("Recording Thread - Interrupt Exception");
 	                }
 	                
 	                CaptureResult result = capture.stop();
@@ -856,7 +865,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                
 	                totalBytesWrittenA[x] = totalBytesWritten; 
 	            	durationA[x]= totalBytesWritten / (double) (format.getSampleRate() * format.getSampleSizeInBits()/ 8);
-	        		System.err.println("duration1:" + durationA[x]);
+	        		System.out.println("duration1:" + durationA[x]);
 	            	samplingGraph.stop();
 	                restoreButtonState(); 
 	                playA[x].setEnabled(true);
@@ -867,7 +876,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                if (x < prompts.getNumberOfPrompts()-1) {
 	                	captA[x+1].setEnabled(true);
 	                }
-	        		System.err.println("x " + x +"numberofPrompts " + prompts.getNumberOfPrompts());
+	        		//System.out.println("x " + x +"numberofPrompts " + prompts.getNumberOfPrompts());
 	                if (x == prompts.getNumberOfPrompts()-1) {
 	                	uploadB.setEnabled(true);
 	                	//saveLocalB.setEnabled(true);
@@ -1002,7 +1011,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			} catch (IOException err) {
 			}
 		}
-		System.err.println("getAudioInputStream - totalBytesWritten:" + totalBytesWritten);
+		System.out.println("getAudioInputStream - totalBytesWritten:" + totalBytesWritten);
 		try {
 			audioInputStream = new AudioInputStream(new BufferedInputStream(
 					new FileInputStream(wavFile)), format, totalBytesWritten
@@ -1013,7 +1022,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		} catch (Exception err) {
 			System.err.println("Exception while reading cache file: " + err);
 		}
-		System.err.println("Grabbed audio input stream from cache file");
+		System.out.println("Grabbed audio input stream from cache file");
 		
 		return audioInputStream;
 	}
@@ -1029,7 +1038,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             progBar.setStringPainted(true);
            	progBar.setString(messages.getString("uploadCompletedMessageLabel"));
             progBar.setIndeterminate(false);
-            System.err.println("Finished! submission uploaded to VoxForge repository");
+            System.out.println("Finished! submission uploaded to VoxForge repository");
             // Reset the applet
             progBar.setValue(0);
          } 

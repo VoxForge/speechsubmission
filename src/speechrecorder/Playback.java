@@ -210,7 +210,7 @@ public class Playback implements Runnable {
         line.stop();
         line.close();
         line = null;
-        System.err.println("reached end of file");
+        System.out.println("reached end of audio file");
 
         shutDown(null);
         capturePlayback.restoreButtonState(); 

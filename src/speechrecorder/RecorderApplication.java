@@ -25,21 +25,18 @@ public class RecorderApplication extends JFrame {
     private CapturePlayback theRecorder;
    	String targetDirectory = ""; // blank target directory means current
     String destination = "http://read.voxforge1.org/r0_2_4b/javaUploadServer.php";
-    ResourceBundle messages;
-    Prompts prompts;
-    static int numberOfPrompts = 3;
+    Locale currentLocale;
     
-	public RecorderApplication(ResourceBundle messages, Prompts prompts)
+	public RecorderApplication(Locale currentLocale)
 	{
-		this.messages = messages;
-		this.prompts = prompts;
+		this.currentLocale = currentLocale;
 		init();						// simulate browser call(1)
 		setSize(800,800);   		// Set the size of the frame
 		setVisible(true);   		// Show the frame 
 	}
 	
     public void init() {
-    	theRecorder = new CapturePlayback( messages, prompts, targetDirectory, destination ); 
+    	theRecorder = new CapturePlayback(currentLocale, targetDirectory, destination ); 
         getContentPane().add("Center", theRecorder);
     }
 
@@ -74,8 +71,6 @@ public class RecorderApplication extends JFrame {
         String country="US";
 
         Locale currentLocale;
-        ResourceBundle messages;
-        Prompts prompts;
         
         if  (args.length == 1) 
         {
@@ -94,9 +89,6 @@ public class RecorderApplication extends JFrame {
             currentLocale = new Locale("en");
         }
         
-	    prompts = new Prompts(language, numberOfPrompts);
-	    messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale, new UTF8Control() );
-        
-    	new RecorderApplication(messages, prompts);
+    	new RecorderApplication(currentLocale);
     }
 }

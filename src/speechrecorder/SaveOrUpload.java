@@ -93,8 +93,8 @@ class SaveOrUpload implements Runnable {
     {
         thread = new Thread(this);
         thread.setName("ConvertAndUpload");
-		System.err.println("=== Upload ===");
-		System.err.println("destinationURL:" + destinationURL);
+		System.out.println("=== Upload ===");
+		System.out.println("destinationURL:" + destinationURL);
         thread.start();
 
         this.progBar = progBar;
@@ -113,7 +113,6 @@ class SaveOrUpload implements Runnable {
         progBar.setVisible(true);
         progBar.setStringPainted(true);
         progBar.setMaximum(100);
-		System.err.println("uploadingMessageLabel:" + uploadingMessageLabel);
         progBar.setString(uploadingMessageLabel);
         progBar.setIndeterminate(false);
         progBar.setMinimum(0);
@@ -191,7 +190,7 @@ class SaveOrUpload implements Runnable {
 		}
 		
 		createZipArchive(archiveFile, files);
-		System.err.println("Archive file location:" + archiveFile);
+		System.out.println("Archive file location:" + archiveFile);
 		totalBytes = ((int)archiveFile.length()) ; 
 		progBar.setMaximum((int)archiveFile.length());
 
@@ -208,7 +207,7 @@ class SaveOrUpload implements Runnable {
         {
         	u = new UploadManager(archiveFiles, capturePlayback, destinationURL, fileFieldName);
         }
-        System.err.println("Uploading to " + destinationURL);
+        System.out.println("Uploading to " + destinationURL);
         u.start();
     }
 	
@@ -357,7 +356,7 @@ class SaveOrUpload implements Runnable {
 			}
 			
 			createZipArchive(archiveFile, files);
-			System.err.println("Archive file location:" + archiveFile);
+			System.out.println("Archive file location:" + archiveFile);
 			totalBytes = ((int)archiveFile.length()) ; 
 			progBar.setMaximum((int)archiveFile.length());
 

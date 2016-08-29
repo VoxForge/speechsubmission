@@ -74,7 +74,7 @@ class Capture implements Runnable {
     	this.wavFile = wavFile; 
     	this.fileName = fileName; 
     	
-    	System.err.println("Capture uploadWavFile is:" + uploadWavFile);
+    	System.out.println("Capture uploadWavFile is:" + uploadWavFile);
 
         errStr = null;
         thread = new Thread(this);
@@ -138,7 +138,7 @@ class Capture implements Runnable {
             return;
         }
         ByteArrayOutputStream outbaos = new ByteArrayOutputStream();
-        System.err.println("AudioFormat: " + line.getFormat());
+        System.out.println("AudioFormat: " + line.getFormat());
 
         BufferedOutputStream out;
         try {
@@ -200,14 +200,11 @@ class Capture implements Runnable {
     	byte audioBytes[] = outbaos.toByteArray();
 	
     	duration = totalBytesWritten / (double) (format.getSampleRate() * format.getSampleSizeInBits()/ 8);
-		System.err.println("capture duration:" + duration);
+		System.out.println("capture duration:" + duration);
     	// debug	System.err.println("Calculated duration");
         samplingGraph.createWaveForm(
         		audioInputStream, 
         		audioBytes, 
-        	    sampleGraphFileLabel,
-    			sampleGraphLengthLabel,
-    			sampleGraphPositionLabel,
     		    fileName,
         		duration
         );

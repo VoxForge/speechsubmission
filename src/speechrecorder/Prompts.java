@@ -103,44 +103,44 @@ class Prompts  {
 	public Prompts(String Language, int numberofPrompts) {
 		this.numberofPrompts = numberofPrompts;
 		
-		if (Language.equals("EN")) {
+		if (Language.equalsIgnoreCase("EN")) {
 //			promptList = getPromptTextFile("prompts/englishPromptList.txt", 1223); // number of prompts needs to be exact or there might be an error on a roll-over
 			promptList = getPromptTextFile("en", "prompts/englishPromptList.txt", 798); // number of prompts needs to be exact or there might be an error on a roll-over
 
-		} else if (Language.equals("nl")) {
+		} else if (Language.equalsIgnoreCase("nl")) {
 			promptList = getPromptTextFile("nl","prompts/dutchPromptList.txt", 947);
-		} else if (Language.equals("de")) {
+		} else if (Language.equalsIgnoreCase("de")) {
 			promptList = getPromptTextFile("prompts/germanPromptList.txt", 1211);
-		} else if (Language.equals("ru")) {
+		} else if (Language.equalsIgnoreCase("ru")) {
 			promptList = getPromptTextFile("prompts/russianPromptList.txt", 81);	
-		} else if (Language.equals("it")) {
+		} else if (Language.equalsIgnoreCase("it")) {
 			promptList = getPromptTextFile("it","prompts/italianPromptList.txt", 1185);
-		} else if (Language.equals("he")) {
+		} else if (Language.equalsIgnoreCase("he")) {
 			promptList = getPromptTextFile("prompts/hebrewPromptList.txt", 55);	
-		} else if (Language.equals("pt")) {
+		} else if (Language.equalsIgnoreCase("pt")) {
 			promptList = getPromptTextFile("prompts/portuguesePromptList.txt", 218);	
-		} else if (Language.equals("es")) {
+		} else if (Language.equalsIgnoreCase("es")) {
 			promptList = getPromptTextFile("es","prompts/spanishPromptList.txt", 43);	
-		} else if (Language.equals("fr")) {
+		} else if (Language.equalsIgnoreCase("fr")) {
 			promptList = getPromptTextFile("prompts/frenchPromptList.txt", 865);	
-		} else if (Language.equals("el")) {
+		} else if (Language.equalsIgnoreCase("el")) {
 			promptList = getPromptTextFile("el","prompts/greekPromptList.txt", 221);		
-		} else if (Language.equals("tr")) {
+		} else if (Language.equalsIgnoreCase("tr")) {
 			promptList = getPromptTextFile("tr","prompts/turkishPromptList.txt", 40 );		
-		} else if (Language.equals("bg")) {
+		} else if (Language.equalsIgnoreCase("bg")) {
 			promptList = getPromptTextFile("bg","prompts/bulgarianPromptList.txt", 50 );	
-		} else if (Language.equals("uk")) {
+		} else if (Language.equalsIgnoreCase("uk")) {
 			promptList = getPromptTextFile("prompts/ukrainianPromptList.txt", 50);		
-		} else if (Language.equals("ca")) {
+		} else if (Language.equalsIgnoreCase("ca")) {
 			promptList = getPromptTextFile("ca", "prompts/catalanPromptList.txt", 40);				
-		} else if (Language.equals("hr")) {
+		} else if (Language.equalsIgnoreCase("hr")) {
 			promptList = getPromptTextFile("hr", "prompts/croatianPromptList.txt", 98);
-		} else if (Language.equals("sq")) {
+		} else if (Language.equalsIgnoreCase("sq")) {
 			promptList = getPromptTextFile("sq", "prompts/albanianPromptList.txt", 56);			
-		} else if (Language.equals("fa")) {
+		} else if (Language.equalsIgnoreCase("fa")) {
 			promptList = getPromptTextFile("fa", "prompts/persianPromptList.txt", 50);					
 		} else {
-	        System.err.println("getPromptTextFile error accessing prompt file for "+ Language + " using default English prompts");
+	        System.err.println("WARNING getPromptTextFile error accessing prompt file for "+ Language + " using default English prompts");
 			promptList = englishPromptList;
 		}
 		
@@ -192,7 +192,7 @@ class Prompts  {
 		try {
 		    InputStream is = getClass().getResourceAsStream(File); 
 		    InputStreamReader isr = new InputStreamReader(is,"UTF-8" );
-			System.err.println(System.getProperty("line.separator") + "PromptList Character Encoding:" + isr.getEncoding());  // doesn't work ????
+			System.out.println(System.getProperty("line.separator") + "PromptList Character Encoding:" + isr.getEncoding());  // doesn't work ????
 		    BufferedReader br = new BufferedReader(isr);
 		    String line;
 		 	int i = 0;    
@@ -201,7 +201,7 @@ class Prompts  {
 				i++; 
 		    }
 		  } catch (IOException io) {
-	          System.err.println("getPromptTextFile error accessing text file for "+File + "using default prompts");
+	          System.out.println("getPromptTextFile error accessing text file for "+File + "using default prompts");
 	          return englishPromptList;
 		  }
 		  return words;
@@ -212,7 +212,7 @@ class Prompts  {
 		try {
 		    InputStream is = getClass().getResourceAsStream(File);
 		    InputStreamReader isr = new InputStreamReader(is,"UTF-8" );
-		    System.err.println(System.getProperty("line.separator") + "PromptList Character Encoding:" + isr.getEncoding());  // doesn't work ????
+		    System.out.println(System.getProperty("line.separator") + "PromptList Character Encoding:" + isr.getEncoding());  // doesn't work ????
 		    BufferedReader br = new BufferedReader(isr);
 		    String line;
 		 	int i = 0;    

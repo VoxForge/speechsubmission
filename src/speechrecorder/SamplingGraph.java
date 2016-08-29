@@ -69,7 +69,6 @@ class SamplingGraph extends JPanel implements Runnable {
     public void createWaveForm(
     			AudioInputStream audioInputStream, 
     			byte[] audioBytes, 
-
     		    String fileName,
     			double duration
     		) 
@@ -149,9 +148,9 @@ class SamplingGraph extends JPanel implements Runnable {
             lines.add(new Line2D.Double(x, y_last, x, y_new));
             y_last = y_new;
         }
-        System.err.println("numPeakValues: " + numPeakValues);
+        System.out.println("numPeakValues: " + numPeakValues);
         float proportionPeakValues = ((float)numPeakValues) / (nlengthInSamples);
-        System.err.println("proportionPeakValues: " + proportionPeakValues);
+        System.out.println("proportionPeakValues: " + proportionPeakValues);
         peakWarning = proportionPeakValues > 0.001f;
         
         repaint(); // calls paint
