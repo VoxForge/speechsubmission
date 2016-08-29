@@ -168,9 +168,6 @@ public class Playback implements Runnable {
         samplingGraph.createWaveForm(
         		audioInputStream, 
         		audioBytes, 
-        	    sampleGraphFileLabel,
-    			sampleGraphLengthLabel,
-    			sampleGraphPositionLabel,
     		    fileName,
         		duration
         ); 

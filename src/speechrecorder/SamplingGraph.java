@@ -52,28 +52,30 @@ class SamplingGraph extends JPanel implements Runnable {
 
     public SamplingGraph (
     		Capture capture,
-    		Playback playback
+    		Playback playback,
+		    String sampleGraphFileLabel,
+			String sampleGraphLengthLabel,
+			String sampleGraphPositionLabel
     	) 
     {
     	setBackground(new Color(20, 20, 20));
         this.capture = capture;
         this.playback = playback;
+        this.sampleGraphFileLabel = sampleGraphFileLabel;
+        this.sampleGraphLengthLabel = sampleGraphLengthLabel;       
+        this.sampleGraphPositionLabel = sampleGraphPositionLabel;
     }   
     
     public void createWaveForm(
     			AudioInputStream audioInputStream, 
     			byte[] audioBytes, 
-    		    String sampleGraphFileLabel,
-    			String sampleGraphLengthLabel,
-    			String sampleGraphPositionLabel,
+
     		    String fileName,
     			double duration
     		) 
     {
         this.audioInputStream = audioInputStream;    	
-        this.sampleGraphFileLabel = sampleGraphFileLabel;
-        this.sampleGraphLengthLabel = sampleGraphLengthLabel;       
-        this.sampleGraphPositionLabel = sampleGraphPositionLabel;
+
         this.fileName = fileName;  
         this.duration = duration;  
         
@@ -195,7 +197,7 @@ class SamplingGraph extends JPanel implements Runnable {
         } else {
             g2.setColor(Color.black);
             g2.setFont(font12);
-            g2.drawString(sampleGraphFileLabel + fileName + sampleGraphLengthLabel + String.valueOf(duration) + sampleGraphPositionLabel + String.valueOf(seconds), 3, h-4);
+            g2.drawString(sampleGraphFileLabel + fileName + " " + sampleGraphLengthLabel + String.valueOf(duration) + " " + sampleGraphPositionLabel + String.valueOf(seconds), 3, h-4);
 
             if (audioInputStream != null) {
                 // .. render sampling graph ..

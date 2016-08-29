@@ -91,7 +91,7 @@ public class RecorderApplication extends JFrame {
         }
         else
         {
-            currentLocale = new Locale("EN");
+            currentLocale = new Locale("en");
         }
         
 	    prompts = new Prompts(language, numberOfPrompts);

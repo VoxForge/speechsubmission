@@ -247,7 +247,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    promptidA = new String [numberofPrompts];
     }
     
-    
     /**
 	 * see http://stackoverflow.com/questions/14874613/how-to-replace-jpanel-with-another-jpanel
 	 */
@@ -497,7 +496,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         
         samplingGraph = new SamplingGraph(
         				capture,
-        				playback
+        				playback,
+        				messages.getString("sampleGraphFileLabel"),
+        				messages.getString("sampleGraphLengthLabel"),
+        				messages.getString("sampleGraphPositionLabel")
         );
         samplingGraph.setPreferredSize(new Dimension(50, 100));
         samplingPanel.add(samplingGraph);
@@ -507,7 +509,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     	//		############ Upload Progress bar ####################################
         progBar = new JProgressBar();
         progBar.setStringPainted(true);
-        progBar.setString("Ready to Record");
+        progBar.setString(messages.getString("readyToRecord"));
         userPanel.add(progBar);    
     }
     

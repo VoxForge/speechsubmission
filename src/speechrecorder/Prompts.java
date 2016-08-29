@@ -107,40 +107,40 @@ class Prompts  {
 //			promptList = getPromptTextFile("prompts/englishPromptList.txt", 1223); // number of prompts needs to be exact or there might be an error on a roll-over
 			promptList = getPromptTextFile("en", "prompts/englishPromptList.txt", 798); // number of prompts needs to be exact or there might be an error on a roll-over
 
-		} else if (Language.equals("NL")) {
+		} else if (Language.equals("nl")) {
 			promptList = getPromptTextFile("nl","prompts/dutchPromptList.txt", 947);
-		} else if (Language.equals("DE")) {
+		} else if (Language.equals("de")) {
 			promptList = getPromptTextFile("prompts/germanPromptList.txt", 1211);
-		} else if (Language.equals("RU")) {
+		} else if (Language.equals("ru")) {
 			promptList = getPromptTextFile("prompts/russianPromptList.txt", 81);	
-		} else if (Language.equals("IT")) {
+		} else if (Language.equals("it")) {
 			promptList = getPromptTextFile("it","prompts/italianPromptList.txt", 1185);
-		} else if (Language.equals("HE")) {
+		} else if (Language.equals("he")) {
 			promptList = getPromptTextFile("prompts/hebrewPromptList.txt", 55);	
-		} else if (Language.equals("PT")) {
+		} else if (Language.equals("pt")) {
 			promptList = getPromptTextFile("prompts/portuguesePromptList.txt", 218);	
-		} else if (Language.equals("ES")) {
+		} else if (Language.equals("es")) {
 			promptList = getPromptTextFile("es","prompts/spanishPromptList.txt", 43);	
-		} else if (Language.equals("FR")) {
+		} else if (Language.equals("fr")) {
 			promptList = getPromptTextFile("prompts/frenchPromptList.txt", 865);	
-		} else if (Language.equals("EL")) {
+		} else if (Language.equals("el")) {
 			promptList = getPromptTextFile("el","prompts/greekPromptList.txt", 221);		
-		} else if (Language.equals("TR")) {
+		} else if (Language.equals("tr")) {
 			promptList = getPromptTextFile("tr","prompts/turkishPromptList.txt", 40 );		
-		} else if (Language.equals("BG")) {
+		} else if (Language.equals("bg")) {
 			promptList = getPromptTextFile("bg","prompts/bulgarianPromptList.txt", 50 );	
-		} else if (Language.equals("UK")) {
+		} else if (Language.equals("uk")) {
 			promptList = getPromptTextFile("prompts/ukrainianPromptList.txt", 50);		
-		} else if (Language.equals("CA")) {
+		} else if (Language.equals("ca")) {
 			promptList = getPromptTextFile("ca", "prompts/catalanPromptList.txt", 40);				
-		} else if (Language.equals("HR")) {
+		} else if (Language.equals("hr")) {
 			promptList = getPromptTextFile("hr", "prompts/croatianPromptList.txt", 98);
-		} else if (Language.equals("SQ")) {
+		} else if (Language.equals("sq")) {
 			promptList = getPromptTextFile("sq", "prompts/albanianPromptList.txt", 56);			
-		} else if (Language.equals("FA")) {
+		} else if (Language.equals("fa")) {
 			promptList = getPromptTextFile("fa", "prompts/persianPromptList.txt", 50);					
 		} else {
-	        System.err.println("getPromptTextFile error accessing prompt file for "+ Language + "using default English prompts");
+	        System.err.println("getPromptTextFile error accessing prompt file for "+ Language + " using default English prompts");
 			promptList = englishPromptList;
 		}
 		
