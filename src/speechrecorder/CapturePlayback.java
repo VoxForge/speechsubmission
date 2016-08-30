@@ -917,8 +917,24 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             }
 
 			//saveSettings();
-
-			totalBytes = saveOrUpload.start(progBar, language, userName, userDataToString() );
+        	/*
+       		totalBytes = saveOrUpload.start(
+							progBar, 
+							language, 
+							userName, 
+							userDataToString() 
+			);
+			*/
+        	totalBytes = saveOrUpload.createArchive(
+					progBar, 
+					language, 
+					userName, 
+					userDataToString() 
+			);
+        	
+        	
+        	saveOrUpload.upload();
+        	
 			restartApp();
         }
 //      ################### SaveLocally #######################################   
@@ -1033,6 +1049,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
  	public synchronized void setProgress(int a) {
          sentBytes += a;
          progBar.setValue(sentBytes);
+         
          if (sentBytes == totalBytes)
          {
             progBar.setStringPainted(true);
@@ -1041,11 +1058,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             System.out.println("Finished! submission uploaded to VoxForge repository");
             // Reset the applet
             progBar.setValue(0);
-         } 
+            sentBytes = 0;
+         }
          else 
          {
          	//FORDEBUG
-         	// System.err.println("setProgress(): Not reached end yet. sentBytes="+sentBytes+", totalBytes="+totalBytes);
+         	System.err.println("setProgress(): Not reached end yet. sentBytes="+sentBytes+", totalBytes="+totalBytes);
          }
  	}    
     

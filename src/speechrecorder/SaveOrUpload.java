@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URL;
-import java.nio.channels.FileChannel;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.zip.ZipEntry;
@@ -21,7 +20,7 @@ import net.sf.postlet.UploadManager;
 /** 
  * uploads the file
  */
-class SaveOrUpload implements Runnable {
+class SaveOrUpload  {
     Thread thread;
     String fileFieldName = "userfile";         
     JProgressBar progBar;
@@ -46,6 +45,8 @@ class SaveOrUpload implements Runnable {
     File readmeFile;    
     File licenseFile;   
     File licenseNoticeFile;   
+    
+	File archiveFile;
     
     int totalBytes; // return value
     
@@ -84,45 +85,44 @@ class SaveOrUpload implements Runnable {
 		licenseNoticeFile.deleteOnExit();	
 	}
     
-    public int start(
+    //public void start(
+    public int createArchive(
     		JProgressBar progBar, 
 		    String language,
     		String userName, 
     		String userData
     	) 
     {
-        thread = new Thread(this);
-        thread.setName("ConvertAndUpload");
-		System.out.println("=== Upload ===");
-		System.out.println("destinationURL:" + destinationURL);
-        thread.start();
-
         this.progBar = progBar;
     	this.language = language;   
     	this.userName = userName;   
     	this.userData = userData;   
-        
-        return totalBytes;
-    }
+    	
+    	//thread = new Thread(this);
+        //thread.setName("ConvertAndUpload");
+		System.out.println("=== Upload ===");
+        //thread.start();
+    //}
 
-    public void stop() {
-        thread = null;
-    }
+    //public void stop() {
+    //    thread = null;
+   // }
     
-	public void run() {
-        progBar.setVisible(true);
-        progBar.setStringPainted(true);
-        progBar.setMaximum(100);
-        progBar.setString(uploadingMessageLabel);
-        progBar.setIndeterminate(false);
-        progBar.setMinimum(0);
+	//public void run() {
+        //progBar.setVisible(true);
+        //progBar.setStringPainted(true);
+        //progBar.setMaximum(100);
+        //progBar.setString(uploadingMessageLabel);
+        //progBar.setIndeterminate(false);
+        //progBar.setMinimum(0);
+
         sentBytes = 0;
 		try {
 			destinationURL = new URL(destinationURL.toString());	  
 		}catch(Exception err){
 		    System.err.println(err);
 		}
-		System.err.println("Destination URL is " + destinationURL);
+		System.out.println("Destination URL is " + destinationURL);
 
 		//############ audio files ####################################
 		File[] files = new File[numberofPrompts + 4];
@@ -159,7 +159,7 @@ class SaveOrUpload implements Runnable {
 		} 
 		files[numberofPrompts + 2] = licenseNoticeFile;
 		//############ create archive file #################################### 
-		File archiveFile;
+		//File archiveFile;
 		Calendar cal = Calendar.getInstance();
 		int day = cal.get(Calendar.DATE);
 		int month = cal.get(Calendar.MONTH) + 1;
@@ -192,8 +192,20 @@ class SaveOrUpload implements Runnable {
 		createZipArchive(archiveFile, files);
 		System.out.println("Archive file location:" + archiveFile);
 		totalBytes = ((int)archiveFile.length()) ; 
+		System.out.println("SaveOrUpload totalBytes:" + totalBytes);
 		progBar.setMaximum((int)archiveFile.length());
-
+		
+        return totalBytes;
+    }
+    
+    public void upload() { 
+        progBar.setVisible(true);
+        progBar.setStringPainted(true);
+        progBar.setMaximum(100);
+        progBar.setString(uploadingMessageLabel);
+        progBar.setIndeterminate(false);
+        progBar.setMinimum(0);
+    	
 		//############ Upload #################################### 
 		// Upload manager needs an array but JavaUpload.php script can only handle one file at a time
 		File[] archiveFiles = new File[1];
