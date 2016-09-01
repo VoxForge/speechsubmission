@@ -14,6 +14,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.swing.JProgressBar;
 
+import net.sf.postlet.PostletInterface;
 import net.sf.postlet.UploadManager;
 
 
@@ -25,15 +26,17 @@ class SaveOrUpload  {
     String fileFieldName = "userfile";         
     JProgressBar progBar;
     
-    CapturePlayback capturePlayback;
+    //CapturePlayback capturePlayback;
+    PostletInterface postletInterface;
     
     URL destinationURL;
     String uploadingMessageLabel;
     int sentBytes;
-    int numberofPrompts;
-    File [] uploadWavFileA;
-    String [] promptidA;
-    String [] promptA;
+    //int numberofPrompts;
+    //File [] uploadWavFileA;
+    //String [] promptidA;
+    //String [] promptA;
+    Submission submission;
     String userData;
 	String tempdir;
 	String licenseNotice;
@@ -52,25 +55,29 @@ class SaveOrUpload  {
     
     // constructor
     public SaveOrUpload(
-			CapturePlayback capturePlayback,
+			//CapturePlayback capturePlayback,
+			PostletInterface postletInterface,
 			URL destinationURL, 
 			String uploadingMessageLabel, 
-			int numberofPrompts,
-			File [] uploadWavFileA,
-		    String [] promptidA,
-		    String [] promptA,
+			//int numberofPrompts,
+			//File [] uploadWavFileA,
+		    //String [] promptidA,
+		    //String [] promptA,
+			Submission submission,
 		    String tempdir,
 		    String licenseNotice,
 		    int buffer_size
     	) 
 	{   
-    	this.capturePlayback = capturePlayback;   
+    	//this.capturePlayback = capturePlayback;   
+    	this.postletInterface = postletInterface;   
     	this.destinationURL = destinationURL;
     	this.uploadingMessageLabel = uploadingMessageLabel;
-    	this.numberofPrompts = numberofPrompts;    	
-    	this.uploadWavFileA = uploadWavFileA;    	
-    	this.promptidA = promptidA;    	
-    	this.promptA = promptA;    	
+    	//this.numberofPrompts = numberofPrompts;    	
+    	//this.uploadWavFileA = uploadWavFileA;    	
+    	//this.promptidA = promptidA;    	
+    	//this.promptA = promptA;   
+    	this.submission = submission;      	
     	this.tempdir = tempdir;    	
     	this.licenseNotice = licenseNotice;       	
     	this.buffer_size = buffer_size;      
@@ -125,21 +132,23 @@ class SaveOrUpload  {
 		System.out.println("Destination URL is " + destinationURL);
 
 		//############ audio files ####################################
-		File[] files = new File[numberofPrompts + 4];
-        for (int i = 0; i < numberofPrompts; i++) {
-			files[i] = uploadWavFileA[i];
+		File[] files = new File[submission.getNumberOfPrompts() + 4];
+        for (int i = 0; i < submission.getNumberOfPrompts(); i++) {
+			//files[i] = uploadWavFileA[i];
+			files[i] = submission.elementA[i].uploadWavFile;
         }
 		//############ prompt files #################################### 
 		try {
 			BufferedWriter out_prompts = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(promptsFile),"UTF-8"));
-	        for (int i = 0; i < numberofPrompts; i++) {
-				out_prompts.write(promptidA[i] + " " + promptA[i] + System.getProperty("line.separator"));
-	        }
+	        //for (int i = 0; i < numberofPrompts; i++) {
+			//	out_prompts.write(promptidA[i] + " " + promptA[i] + System.getProperty("line.separator"));
+	        //}
+	        out_prompts.write(submission.toString());
 		    out_prompts.close();
 		} catch (IOException e) {
 			    System.err.println("Problems with prompts");
 		} 
-		files[numberofPrompts] = promptsFile;
+		files[submission.getNumberOfPrompts()] = promptsFile;
 		//############ ReadMe file#################################### 
 		try {
 			BufferedWriter out_readme = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(readmeFile),"UTF-8"));
@@ -148,7 +157,7 @@ class SaveOrUpload  {
 		} catch (IOException e) {
 		    System.err.println("Problems with Gender, Age Range or Dialect");
 		} 
-		files[numberofPrompts + 1] = readmeFile;
+		files[submission.getNumberOfPrompts() + 1] = readmeFile;
 		//############ License Notice File ####################################    
 		try {
 			BufferedWriter out_licenseNoticeFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseNoticeFile),"UTF-8"));
@@ -157,7 +166,7 @@ class SaveOrUpload  {
 		} catch (IOException e) {
 			    System.err.println("Problems with licenseNoticeFile file");
 		} 
-		files[numberofPrompts + 2] = licenseNoticeFile;
+		files[submission.getNumberOfPrompts() + 2] = licenseNoticeFile;
 		//############ create archive file #################################### 
 		//File archiveFile;
 		Calendar cal = Calendar.getInstance();
@@ -215,11 +224,11 @@ class SaveOrUpload  {
         UploadManager u;
         try 
         {
-            u = new UploadManager(archiveFiles, capturePlayback, destinationURL, 1, fileFieldName);
+            u = new UploadManager(archiveFiles, postletInterface, destinationURL, 1, fileFieldName);
         } 
         catch(java.lang.NullPointerException npered)
         {
-        	u = new UploadManager(archiveFiles, capturePlayback, destinationURL, fileFieldName);
+        	u = new UploadManager(archiveFiles, postletInterface, destinationURL, fileFieldName);
         }
         System.out.println("Uploading to " + destinationURL);
         u.start();
