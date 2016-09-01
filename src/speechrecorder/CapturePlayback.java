@@ -691,8 +691,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
     }
 
-
-
     /**
      * Which button pressed:
      * 
@@ -705,26 +703,21 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      */
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
-// ################### Play #######################################       
+ 
         for (int i = 0; i < submission.getNumberOfPrompts(); i++) {
             if (obj.equals(playA[i])) {
             	play(i);
             }
         }
-
-// ################### Record (capture) #######################################        
 	    for (int i = 0; i < submission.getNumberOfPrompts(); i++) {
 	        if (obj.equals(captA[i])) {
             	capture(i);
  	        } 
 	    }
-
-//          ################### Upload #######################################               
 	    if (obj.equals(uploadB)) 
 	    { 
 	    	upload();
         }
-//      ################### SaveLocally #######################################   
 	    /*
 	    if (obj.equals(saveLocalB)) 
 	    { 
@@ -733,13 +726,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    */ 
 //      ################### More Information #######################################     
         else if (obj.equals(moreInfoB)) {
-         	 JTextArea textArea = new JTextArea(License.getLicense());
-             textArea.setLineWrap(true);
-             textArea.setWrapStyleWord(true);
-             JScrollPane areaScrollPane = new JScrollPane(textArea);
-             areaScrollPane.setVerticalScrollBarPolicy(
+         	JTextArea textArea = new JTextArea(License.getLicense());
+            textArea.setLineWrap(true);
+            textArea.setWrapStyleWord(true);
+            JScrollPane areaScrollPane = new JScrollPane(textArea);
+            areaScrollPane.setVerticalScrollBarPolicy(
              		JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-             areaScrollPane.setPreferredSize(new Dimension(600, 600));
+            areaScrollPane.setPreferredSize(new Dimension(600, 600));
   
             JOptionPane.showMessageDialog(this, areaScrollPane, 
                     "More info on Copyright and GPL license", JOptionPane.PLAIN_MESSAGE);
@@ -754,11 +747,16 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             		JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             areaScrollPane.setPreferredSize(new Dimension(600, 600));
  
-           JOptionPane.showMessageDialog(this, areaScrollPane, 
+            JOptionPane.showMessageDialog(this, areaScrollPane, 
                    "About VoxForge Speech Submission Application", JOptionPane.PLAIN_MESSAGE);
        }
     }
     
+    /**
+     * play selected audio file
+     * 
+     * @param i
+     */
     protected void play(int i) {
         if (playA[i].getText().startsWith(messages.getString("playButton"))) {
             wavFile = submission.getElement(i).wavFile; 
@@ -791,6 +789,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
     }
     
+    /**
+     * record audio
+     * 
+     * @param i
+     */
     protected void capture(int i) {
         if (captA[i].getText().startsWith(messages.getString("recordButton"))) {
             file = null;
@@ -845,7 +848,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
     }
     
-    
+    /**
+     * upload submission to voxforge
+     */
     protected void upload() {
 	    for (int i = 0; i < submission.getNumberOfPrompts(); i++) 
 	    {
@@ -933,8 +938,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		restartApp();
     }	   
 */	
-
-    
     
     /**
      *  return multiple values from Capture class
