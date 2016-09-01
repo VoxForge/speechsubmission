@@ -55,30 +55,19 @@ class SaveOrUpload  {
     
     // constructor
     public SaveOrUpload(
-			//CapturePlayback capturePlayback,
 			PostletInterface postletInterface,
 			URL destinationURL, 
 			String uploadingMessageLabel, 
-			//int numberofPrompts,
-			//File [] uploadWavFileA,
-		    //String [] promptidA,
-		    //String [] promptA,
 			Submission submission,
-		    String tempdir,
 		    String licenseNotice,
 		    int buffer_size
     	) 
 	{   
-    	//this.capturePlayback = capturePlayback;   
     	this.postletInterface = postletInterface;   
     	this.destinationURL = destinationURL;
     	this.uploadingMessageLabel = uploadingMessageLabel;
-    	//this.numberofPrompts = numberofPrompts;    	
-    	//this.uploadWavFileA = uploadWavFileA;    	
-    	//this.promptidA = promptidA;    	
-    	//this.promptA = promptA;   
     	this.submission = submission;      	
-    	this.tempdir = tempdir;    	
+    	this.tempdir = submission.getDirectory();    	
     	this.licenseNotice = licenseNotice;       	
     	this.buffer_size = buffer_size;      
 

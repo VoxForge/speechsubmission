@@ -68,7 +68,7 @@ public class Submission {
 	}
     
 	/**
-	 * Submission Elemen iterator
+	 * Submission Element iterator
 	 * 
 	 * @return
 	 */
@@ -130,6 +130,16 @@ public class Submission {
 		}
 		return tempdir;
     }
+
+	/**
+	 * return name of directory where wav files are stored
+	 * 
+	 * @return
+	 */
+	public String getDirectory()
+	{
+		return tempdir;
+	}
     
     /**
      * return list of promptIDs and prompt sentences in string format
@@ -144,5 +154,5 @@ public class Submission {
         
         return result;
 	}
-
+	
 }

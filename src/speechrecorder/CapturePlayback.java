@@ -99,7 +99,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
     Capture capture;
     Playback playback;
-    CapturePlayback capturePlayback; // Needed for referencing within the inner classes
 
     AudioInputStream audioInputStream;
     SamplingGraph samplingGraph;
@@ -131,8 +130,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     File file;
   
     private File wavFile;
-    //private File[] wavFileA; // raw audio
-    //private File [] uploadWavFileA; // wav file with header
 
     JProgressBar progBar;
     int sentBytes = 0;
@@ -141,9 +138,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
     JTextField subjectBox;
     String subject;
-
-    //String [] promptA;
-    //String [] promptidA;
     
 //  ############ Localized Fields ####################################   
     JTextField usernameTextField;  
@@ -188,7 +182,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      */
 	public CapturePlayback( Locale currentLocale, String targetDirectory, String destination) 
 	{    	
-		this.capturePlayback = this;
     	this.targetDirectory = targetDirectory;
         try 
         {
@@ -246,7 +239,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     private void restartApp() 
     { 	
 		removeAll();  //Removes all the components from this container
-        //tempdir = getTempDir(); // creates new temp dir with every call
 
         messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", new Locale(language), new UTF8Control() );
         submission = new Submission(language, submission.getNumberOfPrompts(), messages);
@@ -280,11 +272,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
 	    durationA= new double [numberofPrompts];
 	    totalBytesWrittenA= new long [numberofPrompts];
-	    //wavFileA = new File [numberofPrompts]; // raw audio
-	    //uploadWavFileA = new File [numberofPrompts]; // wav file with header
-
-	    //promptA = new String [numberofPrompts];
-	    //promptidA = new String [numberofPrompts];
     }
     
     
@@ -304,15 +291,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		vflicense = License.getVFLicense();	 	
 
 		saveOrUpload = new SaveOrUpload(
-				capturePlayback,
+				this,
 				destinationURL, 
 				messages.getString("uploadingMessageLabel"),
 				submission,
-				//uploadWavFileA,
-			    //promptidA,
-			    //promptA,
-				//submission.toString(),
-			    tempdir,
 			    licenseNotice,
 			    BUFFER_SIZE
 		);
@@ -324,7 +306,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    microphone = messages.getString("notApplicable");  // default selection
 	    
 	    playback = new Playback(
-		    	capturePlayback,
+		    	this,
 		    	format,
 		    	submission.getNumberOfPrompts(),
                 bufSize,
@@ -337,7 +319,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    );
 	    
 	    capture = new Capture(
-	    	capturePlayback,
+	    	this,
 	    	format,
             messages.getString("peakWarningLabel"),
             messages.getString("sampleGraphFileLabel"),
@@ -410,18 +392,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     private void addPromptInfo(JPanel userPanel) 
     { 
     	JPanel promptsContainer = new JPanel();
-
-	    int j = 0;
-
-    	//SubmissionElement el=null;
-	    //while (submission.hasNext()) {
-		//	el = submission.next();
-	    //	this.promptidA[j] = el.promptid;
-	    //	this.promptA[j] = el.prompt;
-
-	    //	j++;
-		//}
-	    
 	    
     	//		############ Prompt container ####################################   
 
@@ -439,14 +409,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
         JPanel promptPanelA[] = new JPanel[promptsPerPane]; 
         JPanel promptInnerPanelA[] = new JPanel[promptsPerPane]; 
-        for (int i = startPromptCount; i < promptsPerPane && submission.hasNext(); i++) 
+        for (int i = startPromptCount; i < promptsPerPane; i++) 
         {
         	promptPanelA[i] = new JPanel();
         	promptPanelA[i].setLayout(new FlowLayout(FlowLayout.RIGHT));
         	promptInnerPanelA [i]= new JPanel();
 	        promptInnerPanelA[i].setBorder(BorderFactory.createLineBorder (voxforgeColour, 1));
-	        //promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], this.promptA[i], maxWidth, rightToLeft));
-	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], submission.next().prompt, maxWidth, rightToLeft));
+	        promptInnerPanelA[i].add(new MultiLineLabel(promptPanelA[i], submission.getElement(i).prompt, maxWidth, rightToLeft));
 	        promptPanelA[i].add(promptInnerPanelA[i]);
 	        playA[i] = addButton(messages.getString("playButton"), promptPanelA[i], false);
 	        if (i==0) {
@@ -462,39 +431,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
         userPanel.add(promptsContainer);
     }	
-	    
-    /**
-     * Create WAV files to hold recordings
-     * 
-     * @param numberofPrompts
-     * @param promptidA
-
-    //private void createWavFiles(int numberofPrompts, String [] promptidA ) 
-    private void createWavFiles(int numberofPrompts,SubmissionElement[] elementA ) 
-    { 
-		try {
-	        for (int i = 0; i < numberofPrompts; i++) 
-	        {
-	        	wavFileA[i] = new File(tempdir + "wavFile" + i + ".wav");
-	        	wavFileA[i].deleteOnExit();
-	        }
-	        for (int i = 0; i < numberofPrompts; i++) 
-	        {
-				//uploadWavFileA[i] = new File(tempdir + promptidA [i] + ".wav");
-				uploadWavFileA[i] = new File(tempdir + elementA[i].promptid + ".wav");
-				uploadWavFileA[i].deleteOnExit();
-	        }
-		} catch (Exception e) {
-			System.err.println("Unable to create WAV cache file for storing audio\n" + e);
-			return;
-		}
-	    for (int i = 0; i < numberofPrompts; i++) 
-	    {			
-			System.out.println("CapturePlayback's WAV file for recording uploadWavFile" + i + " is: " + uploadWavFileA[i]);
-			//System.err.println("CapturePlayback's raw file for recording wavFileA" + i + " is: " + wavFileA[i]);
-	    }    	
-    }
-    */
     
     /**
      * Sampling Graph
@@ -719,31 +655,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         	});
         p2.add(microphonePanel);
     }	
-
-    /**
-     * create temporary directory and return path as a string; 
-     * 
-     * creates new temp dir with every call
-     * 
-     * @return
-    
-    private String getTempDir() {
-    	String tempdir=null;
-		try {
-	    	File dir=File.createTempFile("VF-dir",null);
-	    	dir.delete();
-	    	dir.mkdir();
-	    	tempdir = dir.toString();
-	    	if ( !(tempdir.endsWith("/") || tempdir.endsWith("\\")) )
-	    		   tempdir = tempdir + System.getProperty("file.separator");
-
-		} catch (Exception e) {
-			System.err.println("Unable to create temp directory\n" + e);
-		}
-		return tempdir;
-    }
-	*/
-    
+   
     public void open() { }
     
     public void close() {
