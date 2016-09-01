@@ -26,16 +26,11 @@ class SaveOrUpload  {
     String fileFieldName = "userfile";         
     JProgressBar progBar;
     
-    //CapturePlayback capturePlayback;
     PostletInterface postletInterface;
     
     URL destinationURL;
     String uploadingMessageLabel;
     int sentBytes;
-    //int numberofPrompts;
-    //File [] uploadWavFileA;
-    //String [] promptidA;
-    //String [] promptA;
     Submission submission;
     String userData;
 	String tempdir;
@@ -93,25 +88,8 @@ class SaveOrUpload  {
     	this.language = language;   
     	this.userName = userName;   
     	this.userData = userData;   
-    	
-    	//thread = new Thread(this);
-        //thread.setName("ConvertAndUpload");
+
 		System.out.println("=== creating archive ===");
-        //thread.start();
-    //}
-
-    //public void stop() {
-    //    thread = null;
-   // }
-    
-	//public void run() {
-        //progBar.setVisible(true);
-        //progBar.setStringPainted(true);
-        //progBar.setMaximum(100);
-        //progBar.setString(uploadingMessageLabel);
-        //progBar.setIndeterminate(false);
-        //progBar.setMinimum(0);
-
         sentBytes = 0;
 		try {
 			destinationURL = new URL(destinationURL.toString());	  
@@ -123,15 +101,11 @@ class SaveOrUpload  {
 		//############ audio files ####################################
 		File[] files = new File[submission.getNumberOfPrompts() + 4];
         for (int i = 0; i < submission.getNumberOfPrompts(); i++) {
-			//files[i] = uploadWavFileA[i];
 			files[i] = submission.getElement(i).uploadWavFile;
         }
 		//############ prompt files #################################### 
 		try {
 			BufferedWriter out_prompts = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(promptsFile),"UTF-8"));
-	        //for (int i = 0; i < numberofPrompts; i++) {
-			//	out_prompts.write(promptidA[i] + " " + promptA[i] + System.getProperty("line.separator"));
-	        //}
 	        out_prompts.write(submission.toString());
 		    out_prompts.close();
 		} catch (IOException e) {

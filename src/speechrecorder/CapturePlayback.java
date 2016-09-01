@@ -119,12 +119,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     String fileName = "untitled";
     String errStr;
 
-    //double [] durationA;
-    //double duration = 0;
-
     double seconds;
-
-    //long [] totalBytesWrittenA;
     long totalBytesWritten = 0L;
      
     File file;
@@ -199,7 +194,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale, new UTF8Control() );
         submission = new Submission(language, 3, messages);
 		
-		initPromptNumArrays(submission.getNumberOfPrompts());
+		initButtons(submission.getNumberOfPrompts());
 		
 		rightToLeft = messages.getString("rightToLeft").equals("true") ?  true :  false;
 		languageDependent(messages);
@@ -226,7 +221,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         addUserInfo(userPanel);
         addPromptInfo(userPanel);
 
-	    //createWavFiles(submission.getNumberOfPrompts(), this.promptidA ); // promptidA array gets assigned in addPromptInfo
         addGraph(userPanel); 
         addRemainingPanelInfo(userPanel); 
 
@@ -262,16 +256,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      * the user has selected
      * 
      */
-    private void initPromptNumArrays(int numberofPrompts) 
+    private void initButtons(int numberofPrompts) 
     { 	
 	    playA = new JButton [numberofPrompts]; 
 	    captA = new JButton [numberofPrompts];
 
 	    play_stateA = new boolean [numberofPrompts];
 	    capt_stateA = new boolean [numberofPrompts];
-
-	    //durationA= new double [numberofPrompts];
-	    //totalBytesWrittenA= new long [numberofPrompts];
     }
     
     
@@ -700,6 +691,161 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
     }
 
+    
+    protected void play(int i) {
+        if (playA[i].getText().startsWith(messages.getString("playButton"))) {
+            //wavFile = wavFileA[i];      
+            wavFile = submission.getElement(i).wavFile; 
+            //duration = durationA[i];
+            //totalBytesWritten = totalBytesWrittenA[i];
+            totalBytesWritten = submission.getElement(i).totalBytesWritten;
+            System.out.println("=== Play " + (i+1) + " ===");
+
+            fileName = submission.getElement(i).promptid;  
+            playback.start(
+            		samplingGraph,
+            		progBar,
+                    playA, 
+                    captA,
+                    fileName,
+                    //duration
+                    submission.getElement(i).duration
+            );
+    		//System.out.println("duration:" + duration);
+    		System.out.println("duration:" + submission.getElement(i).duration);
+
+            samplingGraph.start();
+            saveButtonState(); 
+            setButtonsOff();
+            captA[i].setEnabled(false);
+            playA[i].setEnabled(true);
+            playA[i].setText(messages.getString("stopButton"));
+        } else {
+            playback.stop();
+            samplingGraph.stop();
+            restoreButtonState(); 
+            captA[i].setEnabled(true);
+            playA[i].setText(messages.getString("playButton"));
+        }
+    }
+    
+    
+    protected void capture(int x) {
+        if (captA[x].getText().startsWith(messages.getString("recordButton"))) {
+            file = null;
+            //wavFile = wavFileA[x]; 
+            wavFile = submission.getElement(x).wavFile; 
+            //fileName = promptidA[x];
+            fileName = submission.getElement(x).promptid;  
+    		System.out.println("=== Record " + (x+1) + " ==="); 
+            capture.start(
+            		samplingGraph,
+            		progBar,
+            		//uploadWavFileA[x],
+            		//wavFileA[x],
+            		submission.getElement(x).uploadWavFile,
+            		submission.getElement(x).wavFile,	                		
+            		//promptidA[x]
+            		fileName
+            );  
+            samplingGraph.start();
+            saveButtonState(); 
+            setButtonsOff(); 
+            captA[x].setEnabled(true);    
+            captA[x].setText(messages.getString("stopButton"));
+            moreInfoB.setEnabled(false);  
+            aboutB.setEnabled(false); 
+        } else {
+        	samplingGraph.removeAllLinesElements();
+            try {  
+            	Thread.sleep(1000);
+            } catch (InterruptedException ex) { 
+    			System.out.println("Recording Thread - Interrupt Exception");
+            }
+            
+            CaptureResult result = capture.stop();
+//            audioInputStream = result.audioInputStream;
+            //duration = result.duration; // not sure why duration is needed
+            totalBytesWritten = result.totalBytesWritten;
+            
+            //totalBytesWrittenA[x] = totalBytesWritten; 
+        	//durationA[x]= totalBytesWritten / (double) (format.getSampleRate() * format.getSampleSizeInBits()/ 8);
+        	//System.out.println("duration1:" + durationA[x]);
+        	submission.getElement(x).setTotalBytesWritten(totalBytesWritten);
+        	submission.getElement(x).setDuration(totalBytesWritten / (double) (format.getSampleRate() * format.getSampleSizeInBits()/ 8));  
+        	System.out.println("duration1:" + submission.getElement(x).duration);
+
+        	samplingGraph.stop();
+            restoreButtonState(); 
+            playA[x].setEnabled(true);
+            captA[x].setText(messages.getString("recordButton"));
+            moreInfoB.setEnabled(true);  
+            aboutB.setEnabled(true); 
+            captA[x].setEnabled(true);
+            if (x < submission.getNumberOfPrompts()-1) {
+            	captA[x+1].setEnabled(true);
+            }
+    		//System.out.println("x " + x +"numberofPrompts " + prompts.getNumberOfPrompts());
+            if (x == submission.getNumberOfPrompts()-1) {
+            	uploadB.setEnabled(true);
+            	//saveLocalB.setEnabled(true);
+            }
+        }
+    	
+    }
+    
+    
+    
+    protected void upload() {
+	    for (int i = 0; i < submission.getNumberOfPrompts(); i++) 
+	    {
+	    	playA[i].setEnabled(false);
+	        captA[i].setEnabled(false);
+	    }
+	    uploadB.setEnabled(false);               
+		try 
+		{
+	    	   usernameTextField.selectAll();
+		   userName = usernameTextField.getText();
+		   // see   java.util.regex.Pattern: \W  A non-word character: [^\w]
+		   userName = (usernameTextField.getText().replaceAll("\\W",""));
+		   if (userName.length() == 0 ) 
+		   {
+	           userName = "anonymous";
+		   } else 
+		   {
+			   if (userName.length() > 40 ) 
+			   {
+				   userName = userName.substring(0,40);
+			   } 
+		   }
+		} 
+		catch (NullPointerException ex) 
+		{ 
+	       userName = "anonymous";
+	    }
+	
+		//saveSettings();
+		/*
+		totalBytes = saveOrUpload.start(
+						progBar, 
+						language, 
+						userName, 
+						userDataToString() 
+		);
+		*/
+		totalBytes = saveOrUpload.createArchive(
+				progBar, 
+				language, 
+				userName, 
+				userDataToString() 
+		);    
+		
+		saveOrUpload.upload();
+		
+		//restartApp();
+}
+
     /**
      * Which button pressed:
      * 
@@ -715,6 +861,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 // ################### Play #######################################       
         for (int i = 0; i < submission.getNumberOfPrompts(); i++) {
             if (obj.equals(playA[i])) {
+            	play(i);
+            	/*
                 if (playA[i].getText().startsWith(messages.getString("playButton"))) {
                     //wavFile = wavFileA[i];      
                     wavFile = submission.getElement(i).wavFile; 
@@ -749,12 +897,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                     captA[i].setEnabled(true);
                     playA[i].setText(messages.getString("playButton"));
                 }
+                */
             }
         }
 
 // ################### Record (capture) #######################################        
 	    for (int x = 0; x < submission.getNumberOfPrompts(); x++) {
 	        if (obj.equals(captA[x])) {
+            	capture(x);
+            	/*
 	            if (captA[x].getText().startsWith(messages.getString("recordButton"))) {
 	                file = null;
 	                //wavFile = wavFileA[x]; 
@@ -815,12 +966,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                	//saveLocalB.setEnabled(true);
 	                }
 	            }
+	            */
 	        } 
 	    }
 
 //          ################### Upload #######################################               
 	    if (obj.equals(uploadB)) 
 	    { 
+	    	upload();
+	    	/*
 	        for (int i = 0; i < submission.getNumberOfPrompts(); i++) 
 	        {
 	        	playA[i].setEnabled(false);
@@ -850,14 +1004,14 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             }
 
 			//saveSettings();
-        	/*
-       		totalBytes = saveOrUpload.start(
-							progBar, 
-							language, 
-							userName, 
-							userDataToString() 
-			);
-			*/
+        	
+       		//totalBytes = saveOrUpload.start(
+			//				progBar, 
+			//				language, 
+			//				userName, 
+			//				userDataToString() 
+			//);
+			
         	totalBytes = saveOrUpload.createArchive(
 					progBar, 
 					language, 
@@ -868,6 +1022,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         	saveOrUpload.upload();
         	
 			//restartApp();
+        	*/
         }
 //      ################### SaveLocally #######################################   
 	    /*

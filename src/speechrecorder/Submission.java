@@ -16,6 +16,13 @@ public class Submission {
     
     int index = 0;
     
+    /**
+     * constructor
+     * 
+     * @param language
+     * @param numberofPrompts
+     * @param messages
+     */
 	public Submission(
     		String language, 
     		int numberofPrompts,
