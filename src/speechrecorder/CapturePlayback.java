@@ -120,7 +120,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     String errStr;
 
     //double [] durationA;
-    double duration = 0;
+    //double duration = 0;
 
     double seconds;
 
@@ -720,7 +720,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                     wavFile = submission.getElement(i).wavFile; 
                     //duration = durationA[i];
                     //totalBytesWritten = totalBytesWrittenA[i];
-                    duration = submission.getElement(i).duration;
                     totalBytesWritten = submission.getElement(i).totalBytesWritten;
                     System.out.println("=== Play " + (i+1) + " ===");
 
@@ -731,9 +730,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                        playA, 
 	                        captA,
 	                        fileName,
-	                        duration
+	                        //duration
+	                        submission.getElement(i).duration
                     );
-            		System.out.println("duration:" + duration);
+            		//System.out.println("duration:" + duration);
+            		System.out.println("duration:" + submission.getElement(i).duration);
 
                     samplingGraph.start();
 	                saveButtonState(); 
@@ -788,7 +789,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                
 	                CaptureResult result = capture.stop();
 //	                audioInputStream = result.audioInputStream;
-	                duration = result.duration;
+	                //duration = result.duration; // not sure why duration is needed
 	                totalBytesWritten = result.totalBytesWritten;
 	                
 	                //totalBytesWrittenA[x] = totalBytesWritten; 
