@@ -100,7 +100,7 @@ class SaveOrUpload  {
     	
     	//thread = new Thread(this);
         //thread.setName("ConvertAndUpload");
-		System.out.println("=== Upload ===");
+		System.out.println("=== creating archive ===");
         //thread.start();
     //}
 
@@ -199,12 +199,14 @@ class SaveOrUpload  {
     }
     
     public void upload() { 
-        progBar.setVisible(true);
+		System.out.println("=== Upload ===");
+    	
+        //progBar.setVisible(true);
         progBar.setStringPainted(true);
-        progBar.setMaximum(100);
+        //progBar.setMaximum(100);
         progBar.setString(uploadingMessageLabel);
-        progBar.setIndeterminate(false);
-        progBar.setMinimum(0);
+       // progBar.setIndeterminate(false);
+        //progBar.setMinimum(0);
     	
 		//############ Upload #################################### 
 		// Upload manager needs an array but JavaUpload.php script can only handle one file at a time

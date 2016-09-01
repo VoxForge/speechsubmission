@@ -135,7 +135,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     private File [] uploadWavFileA; // wav file with header
 
     JProgressBar progBar;
-    int sentBytes;
+    int sentBytes = 0;
     int totalBytes;
     int buttonClicked;
 
@@ -177,7 +177,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     Color voxforgeColour = new Color(197, 216, 234);
     
     ResourceBundle messages;
-    Prompts prompts;
+    //Prompts prompts;
+    Submission submission;
     Boolean rightToLeft = false;
     
     // constructor
@@ -199,13 +200,14 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         {
             System.err.println( "destination is null" );
         }
-        int numberOfPrompts = 3;
-        prompts = new Prompts(language, numberOfPrompts);
+        //int numberOfPrompts = 3;
+        //prompts = new Prompts(language, numberOfPrompts);
+        submission = new Submission(language, 3);
 	    messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale, new UTF8Control() );
         
         tempdir = getTempDir(); 
 		
-		initPromptNumArrays(prompts.getNumberOfPrompts());
+		initPromptNumArrays(submission.getNumberOfPrompts());
 		
 		rightToLeft = messages.getString("rightToLeft").equals("true") ?  true :  false;
 		languageDependent(messages);
@@ -217,7 +219,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(scrollPane, BorderLayout.CENTER);
 		setPreferredSize(new Dimension(300, 300));
-		
         //loadSettings();
 	}
 
@@ -234,7 +235,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         addUserInfo(userPanel);
         addPromptInfo(userPanel);
 
-	    createWavFiles(prompts.getNumberOfPrompts(), this.promptidA ); // promptidA array gets assigned in addPromptInfo
+	    createWavFiles(submission.getNumberOfPrompts(), this.promptidA ); // promptidA array gets assigned in addPromptInfo
         addGraph(userPanel); 
         addRemainingPanelInfo(userPanel); 
 
@@ -249,8 +250,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		removeAll();  //Removes all the components from this container
         tempdir = getTempDir(); // creates new temp dir with every call
 
-        int numberOfPrompts = prompts.getNumberOfPrompts();
-        prompts = new Prompts(language, numberOfPrompts);
+        int numberOfPrompts = submission.getNumberOfPrompts();
+        //prompts = new Prompts(language, numberOfPrompts);
+        submission = new Submission(language, numberOfPrompts);
         messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", new Locale(language), new UTF8Control() );
         
         languageDependent(messages);
@@ -266,7 +268,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         repaint();
         setVisible(true);
     }	
-    
     
     /**
      * initialize arrays whose size is dependent on the number of prompts
@@ -310,7 +311,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 				capturePlayback,
 				destinationURL, 
 				messages.getString("uploadingMessageLabel"),
-				prompts.getNumberOfPrompts(),
+				submission.getNumberOfPrompts(),
 				uploadWavFileA,
 			    promptidA,
 			    promptA,
@@ -328,7 +329,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    playback = new Playback(
 		    	capturePlayback,
 		    	format,
-        		prompts.getNumberOfPrompts(),
+		    	submission.getNumberOfPrompts(),
                 bufSize,
                 messages.getString("peakWarningLabel"),
                 messages.getString("sampleGraphFileLabel"),
@@ -412,25 +413,36 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     private void addPromptInfo(JPanel userPanel) 
     { 
     	JPanel promptsContainer = new JPanel();
-	    String [][] promptArray = prompts.getPrompts();
-	    int numberofPrompts = prompts.getNumberOfPrompts();
-	    for (int i = 0; i < numberofPrompts; i++) 
-	    {
-	    	this.promptidA[i] = promptArray[0][i];
-	    	this.promptA[i] = promptArray[1][i];
-	    }
-    	
+	    //String [][] promptArray = prompts.getPrompts();
+	    //int numberofPrompts = submission.getNumberOfPrompts();
+	    //for (int i = 0; i < numberofPrompts; i++) 
+	    //{
+	    //	this.promptidA[i] = promptArray[0][i];
+	    //	this.promptA[i] = promptArray[1][i];
+	    //}
+	    int j = 0;
+
+    	SubmissionElement el=null;
+	    while (submission.hasNext()) {
+			el = submission.next();
+	    	this.promptidA[j] = el.promptid;
+	    	this.promptA[j] = el.prompt;
+
+	    	j++;
+		}
+	    
+	    
     	//		############ Prompt container ####################################   
 
         promptsContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         int startPromptCount = 0;
-        int promptsPerPane = numberofPrompts;
+        int promptsPerPane = submission.getNumberOfPrompts();
 	
         //      ############ Prompts panel ####################################         
-        JPanel prompts = new JPanel(); 
-        prompts.setLayout(new BoxLayout(prompts, BoxLayout.Y_AXIS));
-        prompts.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
+        JPanel promptsPanel = new JPanel(); 
+        promptsPanel.setLayout(new BoxLayout(promptsPanel, BoxLayout.Y_AXIS));
+        promptsPanel.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
     
         int maxWidth = 40;
 
@@ -450,11 +462,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	        } else {
 		        captA[i] = addButton(messages.getString("recordButton"), promptPanelA[i], false);
 	        }
-	        prompts.add(promptPanelA[i]);  
+	        promptsPanel.add(promptPanelA[i]);  
         }
         
 		//############ Prompt container ####################################   	
-        promptsContainer.add(prompts);
+        promptsContainer.add(promptsPanel);
 
         userPanel.add(promptsContainer);
     }	
@@ -740,12 +752,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     
     public void close() {
         if (playback.thread != null) {
-            for (int i = 0; i < prompts.getNumberOfPrompts(); i++) {
+            for (int i = 0; i < submission.getNumberOfPrompts(); i++) {
             	playA[i].doClick(0);
             }
         }
         if (capture.thread != null) {
-            for (int i = 0; i < prompts.getNumberOfPrompts(); i++) {
+            for (int i = 0; i < submission.getNumberOfPrompts(); i++) {
             	captA[i].doClick(0);
             }
         }
@@ -760,21 +772,21 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     }
     
     private void setButtonsOff() {
-        for (int i = 0; i < prompts.getNumberOfPrompts(); i++) {
+        for (int i = 0; i < submission.getNumberOfPrompts(); i++) {
         	playA[i].setEnabled(false); 
         	captA[i].setEnabled(false); 
         }
     }
     
     private void saveButtonState() {
-        for (int i = 0; i < prompts.getNumberOfPrompts(); i++) {
+        for (int i = 0; i < submission.getNumberOfPrompts(); i++) {
         	if (playA[i].isEnabled()) {play_stateA [i] = true;} else {play_stateA [i] = false;}
         	if (captA[i].isEnabled()) {capt_stateA [i] = true;} else {capt_stateA [i] = false;}
         }
     }
     
     protected void restoreButtonState() {
-        for (int i = 0; i < prompts.getNumberOfPrompts(); i++) {
+        for (int i = 0; i < submission.getNumberOfPrompts(); i++) {
          	if (play_stateA[i]) {playA[i].setEnabled(true);} else {playA[i].setEnabled(false);}
         	if (capt_stateA[i]) {captA[i].setEnabled(true);} else {captA[i].setEnabled(false);}
         }
@@ -793,7 +805,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
 // ################### Play #######################################       
-        for (int i = 0; i < prompts.getNumberOfPrompts(); i++) {
+        for (int i = 0; i < submission.getNumberOfPrompts(); i++) {
             if (obj.equals(playA[i])) {
                 if (playA[i].getText().startsWith(messages.getString("playButton"))) {
                     wavFile = wavFileA[i];      
@@ -829,7 +841,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
 
 // ################### Record (capture) #######################################        
-	    for (int x = 0; x < prompts.getNumberOfPrompts(); x++) {
+	    for (int x = 0; x < submission.getNumberOfPrompts(); x++) {
 	        if (obj.equals(captA[x])) {
 	            if (captA[x].getText().startsWith(messages.getString("recordButton"))) {
 	                file = null;
@@ -873,11 +885,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                moreInfoB.setEnabled(true);  
 	                aboutB.setEnabled(true); 
 	                captA[x].setEnabled(true);
-	                if (x < prompts.getNumberOfPrompts()-1) {
+	                if (x < submission.getNumberOfPrompts()-1) {
 	                	captA[x+1].setEnabled(true);
 	                }
 	        		//System.out.println("x " + x +"numberofPrompts " + prompts.getNumberOfPrompts());
-	                if (x == prompts.getNumberOfPrompts()-1) {
+	                if (x == submission.getNumberOfPrompts()-1) {
 	                	uploadB.setEnabled(true);
 	                	//saveLocalB.setEnabled(true);
 	                }
@@ -888,7 +900,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 //          ################### Upload #######################################               
 	    if (obj.equals(uploadB)) 
 	    { 
-	        for (int i = 0; i < prompts.getNumberOfPrompts(); i++) 
+	        for (int i = 0; i < submission.getNumberOfPrompts(); i++) 
 	        {
 	        	playA[i].setEnabled(false);
 	            captA[i].setEnabled(false);
@@ -930,12 +942,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 					language, 
 					userName, 
 					userDataToString() 
-			);
-        	
+			);    
         	
         	saveOrUpload.upload();
         	
-			restartApp();
+			//restartApp();
         }
 //      ################### SaveLocally #######################################   
 	    /*
@@ -1002,11 +1013,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                    "About VoxForge Speech Submission Application", JOptionPane.PLAIN_MESSAGE);
        }
     }
-
+   
     /**
      *  return multiple values from Capture class
      * 
-     * @author daddy
      *
      */
     protected class CaptureResult {
@@ -1059,11 +1069,24 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             // Reset the applet
             progBar.setValue(0);
             sentBytes = 0;
+            
+            try { // sleep so user has time to finished message
+                Thread.sleep(1000);
+            } catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            
+            progBar.setStringPainted(true);
+            //progBar.setString(messages.getString("readyToRecord"));
+            progBar.setString("setProgress readyToRecord");
          }
          else 
          {
+            progBar.setStringPainted(true);
+            //progBar.setString(messages.getString("uploadingMessageLabel"));
+            progBar.setString("setProgress uploading");
          	//FORDEBUG
-         	System.err.println("setProgress(): Not reached end yet. sentBytes="+sentBytes+", totalBytes="+totalBytes);
+         	//System.err.println("setProgress(): Not reached end yet. sentBytes="+sentBytes+", totalBytes="+totalBytes);
          }
  	}    
     
