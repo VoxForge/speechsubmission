@@ -119,12 +119,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     String fileName = "untitled";
     String errStr;
 
-    double [] durationA;
+    //double [] durationA;
     double duration = 0;
 
     double seconds;
 
-    long [] totalBytesWrittenA;
+    //long [] totalBytesWrittenA;
     long totalBytesWritten = 0L;
      
     File file;
@@ -270,8 +270,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    play_stateA = new boolean [numberofPrompts];
 	    capt_stateA = new boolean [numberofPrompts];
 
-	    durationA= new double [numberofPrompts];
-	    totalBytesWrittenA= new long [numberofPrompts];
+	    //durationA= new double [numberofPrompts];
+	    //totalBytesWrittenA= new long [numberofPrompts];
     }
     
     
@@ -717,19 +717,19 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             if (obj.equals(playA[i])) {
                 if (playA[i].getText().startsWith(messages.getString("playButton"))) {
                     //wavFile = wavFileA[i];      
-                    wavFile = submission.elementA[i].wavFile; 
-                    duration = durationA[i];
-                    totalBytesWritten = totalBytesWrittenA[i];
+                    wavFile = submission.getElement(i).wavFile; 
+                    //duration = durationA[i];
+                    //totalBytesWritten = totalBytesWrittenA[i];
+                    duration = submission.getElement(i).duration;
+                    totalBytesWritten = submission.getElement(i).totalBytesWritten;
                     System.out.println("=== Play " + (i+1) + " ===");
 
-                    //fileName = promptidA[i];  
                     fileName = submission.getElement(i).promptid;  
                     playback.start(
 	                		samplingGraph,
 	                		progBar,
 	                        playA, 
 	                        captA,
-	                        //promptidA[i],
 	                        fileName,
 	                        duration
                     );
@@ -757,7 +757,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	            if (captA[x].getText().startsWith(messages.getString("recordButton"))) {
 	                file = null;
 	                //wavFile = wavFileA[x]; 
-                    wavFile = submission.elementA[x].wavFile; 
+                    wavFile = submission.getElement(x).wavFile; 
 	                //fileName = promptidA[x];
                     fileName = submission.getElement(x).promptid;  
 	        		System.out.println("=== Record " + (x+1) + " ==="); 
@@ -766,8 +766,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                		progBar,
 	                		//uploadWavFileA[x],
 	                		//wavFileA[x],
-	                		submission.elementA[x].uploadWavFile,
-	                		submission.elementA[x].wavFile,	                		
+	                		submission.getElement(x).uploadWavFile,
+	                		submission.getElement(x).wavFile,	                		
 	                		//promptidA[x]
 	                		fileName
 	                );  
@@ -791,9 +791,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	                duration = result.duration;
 	                totalBytesWritten = result.totalBytesWritten;
 	                
-	                totalBytesWrittenA[x] = totalBytesWritten; 
-	            	durationA[x]= totalBytesWritten / (double) (format.getSampleRate() * format.getSampleSizeInBits()/ 8);
-	        		System.out.println("duration1:" + durationA[x]);
+	                //totalBytesWrittenA[x] = totalBytesWritten; 
+	            	//durationA[x]= totalBytesWritten / (double) (format.getSampleRate() * format.getSampleSizeInBits()/ 8);
+	            	//System.out.println("duration1:" + durationA[x]);
+	            	submission.getElement(x).setTotalBytesWritten(totalBytesWritten);
+	            	submission.getElement(x).setDuration(totalBytesWritten / (double) (format.getSampleRate() * format.getSampleSizeInBits()/ 8));  
+	            	System.out.println("duration1:" + submission.getElement(x).duration);
+
 	            	samplingGraph.stop();
 	                restoreButtonState(); 
 	                playA[x].setEnabled(true);

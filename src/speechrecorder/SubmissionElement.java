@@ -5,8 +5,12 @@ import java.io.File;
 public class SubmissionElement {
 	public String promptid;
 	public String prompt;
-    public File wavFile; // raw audio
+    
+	public File wavFile; // raw audio
     public File uploadWavFile; // wav file with header
+    
+    public double duration;
+    public long totalBytesWritten;
     
     /**
      * constructor 
@@ -50,5 +54,15 @@ public class SubmissionElement {
 	public String toString()
 	{
 		return promptid + " " + prompt + System.getProperty("line.separator");
+	}
+	
+	public void setDuration (double duration)
+	{
+		this.duration = duration;		
+	}
+	
+	public void setTotalBytesWritten (long totalBytesWritten)
+	{
+		this.totalBytesWritten = totalBytesWritten;		
 	}
 }

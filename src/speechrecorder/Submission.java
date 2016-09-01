@@ -4,15 +4,15 @@ import java.io.File;
 import java.util.ResourceBundle;
 
 public class Submission {
-	String tempdir;
+	private String tempdir;
 	
-	String language;
+	private String language;
 	private int numberofPrompts;
-	ResourceBundle messages;
+	private ResourceBundle messages;
 	
-    Prompts prompts;
+    private Prompts prompts;
     
-    SubmissionElement[] elementA;
+    private SubmissionElement[] elementA;
     
     int index = 0;
     

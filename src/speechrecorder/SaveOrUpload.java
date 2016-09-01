@@ -124,7 +124,7 @@ class SaveOrUpload  {
 		File[] files = new File[submission.getNumberOfPrompts() + 4];
         for (int i = 0; i < submission.getNumberOfPrompts(); i++) {
 			//files[i] = uploadWavFileA[i];
-			files[i] = submission.elementA[i].uploadWavFile;
+			files[i] = submission.getElement(i).uploadWavFile;
         }
 		//############ prompt files #################################### 
 		try {
