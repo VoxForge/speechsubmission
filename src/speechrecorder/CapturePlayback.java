@@ -49,7 +49,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.text.BreakIterator;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -136,15 +135,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	JComboBox<String[]> languageChooser;       
     String language = "en";
     
-    //String userName = "unknown";
 	JComboBox<String[]> genderChooser;       
-    //String gender;
     JComboBox<String[]> ageRangeChooser; 
-    //String ageRange;
     JComboBox<String[]> dialectChooser;
-    //String dialect;  
     JComboBox<String[]> microphoneChooser;     
-    //String microphone;  
+
 //  ############ Localized Fields ####################################   
 
     String targetDirectory;
@@ -275,11 +270,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      */
     private void languageDependent(ResourceBundle messages) 
     { 	
-	    //gender = messages.getString("notApplicable"); // default selection
-	    //ageRange = messages.getString("notApplicable"); // default selection
-	    //dialect = messages.getString("notApplicable");  // default selection
-	    // microphone = messages.getString("notApplicable");  // default selection
-	    
 	    playback = new Playback(
 		    	this,
 		    	format,
@@ -849,27 +839,10 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		try 
 		{
 	        usernameTextField.selectAll();
-		   //userName = usernameTextField.getText();
-		   // see   java.util.regex.Pattern: \W  A non-word character: [^\w]
-	       /*
-		   userName = (usernameTextField.getText().replaceAll("\\W",""));
-
-		   if (userName.length() == 0 ) 
-		   {
-	           userName = "anonymous";
-		   } else 
-		   {
-			   if (userName.length() > 40 ) 
-			   {
-				   userName = userName.substring(0,40);
-			   } 
-		   }
-		   */
 		    submission.setUserName( usernameTextField.getText().replaceAll("\\W","") );
 		} 
 		catch (NullPointerException ex) 
 		{ 
-	        //userName = "anonymous";
 		    submission.setUserName( "anonymous" );
 	    }
 	
@@ -978,17 +951,14 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			cr.put("microphone", microphoneChooser.getSelectedIndex());
 			//cr.put("username", usernameTextField.getText());
 			//System.out.println("username:" +  userName);
-			//cr.put("username", userName);
+			cr.put("username", submission.getUserName());	
 			System.out.println("username:" +  submission.getUserName());
-			cr.put("username", submission.getUserName());			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
-    
-
-    
+        
     /**
      *  Load all settings that were saved from the last session
      * 
@@ -1040,8 +1010,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		try {		
 			//usernameTextField.setText(
 			//		cr.getString("username", usernameTextField.getText()));
-			//userName = cr.getString("username", usernameTextField.getText());
-			//usernameTextField.setText(userName);
 			submission.setUserName( cr.getString("username", usernameTextField.getText()) );
 			usernameTextField.setText( submission.getUserName() );			
 		} catch (Exception e) {
@@ -1057,28 +1025,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     //public String userDataToString () {
     public String recInfoToString () {
 		String recInfo = "";
-		/*
-		user = "User Name:" + userName + System.getProperty("line.separator");
-		user = user + System.getProperty("line.separator");	
-
-		user = user + "Speaker Characteristics:" + System.getProperty("line.separator");
-		user = user + System.getProperty("line.separator");	
-		user = user + "Gender: " + gender + System.getProperty("line.separator");
-		user = user + "Age Range: " + ageRange + System.getProperty("line.separator"); 
-		user = user + "Language: " + language + System.getProperty("line.separator");	
-		user = user + "Pronunciation dialect: " + dialect + System.getProperty("line.separator");	
-		user = user + System.getProperty("line.separator");
-		
-		user = user + "Recording Information:" + System.getProperty("line.separator");	
-		user = user + System.getProperty("line.separator");
-		user = user + "Microphone make: n/a" + System.getProperty("line.separator");	
-		user = user + "Microphone type: " + microphone + System.getProperty("line.separator");	
-		user = user + "Audio card make: unknown" + System.getProperty("line.separator");	
-		user = user + "Audio card type: unknown" + System.getProperty("line.separator");
-		user = user + "Audio Recording Software: VoxForge Speech Submission Application" + System.getProperty("line.separator");
-		user = user + "O/S:" + System.getProperty("line.separator");	
-		user = user + System.getProperty("line.separator");	
-		*/
 		
 		// add recording information
 		recInfo = recInfo + "File Info:" + System.getProperty("line.separator");

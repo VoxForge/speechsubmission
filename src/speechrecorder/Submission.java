@@ -4,8 +4,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.ResourceBundle;
-
-import javax.swing.JComboBox;
 import javax.swing.JProgressBar;
 
 import net.sf.postlet.PostletInterface;
@@ -224,45 +222,7 @@ public class Submission {
         
         return result;
 	}
-	
-    
-/*
-    protected void saveLocal() 
-    { 
-        for (int i = 0; i < numberofPrompts; i++) 
-        {
-        	playA[i].setEnabled(false);
-            captA[i].setEnabled(false);
-        }
-        saveLocalB.setEnabled(false);               
-    	try 
-    	{
-	    	   usernameTextField.selectAll();
-    	   userName = usernameTextField.getText();
-		   userName = (usernameTextField.getText().replaceAll("\\W",""));
-    	   if (userName.length() == 0 ) 
-    	   {
-               userName = "anonymous";
-    	   } 
-    	   else 
-    	   {
-			   if (userName.length() > 40 ) 
-			   {
-				   userName = userName.substring(0,40);
-    		   } 
-    	   }
-    	} 
-    	catch (NullPointerException ex) 
-    	{ 
-           userName = "anonymous";
-        }
 
-		saveSettings();
- 	
-		convertAndSavelocally.start(targetDirectory);
-		restartApp();
-    }	   
-*/	
 	
 	
     /**
@@ -298,8 +258,6 @@ public class Submission {
 				
 		return userData;
 	}
-    
-	
 	
     public String getUserName() {
 		return userName;
@@ -307,7 +265,9 @@ public class Submission {
 
 
 	public void setUserName(String userName) {
+	    // see   java.util.regex.Pattern: \W  A non-word character: [^\w]
 		userName = (userName.replaceAll("\\W",""));
+		
 		if (userName.length() == 0 ) 
 		{
 		    userName = "anonymous";
@@ -361,4 +321,42 @@ public class Submission {
 	}
 	
 	
+    
+/*
+    protected void saveLocal() 
+    { 
+        for (int i = 0; i < numberofPrompts; i++) 
+        {
+        	playA[i].setEnabled(false);
+            captA[i].setEnabled(false);
+        }
+        saveLocalB.setEnabled(false);               
+    	try 
+    	{
+	    	   usernameTextField.selectAll();
+    	   userName = usernameTextField.getText();
+		   userName = (usernameTextField.getText().replaceAll("\\W",""));
+    	   if (userName.length() == 0 ) 
+    	   {
+               userName = "anonymous";
+    	   } 
+    	   else 
+    	   {
+			   if (userName.length() > 40 ) 
+			   {
+				   userName = userName.substring(0,40);
+    		   } 
+    	   }
+    	} 
+    	catch (NullPointerException ex) 
+    	{ 
+           userName = "anonymous";
+        }
+
+		saveSettings();
+ 	
+		convertAndSavelocally.start(targetDirectory);
+		restartApp();
+    }	   
+*/		
 }
