@@ -5,14 +5,22 @@ import java.net.URL;
 import java.util.Calendar;
 import java.util.ResourceBundle;
 
+import javax.swing.JComboBox;
 import javax.swing.JProgressBar;
 
 import net.sf.postlet.PostletInterface;
 
 public class Submission {
 
-	
-	private String tempdir;
+
+	String userName = "unknown";
+    String gender;
+    String ageRange;
+    String language;
+    String dialect;  
+    String microphone;     
+
+    private String tempdir;
 	
 	private int numberofPrompts;
 	private ResourceBundle messages;
@@ -42,6 +50,7 @@ public class Submission {
     		ResourceBundle messages
 		) 
 	{
+		this.language = language;
 		this.numberofPrompts = numberofPrompts;
 		this.messages = messages;
         tempdir = createTempDir(); 
@@ -57,6 +66,11 @@ public class Submission {
 			System.out.println("Submission WAV file for recording uploadWavFile" + i + " is: " + elementA[i].uploadWavFile);
 			//System.out.println("Submission raw file for recording wavFileA" + i + " is: " + elementA[i].wavFile);
 	    }
+	    
+	    gender = messages.getString("notApplicable"); // default selection
+	    ageRange = messages.getString("notApplicable"); // default selection
+	    dialect = messages.getString("notApplicable");  // default selection
+	    microphone = messages.getString("notApplicable");  // default selection
 	}
 	
 	
@@ -65,9 +79,8 @@ public class Submission {
     		JProgressBar progBar, 
 			URL destinationURL, 
 		    String language,
-    		String userName, 
-    		String userDataToString
-		)
+		    String recInfoToString
+		 )
 	{
 	    int totalBytes;
 		
@@ -90,9 +103,8 @@ public class Submission {
 				progBar, 
 				language, 
 				userName, 
-				userDataToString
+				userDataToString(recInfoToString)
 		);    
-		
 		saveOrUpload.upload();
 		
 		return totalBytes;
@@ -212,5 +224,141 @@ public class Submission {
         
         return result;
 	}
+	
+    
+/*
+    protected void saveLocal() 
+    { 
+        for (int i = 0; i < numberofPrompts; i++) 
+        {
+        	playA[i].setEnabled(false);
+            captA[i].setEnabled(false);
+        }
+        saveLocalB.setEnabled(false);               
+    	try 
+    	{
+	    	   usernameTextField.selectAll();
+    	   userName = usernameTextField.getText();
+		   userName = (usernameTextField.getText().replaceAll("\\W",""));
+    	   if (userName.length() == 0 ) 
+    	   {
+               userName = "anonymous";
+    	   } 
+    	   else 
+    	   {
+			   if (userName.length() > 40 ) 
+			   {
+				   userName = userName.substring(0,40);
+    		   } 
+    	   }
+    	} 
+    	catch (NullPointerException ex) 
+    	{ 
+           userName = "anonymous";
+        }
+
+		saveSettings();
+ 	
+		convertAndSavelocally.start(targetDirectory);
+		restartApp();
+    }	   
+*/	
+	
+	
+    /**
+     * convert user data to a String
+     * 
+     * @return
+     */
+    public String userDataToString (String recInfoToString) {
+		String userData = "";
+		
+		userData = "User Name:" + userName + System.getProperty("line.separator");
+		userData = userData + System.getProperty("line.separator");	
+
+		userData = userData + "Speaker Characteristics:" + System.getProperty("line.separator");
+		userData = userData + System.getProperty("line.separator");	
+		userData = userData + "Gender: " + gender + System.getProperty("line.separator");
+		userData = userData + "Age Range: " + ageRange + System.getProperty("line.separator"); 
+		userData = userData + "Language: " + language + System.getProperty("line.separator");	
+		userData = userData + "Pronunciation dialect: " + dialect + System.getProperty("line.separator");	
+		userData = userData + System.getProperty("line.separator");
+	
+		userData = userData + "Recording Information:" + System.getProperty("line.separator");	
+		userData = userData + System.getProperty("line.separator");
+		userData = userData + "Microphone make: n/a" + System.getProperty("line.separator");	
+		userData = userData + "Microphone type: " + microphone + System.getProperty("line.separator");	
+		userData = userData + "Audio card make: unknown" + System.getProperty("line.separator");	
+		userData = userData + "Audio card type: unknown" + System.getProperty("line.separator");
+		userData = userData + "Audio Recording Software: VoxForge Speech Submission Application" + System.getProperty("line.separator");
+		userData = userData + "O/S:" + System.getProperty("line.separator");	
+		userData = userData + System.getProperty("line.separator");	
+
+		userData = userData + recInfoToString;
+				
+		return userData;
+	}
+    
+	
+	
+    public String getUserName() {
+		return userName;
+	}
+
+
+	public void setUserName(String userName) {
+		userName = (userName.replaceAll("\\W",""));
+		if (userName.length() == 0 ) 
+		{
+		    userName = "anonymous";
+		} else 
+		{
+			if (userName.length() > 40 ) 
+			{
+				userName = userName.substring(0,40);
+			} 
+		}
+	}
+
+
+	public String getGender() {
+		return gender;
+	}
+
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+
+	public String getAgeRange() {
+		return ageRange;
+	}
+
+
+	public void setAgeRange(String ageRange) {
+		this.ageRange = ageRange;
+	}
+
+
+	public String getDialect() {
+		return dialect;
+	}
+
+
+	public void setDialect(String dialect) {
+		this.dialect = dialect;
+	}
+
+
+	public String getMicrophone() {
+		return microphone;
+	}
+
+
+	public void setMicrophone(String microphone) {
+		this.microphone = microphone;
+	}
+	
 	
 }
