@@ -89,7 +89,7 @@ class Capture implements Runnable {
     public CaptureResult stop() {
         thread = null;
         
-        CaptureResult result = (capturePlayback.new CaptureResult() );
+        CaptureResult result = ( capturePlayback.new CaptureResult() );
 //        result.audioInputStream = audioInputStream;
         result.duration = duration;
         result.totalBytesWritten = totalBytesWritten;

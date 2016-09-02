@@ -9,8 +9,6 @@ import javax.swing.JProgressBar;
 import net.sf.postlet.PostletInterface;
 
 public class Submission {
-
-
 	String userName = "unknown";
     String gender;
     String ageRange;
@@ -34,6 +32,7 @@ public class Submission {
     String vflicense;
     
     PostletInterface postletInterface;
+    
 	/**
 	 * constructor
 	 * 
@@ -73,6 +72,15 @@ public class Submission {
 	    }
 	}
 	
+	/**
+	 * upload submission to VoxForge repository
+	 * 
+	 * @param postletInterface
+	 * @param progBar
+	 * @param recInfo
+	 * @param destinationURL
+	 * @return
+	 */
 	public int upload (
 			PostletInterface postletInterface,
     		JProgressBar progBar, 
@@ -223,14 +231,12 @@ public class Submission {
         return result;
 	}
 
-	
-	
     /**
      * convert user data to a String
      * 
      * @return
      */
-    public String userDataToString (String recInfoToString) {
+    public String userDataToString (String recInfo) {
 		String userData = "";
 		
 		userData = "User Name:" + userName + System.getProperty("line.separator");
@@ -254,7 +260,7 @@ public class Submission {
 		userData = userData + "O/S:" + System.getProperty("line.separator");	
 		userData = userData + System.getProperty("line.separator");	
 
-		userData = userData + recInfoToString;
+		userData = userData + recInfo;
 				
 		return userData;
 	}
@@ -262,7 +268,6 @@ public class Submission {
     public String getUserName() {
 		return userName;
 	}
-
 
 	public void setUserName(String userName) {
 	    // see   java.util.regex.Pattern: \W  A non-word character: [^\w]

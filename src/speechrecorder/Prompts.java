@@ -1,5 +1,6 @@
 package speechrecorder;
 
+import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.io.*;
@@ -90,8 +91,8 @@ class Prompts  {
     
     private int numberofPrompts;
     
-    private String [][] promptSubset; 
-
+    private String [][] promptSubset;
+    
     /**
      *  
      * determine which prompt list to use based on ISO 639-2 language codes
@@ -103,42 +104,42 @@ class Prompts  {
 	public Prompts(String Language, int numberofPrompts) {
 		this.numberofPrompts = numberofPrompts;
 		
-		if (Language.equalsIgnoreCase("EN")) {
+		if (Language.equalsIgnoreCase("EN")) { // english
 //			promptList = getPromptTextFile("prompts/englishPromptList.txt", 1223); // number of prompts needs to be exact or there might be an error on a roll-over
-			promptList = getPromptTextFile("en", "prompts/englishPromptList.txt", 798); // number of prompts needs to be exact or there might be an error on a roll-over
+			promptList = getPromptTextFile("en", "prompts/PromptList_en.txt", 798); // number of prompts needs to be exact or there might be an error on a roll-over
 
-		} else if (Language.equalsIgnoreCase("nl")) {
-			promptList = getPromptTextFile("nl","prompts/dutchPromptList.txt", 947);
-		} else if (Language.equalsIgnoreCase("de")) {
-			promptList = getPromptTextFile("prompts/germanPromptList.txt", 1211);
-		} else if (Language.equalsIgnoreCase("ru")) {
-			promptList = getPromptTextFile("prompts/russianPromptList.txt", 81);	
-		} else if (Language.equalsIgnoreCase("it")) {
-			promptList = getPromptTextFile("it","prompts/italianPromptList.txt", 1185);
-		} else if (Language.equalsIgnoreCase("he")) {
-			promptList = getPromptTextFile("prompts/hebrewPromptList.txt", 55);	
-		} else if (Language.equalsIgnoreCase("pt")) {
-			promptList = getPromptTextFile("prompts/portuguesePromptList.txt", 218);	
-		} else if (Language.equalsIgnoreCase("es")) {
-			promptList = getPromptTextFile("es","prompts/spanishPromptList.txt", 43);	
-		} else if (Language.equalsIgnoreCase("fr")) {
-			promptList = getPromptTextFile("prompts/frenchPromptList.txt", 865);	
-		} else if (Language.equalsIgnoreCase("el")) {
-			promptList = getPromptTextFile("el","prompts/greekPromptList.txt", 221);		
-		} else if (Language.equalsIgnoreCase("tr")) {
-			promptList = getPromptTextFile("tr","prompts/turkishPromptList.txt", 40 );		
-		} else if (Language.equalsIgnoreCase("bg")) {
-			promptList = getPromptTextFile("bg","prompts/bulgarianPromptList.txt", 50 );	
-		} else if (Language.equalsIgnoreCase("uk")) {
-			promptList = getPromptTextFile("prompts/ukrainianPromptList.txt", 50);		
-		} else if (Language.equalsIgnoreCase("ca")) {
-			promptList = getPromptTextFile("ca", "prompts/catalanPromptList.txt", 40);				
-		} else if (Language.equalsIgnoreCase("hr")) {
-			promptList = getPromptTextFile("hr", "prompts/croatianPromptList.txt", 98);
-		} else if (Language.equalsIgnoreCase("sq")) {
-			promptList = getPromptTextFile("sq", "prompts/albanianPromptList.txt", 56);			
-		} else if (Language.equalsIgnoreCase("fa")) {
-			promptList = getPromptTextFile("fa", "prompts/persianPromptList.txt", 50);					
+		} else if (Language.equalsIgnoreCase("nl")) { // dutch
+			promptList = getPromptTextFile("nl","prompts/PromptList_nl.txt", 947);
+		} else if (Language.equalsIgnoreCase("de")) { // german
+			promptList = getPromptTextFile("prompts/PromptList_de.txt", 1211);
+		} else if (Language.equalsIgnoreCase("ru")) { //russian
+			promptList = getPromptTextFile("prompts/PromptList_ru.txt", 81);	
+		} else if (Language.equalsIgnoreCase("it")) { // italian
+			promptList = getPromptTextFile("it","prompts/PromptList_it.txt", 1185);
+		} else if (Language.equalsIgnoreCase("he")) { // hebrew
+			promptList = getPromptTextFile("prompts/PromptList_he.txt", 55);	
+		} else if (Language.equalsIgnoreCase("pt")) { // portuguese
+			promptList = getPromptTextFile("prompts/PromptList_pt.txt", 218);	
+		} else if (Language.equalsIgnoreCase("es")) { // spanish
+			promptList = getPromptTextFile("es","prompts/PromptList_es.txt", 43);	
+		} else if (Language.equalsIgnoreCase("fr")) { // french
+			promptList = getPromptTextFile("prompts/PromptList_fr.txt", 865);	
+		} else if (Language.equalsIgnoreCase("el")) { // greek
+			promptList = getPromptTextFile("el","prompts/PromptList_el.txt", 221);		
+		} else if (Language.equalsIgnoreCase("tr")) { // turkish
+			promptList = getPromptTextFile("tr","prompts/PromptList_tr.txt", 40 );		
+		} else if (Language.equalsIgnoreCase("bg")) { // bulgarian
+			promptList = getPromptTextFile("bg","prompts/PromptList_bg.txt", 50 );	
+		} else if (Language.equalsIgnoreCase("uk")) { // ukrainian
+			promptList = getPromptTextFile("prompts/PromptList_uk.txt", 50);		
+		} else if (Language.equalsIgnoreCase("ca")) { // catalan
+			promptList = getPromptTextFile("ca", "prompts/PromptList_ca.txt", 40);				
+		} else if (Language.equalsIgnoreCase("hr")) { // croatian
+			promptList = getPromptTextFile("hr", "prompts/PromptList_hr.txt", 98);
+		} else if (Language.equalsIgnoreCase("sq")) { // albanian
+			promptList = getPromptTextFile("sq", "prompts/PromptList_sq.txt", 56);			
+		} else if (Language.equalsIgnoreCase("fa")) { // persian
+			promptList = getPromptTextFile("fa", "prompts/PromptList_fa.txt", 50);					
 		} else {
 	        System.err.println("WARNING getPromptTextFile error accessing prompt file for "+ Language + " using default English prompts");
 			promptList = englishPromptList;
@@ -159,7 +160,7 @@ class Prompts  {
 			nextPrompt++;
 		}
 	}
-		
+	
 	public String [][] getPrompts() {
 		return promptSubset;
 	}
