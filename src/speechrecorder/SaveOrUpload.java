@@ -22,6 +22,8 @@ import net.sf.postlet.UploadManager;
  * uploads the file
  */
 class SaveOrUpload  {
+    private static int BUFFER_SIZE = 10240;	
+	
     Thread thread;
     String fileFieldName = "userfile";         
     JProgressBar progBar;
@@ -35,7 +37,6 @@ class SaveOrUpload  {
     String userData;
 	String tempdir;
 	String licenseNotice;
-    int buffer_size;
     String language;
     String userName;
     
@@ -54,8 +55,7 @@ class SaveOrUpload  {
 			URL destinationURL, 
 			String uploadingMessageLabel, 
 			Submission submission,
-		    String licenseNotice,
-		    int buffer_size
+		    String licenseNotice
     	) 
 	{   
     	this.postletInterface = postletInterface;   
@@ -64,7 +64,6 @@ class SaveOrUpload  {
     	this.submission = submission;      	
     	this.tempdir = submission.getDirectory();    	
     	this.licenseNotice = licenseNotice;       	
-    	this.buffer_size = buffer_size;      
 
 		promptsFile = new File(tempdir + "prompts.txt");			
 		promptsFile.deleteOnExit();		
@@ -199,7 +198,7 @@ class SaveOrUpload  {
 	
     void createZipArchive(File archiveFile, File[] tobeZippedFiles) {
         try {
-          byte buffer[] = new byte[buffer_size];
+          byte buffer[] = new byte[BUFFER_SIZE];
           // Open archive file
           FileOutputStream stream = new FileOutputStream(archiveFile);
           ZipOutputStream out = new ZipOutputStream(stream);

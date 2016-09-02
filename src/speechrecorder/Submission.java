@@ -1,12 +1,19 @@
 package speechrecorder;
 
 import java.io.File;
+import java.net.URL;
+import java.util.Calendar;
 import java.util.ResourceBundle;
 
+import javax.swing.JProgressBar;
+
+import net.sf.postlet.PostletInterface;
+
 public class Submission {
+
+	
 	private String tempdir;
 	
-	private String language;
 	private int numberofPrompts;
 	private ResourceBundle messages;
 	
@@ -16,6 +23,11 @@ public class Submission {
     
     int index = 0;
     
+	SaveOrUpload saveOrUpload; 
+    String licenseNotice;
+    String vflicense;
+    
+    PostletInterface postletInterface;
     /**
      * constructor
      * 
@@ -24,12 +36,12 @@ public class Submission {
      * @param messages
      */
 	public Submission(
+			PostletInterface postletInterface,
     		String language, 
     		int numberofPrompts,
     		ResourceBundle messages
-			) 
+		) 
 	{
-		this.language = language;
 		this.numberofPrompts = numberofPrompts;
 		this.messages = messages;
         tempdir = createTempDir(); 
@@ -43,8 +55,47 @@ public class Submission {
 	    	elementA[i] = new SubmissionElement(tempdir, promptArray[0][i], promptArray[1][i]);
 	    	
 			System.out.println("Submission WAV file for recording uploadWavFile" + i + " is: " + elementA[i].uploadWavFile);
-			System.out.println("Submission raw file for recording wavFileA" + i + " is: " + elementA[i].wavFile);
+			//System.out.println("Submission raw file for recording wavFileA" + i + " is: " + elementA[i].wavFile);
 	    }
+	}
+	
+	
+	public int upload (
+			PostletInterface postletInterface,
+    		JProgressBar progBar, 
+			URL destinationURL, 
+		    String language,
+    		String userName, 
+    		String userDataToString
+		)
+	{
+	    int totalBytes;
+		
+	   	Calendar cal = Calendar.getInstance();
+		licenseNotice = "Copyright " + cal.get(Calendar.YEAR) + " " + messages.getString("copyrightName") + System.getProperty("line.separator") 
+				+ System.getProperty("line.separator") 
+				+ License.getBlanklicenseNotice();				
+		vflicense = License.getVFLicense();	 	
+
+		saveOrUpload = new SaveOrUpload(
+				postletInterface,
+				destinationURL, 
+				messages.getString("uploadingMessageLabel"),
+				this,
+			    licenseNotice
+		);
+		//convertAndSavelocally = new ConvertAndSavelocally();
+		
+		totalBytes = saveOrUpload.createArchive(
+				progBar, 
+				language, 
+				userName, 
+				userDataToString
+		);    
+		
+		saveOrUpload.upload();
+		
+		return totalBytes;
 	}
 	
 	/**

@@ -89,7 +89,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	private static final File CONFIGURATION_FILE = new File(System.getProperty("user.home"), "VoxForge.properties");
 
     final int bufSize = 16384;
-    public static int BUFFER_SIZE = 10240;
+    //public static int BUFFER_SIZE = 10240;
     public static final String fileType = "wav";     
     public static final int samplingRate = 48000;// jre 1.4.2 only supports max of 44100
     public static final int samplingRateFormat = 16;      
@@ -155,12 +155,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     
     String cookie;
     
-    String licenseNotice;
-    String vflicense;
+    //String licenseNotice;
+    //String vflicense;
   
 	String tempdir;
 
-	SaveOrUpload saveOrUpload; 
+	//SaveOrUpload saveOrUpload; 
 	//ConvertAndSavelocally convertAndSavelocally; 
 	
     Color voxforgeColour = new Color(197, 216, 234);
@@ -192,7 +192,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
 
         messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale, new UTF8Control() );
-        submission = new Submission(language, 3, messages);
+        submission = new Submission(
+        		this, 
+        		language, 
+        		3, 
+        		messages
+        );
 		
 		initButtons(submission.getNumberOfPrompts());
 		
@@ -235,7 +240,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		removeAll();  //Removes all the components from this container
 
         messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", new Locale(language), new UTF8Control() );
-        submission = new Submission(language, submission.getNumberOfPrompts(), messages);
+        submission = new Submission(
+        		this, 
+        		language, 
+        		submission.getNumberOfPrompts(), 
+        		messages
+        );
         
         languageDependent(messages);
         
@@ -275,6 +285,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      */
     private void languageDependent(ResourceBundle messages) 
     { 	
+    	/*
     	Calendar cal = Calendar.getInstance();
 		licenseNotice = "Copyright " + cal.get(Calendar.YEAR) + " " + messages.getString("copyrightName") + System.getProperty("line.separator") 
 				+ System.getProperty("line.separator") 
@@ -290,7 +301,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			    BUFFER_SIZE
 		);
 		//convertAndSavelocally = new ConvertAndSavelocally();
-		
+		*/
 	    gender = messages.getString("notApplicable"); // default selection
 	    ageRange = messages.getString("notApplicable"); // default selection
 	    dialect = messages.getString("notApplicable");  // default selection
@@ -882,13 +893,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	
 		//saveSettings();
 		/*
-		totalBytes = saveOrUpload.start(
-						progBar, 
-						language, 
-						userName, 
-						userDataToString() 
-		);
-		*/
 		totalBytes = saveOrUpload.createArchive(
 				progBar, 
 				language, 
@@ -897,6 +901,16 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		);    
 		
 		saveOrUpload.upload();
+		*/
+		
+		totalBytes = submission.upload(
+				this,
+				progBar, 
+				destinationURL, 
+				language, 
+				userName, 
+				userDataToString()
+		); 
 		
 		//restartApp();
     } 
