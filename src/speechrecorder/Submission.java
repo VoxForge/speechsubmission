@@ -34,13 +34,14 @@ public class Submission {
     String vflicense;
     
     PostletInterface postletInterface;
-    /**
-     * constructor
-     * 
-     * @param language
-     * @param numberofPrompts
-     * @param messages
-     */
+	/**
+	 * constructor
+	 * 
+	 * @param postletInterface
+	 * @param language
+	 * @param numberofPrompts
+	 * @param messages
+	 */
 	public Submission(
 			PostletInterface postletInterface,
     		String language, 
@@ -51,8 +52,14 @@ public class Submission {
 		this.language = language;
 		this.numberofPrompts = numberofPrompts;
 		this.messages = messages;
-        tempdir = createTempDir(); 
 		
+	    gender = messages.getString("notApplicable"); // default selection
+	    ageRange = messages.getString("notApplicable"); // default selection
+	    dialect = messages.getString("notApplicable");  // default selection
+	    microphone = messages.getString("notApplicable");  // default selection
+
+        tempdir = createTempDir(); 
+	    
 		this.prompts = new Prompts(language, numberofPrompts);
 		String[][] promptArray = prompts.getPrompts();
 		
@@ -64,20 +71,13 @@ public class Submission {
 			System.out.println("Submission WAV file for recording uploadWavFile" + i + " is: " + elementA[i].uploadWavFile);
 			//System.out.println("Submission raw file for recording wavFileA" + i + " is: " + elementA[i].wavFile);
 	    }
-	    
-	    gender = messages.getString("notApplicable"); // default selection
-	    ageRange = messages.getString("notApplicable"); // default selection
-	    dialect = messages.getString("notApplicable");  // default selection
-	    microphone = messages.getString("notApplicable");  // default selection
 	}
-	
 	
 	public int upload (
 			PostletInterface postletInterface,
     		JProgressBar progBar, 
-			URL destinationURL, 
-		    String language,
-		    String recInfoToString
+		    String recInfo,
+    		URL destinationURL
 		 )
 	{
 	    int totalBytes;
@@ -101,7 +101,7 @@ public class Submission {
 				progBar, 
 				language, 
 				userName, 
-				userDataToString(recInfoToString)
+				userDataToString(recInfo)
 		);    
 		saveOrUpload.upload();
 		

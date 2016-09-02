@@ -851,9 +851,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		totalBytes = submission.upload(
 				this,
 				progBar, 
-				destinationURL, 
-				language,
-				recInfoToString()
+				recInfoToString(),
+				destinationURL
 		); 
 		
 		//restartApp();
