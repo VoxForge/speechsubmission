@@ -352,26 +352,23 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
            	languagePanel.add( languageChooser = new JComboBox( convertLanguage2Array("languageSelection") ) );
         }
         
-        //languageChooser.setSelectedIndex(0); 
-        
-        
         languageChooser.setSelectedItem( findLanguageDesc(language) );
-        
         languageChooser.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e)
-				{
-					String languageString = (String)languageChooser.getSelectedItem();
-					
-					System.err.println("languageString " + languageString);
-					
-                    if ( ! languageString.equals(messages.getString("pleaseSelect")) )
-	                {
-                    	 language = extractLanguageID(languageString);
-	                     System.out.println("changing language to: " + language);
-	        			 restartApp();
-                    }
-				}
-        	});
+			public void actionPerformed(ActionEvent e)
+			{
+				String languageString = (String)languageChooser.getSelectedItem();
+				
+				System.err.println("languageString " + languageString);
+				
+                if ( ! languageString.equals(messages.getString("pleaseSelect")) )
+                {
+                	 language = extractLanguageID(languageString);
+                     System.out.println("changing language to: " + language);
+        			 restartApp();
+                }
+			}
+    	});
+        
         p2.add(languagePanel);
     }
     
@@ -866,7 +863,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		try 
 		{
 	        usernameTextField.selectAll();
-		    submission.setUserName( usernameTextField.getText().replaceAll("\\W","") );
+		    submission.setUserName( usernameTextField.getText() );
 		} 
 		catch (NullPointerException ex) 
 		{ 
@@ -938,7 +935,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
            	progBar.setString(messages.getString("uploadCompletedMessageLabel"));
             progBar.setIndeterminate(false);
             System.out.println("Finished! submission uploaded to VoxForge repository");
-            // Reset the applet
+            // Reset the application
             progBar.setValue(0);
             sentBytes = 0;
             
@@ -949,16 +946,14 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             }
             
             progBar.setStringPainted(true);
-            //progBar.setString(messages.getString("readyToRecord"));
-            progBar.setString("setProgress readyToRecord");
+            progBar.setString(messages.getString("readyToRecord"));
 
             restartApp();
          }
          else 
          {
             progBar.setStringPainted(true);
-            //progBar.setString(messages.getString("uploadingMessageLabel"));
-            progBar.setString("setProgress uploading");
+            progBar.setString(messages.getString("uploadingMessageLabel"));
          	//FORDEBUG
          	//System.err.println("setProgress(): Not reached end yet. sentBytes="+sentBytes+", totalBytes="+totalBytes);
          }

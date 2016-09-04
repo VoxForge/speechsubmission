@@ -271,16 +271,16 @@ public class Submission {
 
 	public void setUserName(String userName) {
 	    // see   java.util.regex.Pattern: \W  A non-word character: [^\w]
-		userName = (userName.replaceAll("\\W",""));
+		this.userName = (userName.replaceAll("\\W",""));
 		
 		if (userName.length() == 0 ) 
 		{
-		    userName = "anonymous";
+		    this.userName = "anonymous";
 		} else 
 		{
 			if (userName.length() > 40 ) 
 			{
-				userName = userName.substring(0,40);
+				this.userName = userName.substring(0,40);
 			} 
 		}
 	}
