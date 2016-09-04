@@ -163,6 +163,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      */
 	public CapturePlayback( Locale currentLocale, String targetDirectory, String destination) 
 	{    	
+		this.language = currentLocale.getLanguage();
     	this.targetDirectory = targetDirectory;
         try 
         {
@@ -176,7 +177,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         {
             System.err.println( "destination is null" );
         }
-
+        
         messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale, new UTF8Control() );
         submission = new Submission(
         		this, 
@@ -305,6 +306,28 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		return languageString.split("\\s*-\\s*")[0];
     }
     
+	/**
+	 * Find language selection description string
+	 * @param languageString
+	 * @return
+	 */
+	private String findLanguageDesc(String language)
+    { 
+		String result = "Error: invalid language id";
+		
+		String[] languageArr = convertLanguage2Array("languageSelection");
+		
+		for (String langString : languageArr) {
+			String languageID = extractLanguageID(langString);
+			if (languageID.equals(language))
+			{
+				result = langString;
+			}
+		}
+		
+		return result;
+    }
+	
     /**
      * add language selector
      * 
@@ -329,7 +352,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
            	languagePanel.add( languageChooser = new JComboBox( convertLanguage2Array("languageSelection") ) );
         }
         
-        languageChooser.setSelectedIndex(0); 
+        //languageChooser.setSelectedIndex(0); 
+        
+        
+        languageChooser.setSelectedItem( findLanguageDesc(language) );
+        
         languageChooser.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e)
 				{
