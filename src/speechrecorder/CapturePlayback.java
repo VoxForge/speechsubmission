@@ -932,7 +932,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
          sentBytes += a;
          progBar.setValue(sentBytes);
          
-         if (sentBytes == totalBytes)
+         if (sentBytes == totalBytes) // upload completed
          {
             progBar.setStringPainted(true);
            	progBar.setString(messages.getString("uploadCompletedMessageLabel"));
@@ -951,6 +951,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             progBar.setStringPainted(true);
             //progBar.setString(messages.getString("readyToRecord"));
             progBar.setString("setProgress readyToRecord");
+
+            restartApp();
          }
          else 
          {
