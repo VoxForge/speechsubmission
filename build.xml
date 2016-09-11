@@ -35,9 +35,13 @@
     <copy todir="${build.java}/speechrecorder/prompts">
       <fileset dir="${src.java}/speechrecorder/prompts"/>
     </copy>
-        <copy todir="${build.java}/speechrecorder/copyrights">
+    <copy todir="${build.java}/speechrecorder/languages">
+      <fileset dir="${src.java}/speechrecorder/languages"/>
+    </copy>
+    <copy todir="${build.java}/speechrecorder/copyrights">
       <fileset dir="${src.java}/speechrecorder/copyrights"/>
     </copy>
+  	<copy file="${src.java}/voxforge.png" todir="${build.java}"/>
   </target>
 
   <target name="test" depends="compile">
@@ -50,6 +54,7 @@
         <include name="**/speechrecorder/prompts/*"/>
         <include name="**/speechrecorder/copyrights/*"/>
         <include name="**/speechrecorder/languages/*"/>
+        <include name="**/voxforge.png"/>
       </fileset>
       <metainf dir="${include}/metainf/"/>
       <manifest>
@@ -91,6 +96,7 @@ for ant; needed: sudo apt-get install ant-contrib
 		        <include name="**/*.class"/>
 		        <include name="**/speechrecorder/prompts/*"/>
 		        <include name="**/speechrecorder/copyrights/*"/>
+		        <include name="**/voxforge.png"/>
 		      </fileset>
 		</fx:jar>
 	</target>
@@ -105,8 +111,14 @@ for ant; needed: sudo apt-get install ant-contrib
 		    	mainClass="speechrecorder.RecorderApplication"/>
 		    <fx:resources>
 		        <fx:fileset dir="dist" includes="speechrecorder.jar"/>
+		        <fx:fileset dir="dist" type="license" includes="speechrecorder/LICENSE"/>
 		    </fx:resources>
 		    <fx:info title="speechrecorder" vendor="voxforge"/>
+			<fx:info>
+			    <fx:icon href="${build.java}/voxforge.png"></fx:icon>
+			</fx:info>
+			<fx:info license="${build.java}/LICENSE"/>
+
 		</fx:deploy>
 	</target>
 

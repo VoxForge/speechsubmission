@@ -256,7 +256,7 @@ public class Submission {
 		userData = userData + "Microphone type: " + microphone + System.getProperty("line.separator");	
 		userData = userData + "Audio card make: unknown" + System.getProperty("line.separator");	
 		userData = userData + "Audio card type: unknown" + System.getProperty("line.separator");
-		userData = userData + "Audio Recording Software: VoxForge Speech Submission Application" + System.getProperty("line.separator");
+		userData = userData + "Audio Recording Software: standalone VoxForge speech submission application" + System.getProperty("line.separator");
 		userData = userData + "O/S:" + System.getProperty("line.separator");	
 		userData = userData + System.getProperty("line.separator");	
 

@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//src/speechrecorder/languages/MessagesBundle.properties=UTF-8
 encoding//src/speechrecorder/languages/MessagesBundle_bg.properties=UTF-8
+encoding//src/speechrecorder/languages/MessagesBundle_ca.properties=UTF-8
 encoding//src/speechrecorder/languages/MessagesBundle_de.properties=UTF-8
 encoding//src/speechrecorder/languages/MessagesBundle_el.properties=UTF-8
 encoding//src/speechrecorder/languages/MessagesBundle_es.properties=UTF-8

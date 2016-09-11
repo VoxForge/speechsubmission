@@ -13,7 +13,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-This Java Applet also incorporates other open-source code:
+This Java Application also incorporates other open-source code:
    Patch Contributions:
     - ConfigReader and supporting code modifications (c) 2014 Joseph Lewis	
    Other Projects:
