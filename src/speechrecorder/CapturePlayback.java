@@ -83,13 +83,13 @@ import speechrecorder.Playback;
 @SuppressWarnings("serial")
 public class CapturePlayback extends JPanel implements ActionListener, net.sf.postlet.PostletInterface {
 
-	private static final File CONFIGURATION_FILE = new File(System.getProperty("user.home"), "VoxForge.properties");
-
-    final int bufSize = 16384;
-    public static final String fileType = "wav";     
+	//private static final File CONFIGURATION_FILE = new File(System.getProperty("user.home"), "VoxForge.properties");
+	File configuration_file;
+    //final int bufSize = 16384;
+    //public static final String fileType = "wav";
     public static final int samplingRate = 48000;// jre 1.4.2 only supports max of 44100
-    public static final int samplingRateFormat = 16;      
-    public static final int numberChannels = 1;      
+    public static final int samplingRateFormat = 16;
+    public static final int numberChannels = 1;
 
     AudioFormat format = new AudioFormat(samplingRate, samplingRateFormat, numberChannels, true, false);
 
@@ -130,7 +130,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     JTextField subjectBox;
     String subject;
     
-//  ############ Localized Fields ####################################   
+    //  ############ Localized Fields ####################################   
     JTextField usernameTextField;  
 	JComboBox<String[]> languageChooser;       
     String language = "en";
@@ -140,7 +140,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     JComboBox<String[]> dialectChooser;
     JComboBox<String[]> microphoneChooser;     
 
-//  ############ Localized Fields ####################################   
+    //  ############ Localized Fields ####################################   
 
     String targetDirectory;
     URL destinationURL;
@@ -154,6 +154,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     ResourceBundle messages;
     Submission submission;
     Boolean rightToLeft = false;
+    Boolean firstTime = true;
     
     /**
      * constructor
@@ -161,14 +162,22 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      * @param targetDirectory
      * @param destination
      */
-	public CapturePlayback( Locale currentLocale, String targetDirectory, String destination) 
+	public CapturePlayback(
+			//Locale currentLocale,
+			ResourceBundle messages,
+			String targetDirectory, 
+			String destination,
+			File configuration_file
+		) 
 	{    	
-		this.language = currentLocale.getLanguage();
+		//this.language = currentLocale.getLanguage();
+		this.language = messages.getLocale().getLanguage();
+		this.messages = messages;
     	this.targetDirectory = targetDirectory;
         try 
         {
         	this.destinationURL = new URL(destination);
-        } 
+        }
         catch(java.net.MalformedURLException malurlex)
         {
             System.err.println( "Badly formed destination URL: " + destination);
@@ -177,8 +186,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         {
             System.err.println( "destination is null" );
         }
-        
-        messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale, new UTF8Control() );
+		this.configuration_file = configuration_file;
+		
+        //messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale, new UTF8Control() );
         submission = new Submission(
         		this, 
         		language, 
@@ -197,7 +207,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		add(scrollPane, BorderLayout.CENTER);
 		setPreferredSize(new Dimension(300, 300));
-        //loadSettings();
+		
+        loadSettings();
 	}
 
 	// methods
@@ -227,6 +238,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		removeAll();  //Removes all the components from this container
 
         messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", new Locale(language), new UTF8Control() );
+        Submission old_submission = submission;
         submission = new Submission(
         		this, 
         		language, 
@@ -246,7 +258,20 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         validate();
         repaint();
         setVisible(true);
+        
+        loadSettings();
+        //restoreComboBoxIndices(old_submission);
     }	
+    
+    private void restoreComboBoxIndices(Submission submission) 
+    { 	
+		//languageChooser.setSelectedIndex( submission.getLanguageIndex() );
+		usernameTextField.setText( submission.getUserName() );
+		genderChooser.setSelectedIndex( submission.getGenderIndex() );    	
+		ageRangeChooser.setSelectedIndex( submission.getAgeRangeIndex() );
+		dialectChooser.setSelectedIndex( submission.getDialectIndex() );    	
+		microphoneChooser.setSelectedIndex( submission.getMicrophoneIndex() );
+    }
     
     /**
      * initialize arrays whose size is dependent on the number of prompts
@@ -275,7 +300,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		    	this,
 		    	format,
 		    	submission.getNumberOfPrompts(),
-                bufSize,
+//                bufSize,
                 messages.getString("peakWarningLabel"),
                 messages.getString("sampleGraphFileLabel"),
                 messages.getString("sampleGraphLengthLabel"),
@@ -294,20 +319,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    );
     }
     
-    /**
-     * extracts two character Language ID from language string<br>
-     * e.g. EN - English - will extract 'EN'
-     * 
-     * @param languageString
-     * @return
-     */
-	private String extractLanguageID(String languageString) 
-    { 
-		return languageString.split("\\s*-\\s*")[0];
-    }
-    
 	/**
-	 * Find language selection description string
+	 * return language selection description string
+	 * 
 	 * @param languageString
 	 * @return
 	 */
@@ -326,6 +340,29 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		}
 		
 		return result;
+    }
+	
+    /**
+     * convert comma separated Language List string into a string array
+     * 
+     * @param key
+     * @return
+     */
+	private String[] convertLanguage2Array(String key) 
+    {
+       	return (messages.getString(key)).split("\\s*,\\s*");
+    }	
+	
+    /**
+     * extracts two character Language ID from language string<br>
+     * e.g. EN - English - will extract 'EN'
+     * 
+     * @param languageString
+     * @return
+     */
+	private String extractLanguageID(String languageString) 
+    { 
+		return languageString.split("\\s*-\\s*")[0];
     }
 	
     /**
@@ -358,14 +395,20 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			{
 				String languageString = (String)languageChooser.getSelectedItem();
 				
-				System.err.println("languageString " + languageString);
+				System.out.println("languageString " + languageString);
 				
-                if ( ! languageString.equals(messages.getString("pleaseSelect")) )
+				// on app startup, if language has been set, the "! firstTime" prevents an endless loop
+                if ( ! firstTime && ! languageString.equals(messages.getString("pleaseSelect")) )
                 {
                 	 language = extractLanguageID(languageString);
+                     submission.setLanguageIndex(languageChooser.getSelectedIndex());
+
                      System.out.println("changing language to: " + language);
+                     
         			 restartApp();
                 }
+                
+                if (firstTime) { firstTime = false; }
 			}
     	});
         
@@ -509,7 +552,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      * @param key
      * @return
      */
-	private String[] convertMessage2Array(String key) 
+	private String[] convertMessage2Array(String key)
     {
 		String [] result;
 		
@@ -526,17 +569,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     }
 
     /**
-     * convert comma separated Language List string into a string array
-     * 
-     * @param key
-     * @return
-     */
-	private String[] convertLanguage2Array(String key) 
-    {
-       	return (messages.getString(key)).split("\\s*,\\s*");
-    }	
-	
-    /**
      * User name,
      * Gender,
      * Age Range,
@@ -552,8 +584,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         usernamePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         if (rightToLeft)
         {
-            usernamePanel.add(usernameTextField = new JTextField(20));        	
-            usernamePanel.add(new JLabel(messages.getString("usernamePanelLabel")));  
+            usernamePanel.add(usernameTextField = new JTextField(20));
+            usernamePanel.add(new JLabel(messages.getString("usernamePanelLabel")));
         }
         else
         {
@@ -561,7 +593,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	        usernamePanel.add(usernameTextField = new JTextField(20));     	
         }
         usernamePanel.add(new JLabel(messages.getString("usernamePanelText")));     
-        p2.add(usernamePanel);  
+        p2.add(usernamePanel);
     // 		############ Gender ####################################             
         JPanel genderPanel = new JPanel();
         genderPanel.setLayout(new FlowLayout(FlowLayout.CENTER));  
@@ -580,6 +612,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 				public void actionPerformed(ActionEvent e){
                      //gender = (String)genderChooser.getSelectedItem();
                      submission.setGender( (String)genderChooser.getSelectedItem() );
+                     submission.setGenderIndex(genderChooser.getSelectedIndex());
                  }
         	});
         p2.add(genderPanel);
@@ -601,6 +634,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 				public void actionPerformed(ActionEvent e){
                      //ageRange = (String)ageRangeChooser.getSelectedItem();
                      submission.setAgeRange( (String)ageRangeChooser.getSelectedItem() );
+                     submission.setAgeRangeIndex(ageRangeChooser.getSelectedIndex());
                  }
         	});
         p2.add(ageRangePanel);
@@ -622,6 +656,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 				public void actionPerformed(ActionEvent e){
 	                //dialect = (String)dialectChooser.getSelectedItem();
 	                submission.setDialect( (String)dialectChooser.getSelectedItem() );
+	                submission.setDialectIndex(dialectChooser.getSelectedIndex());
 	            }
             });
         p2.add(dialectPanel);
@@ -644,6 +679,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 				public void actionPerformed(ActionEvent e){
                      //microphone = (String)microphoneChooser.getSelectedItem();
                      submission.setMicrophone( (String)microphoneChooser.getSelectedItem() );
+ 	                submission.setMicrophoneIndex(microphoneChooser.getSelectedIndex());
                  }
         	});
         p2.add(microphonePanel);
@@ -870,7 +906,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		    submission.setUserName( "anonymous" );
 	    }
 	
-		//saveSettings();
+		saveSettings();
 		
 		totalBytes = submission.upload(
 				this,
@@ -878,8 +914,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 				recInfoToString(),
 				destinationURL
 		); 
-		
-		//restartApp();
     } 
 
     
@@ -912,8 +946,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 					new FileInputStream(wavFile)), format, totalBytesWritten
 					/ (format.getChannels() * format.getSampleSizeInBits() / 8) // Length in sample frames
 			);
-
- 			
 		} catch (Exception err) {
 			System.err.println("Exception while reading cache file: " + err);
 		}
@@ -939,7 +971,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             progBar.setValue(0);
             sentBytes = 0;
             
-            try { // sleep so user has time to finished message
+            try { // sleep so user has time to read finished message
                 Thread.sleep(1000);
             } catch(InterruptedException ex) {
                 Thread.currentThread().interrupt();
@@ -965,8 +997,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     public void saveSettings()
     {	
     	try {
-			ConfigReader cr = new ConfigReader(CONFIGURATION_FILE);
-			
+			//ConfigReader cr = new ConfigReader(CONFIGURATION_FILE);
+			ConfigReader cr = new ConfigReader(configuration_file);
+
 			cr.put("language", languageChooser.getSelectedIndex());
 			cr.put("gender", genderChooser.getSelectedIndex());
 			cr.put("age", ageRangeChooser.getSelectedIndex());
@@ -983,24 +1016,28 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     }
         
     /**
-     *  Load all settings that were saved from the last session
-     * 
+     *  Load all settings (that were saved from the last session) 
+     *  from configuration file
+     *   
      */
     public void loadSettings()
     {	
 		ConfigReader cr=null;
 		try {
-			cr = new ConfigReader(CONFIGURATION_FILE);
+			//cr = new ConfigReader(CONFIGURATION_FILE);
+			cr = new ConfigReader(configuration_file);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		try {
-			languageChooser.setSelectedIndex(
-					cr.getInt("language",languageChooser.getSelectedIndex()));
-		} catch (Exception e) { // to catch IndexOutOfBoundsException or any other exceptions
-			languageChooser.setSelectedIndex(-1); // -1 mean no selection			
-		}
+		// this fires an event when starting, which triggers a language change,
+		// which triggers a restart, which runs loadSetting, infinite loop...
+		//try {
+		//	languageChooser.setSelectedIndex(
+		//			cr.getInt("language",languageChooser.getSelectedIndex()));
+		//} catch (Exception e) { // to catch IndexOutOfBoundsException or any other exceptions
+		//	languageChooser.setSelectedIndex(-1); // -1 mean no selection			
+		//}
 		
 		try {
 			genderChooser.setSelectedIndex(
@@ -1052,7 +1089,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		// add recording information
 		recInfo = recInfo + "File Info:" + System.getProperty("line.separator");
 		recInfo = recInfo + System.getProperty("line.separator");
-		recInfo = recInfo + "File type: " + fileType + System.getProperty("line.separator");
+		//recInfo = recInfo + "File type: " + fileType + System.getProperty("line.separator");
+		recInfo = recInfo + "File type: wav" + System.getProperty("line.separator");
 		recInfo = recInfo + "Sampling Rate: " + samplingRate + System.getProperty("line.separator");
 		recInfo = recInfo + "Sample rate format: " + samplingRateFormat + System.getProperty("line.separator");
 		recInfo = recInfo + "Number of channels: " + numberChannels + System.getProperty("line.separator");	

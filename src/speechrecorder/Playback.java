@@ -28,7 +28,8 @@ public class Playback implements Runnable {
     String sampleGraphPositionLabel;
     String playButton;
     String stopButton;
-    int bufSize;       
+    //int bufSize;   
+    final int bufSize = 16384;
     
     AudioInputStream audioInputStream;
     SamplingGraph samplingGraph;
@@ -44,7 +45,7 @@ public class Playback implements Runnable {
     		CapturePlayback capturePlayback,  
     		AudioFormat format,
     		int numberofPrompts,
-            int bufSize,
+            //int bufSize,
     		String peakWarningLabel,
     		String sampleGraphFileLabel,
             String sampleGraphLengthLabel, 
@@ -62,7 +63,7 @@ public class Playback implements Runnable {
     	this.sampleGraphPositionLabel = sampleGraphPositionLabel; 
     	this.playButton = playButton;
     	this.stopButton = stopButton;
-    	this.bufSize = bufSize;
+    	//this.bufSize = bufSize;
     }
     
     public void start(

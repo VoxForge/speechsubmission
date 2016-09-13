@@ -14,6 +14,9 @@
 package speechrecorder;
 
 import javax.swing.JFrame;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -21,22 +24,76 @@ import java.util.*;
  */
 @SuppressWarnings("serial")
 public class RecorderApplication extends JFrame {
+	private static final File CONFIGURATION_FILE = new File(System.getProperty("user.home"), "VoxForge.properties");
 
     private CapturePlayback theRecorder;
    	String targetDirectory = ""; // blank target directory means current
     String destination = "http://read.voxforge1.org/r0_2_4b/javaUploadServer.php";
     Locale currentLocale;
+    ResourceBundle messages;
     
-	public RecorderApplication(Locale currentLocale)
+    /**
+     * constructor
+     * 
+     * see: https://docs.oracle.com/javase/tutorial/i18n/locale/create.html<br>
+     * 
+     * Language codes<br>
+     * http://www.loc.gov/standards/iso639-2/php/code_list.php
+     * 
+     * country codes<br>
+     * http://www.chemie.fu-berlin.de/diverse/doc/ISO_3166.html
+     * 
+     * @param args
+     */
+	public RecorderApplication(String[] args)
 	{
-		this.currentLocale = currentLocale;
+	   	String language="en";
+        String country="US";
+
+        currentLocale = null;
+		ConfigReader cr=null;
+		int languageIndex;
+		
+		// get default language bundle
+    	messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", new Locale("en"), new UTF8Control() );
+		
+        if  (args.length == 1) 
+        {
+            language = new String(args[0]);
+            country = null;
+            currentLocale = new Locale(language);
+        }
+        else if  (args.length == 2) 
+        {
+            language = new String(args[0]);
+            country = new String(args[1]);
+            currentLocale = new Locale(language, country);
+        }
+        else if (CONFIGURATION_FILE.exists() && !CONFIGURATION_FILE.isDirectory())
+        {
+    		try {
+    			cr = new ConfigReader(CONFIGURATION_FILE);
+    			languageIndex = cr.getInt("language",0);
+    			String languageString = convertLanguageInd2Lang(messages, languageIndex);
+    			language = extractLanguageID(languageString);
+    	    	messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", new Locale(language), new UTF8Control() );
+    		} catch (IOException e) {
+    			currentLocale = new Locale("en");
+    		}        	
+        }
+        else
+        {
+            currentLocale = new Locale("en");
+        }
+		
 		init();						// simulate browser call(1)
 		setSize(800,800);   		// Set the size of the frame
 		setVisible(true);   		// Show the frame 
 	}
 	
     public void init() {
-    	theRecorder = new CapturePlayback(currentLocale, targetDirectory, destination ); 
+   	
+    	theRecorder = new CapturePlayback(messages, targetDirectory, destination, CONFIGURATION_FILE ); 
         getContentPane().add("Center", theRecorder);
     }
 
@@ -52,43 +109,37 @@ public class RecorderApplication extends JFrame {
         out.println("***"+message+"***");
     }
 
-    /**
-     * 
-     * 
-     * see: https://docs.oracle.com/javase/tutorial/i18n/locale/create.html<br>
-     * 
-     * Language codes<br>
-     * http://www.loc.gov/standards/iso639-2/php/code_list.php
-     * 
-     * country codes<br>
-     * http://www.chemie.fu-berlin.de/diverse/doc/ISO_3166.html
-     * 
-     * @param args
-     */
+	/**
+	 * 
+	 * @param args
+	 */
     public static void main(String[] args) 
     {
-    	String language="en";
-        String country="US";
-
-        Locale currentLocale;
-        
-        if  (args.length == 1) 
-        {
-            language = new String(args[0]);
-            country = null;
-            currentLocale = new Locale(language);
-        }
-        else if  (args.length == 2) 
-        {
-            language = new String(args[0]);
-            country = new String(args[1]);
-            currentLocale = new Locale(language, country);
-        }
-        else
-        {
-            currentLocale = new Locale("en");
-        }
-        
-    	new RecorderApplication(currentLocale);
+    	new RecorderApplication(args);
     }
+    
+    
+	private String convertLanguageInd2Lang(ResourceBundle messages, int languageIndex)
+    { 
+		String result = "Error: invalid language id";
+		
+		String[] languageArr = convertLanguage2Array(messages, "languageSelection");
+		
+		if (languageIndex >= 0 && languageIndex < languageArr.length)
+		{
+			result = languageArr[languageIndex];
+		}
+		
+		return result;
+    }
+
+	private String[] convertLanguage2Array(ResourceBundle messages, String key) 
+    {
+       	return (messages.getString(key)).split("\\s*,\\s*");
+    }	
+    
+	private String extractLanguageID(String languageString) 
+	{ 
+		return languageString.split("\\s*-\\s*")[0];
+	}
 }

@@ -16,6 +16,12 @@ public class Submission {
     String dialect;  
     String microphone;     
 
+    int languageIndex;
+    int genderIndex;
+    int ageRangeIndex;
+    int dialectIndex;  
+    int microphoneIndex; 
+    
     private String tempdir;
 	
 	private int numberofPrompts;
@@ -325,7 +331,46 @@ public class Submission {
 		this.microphone = microphone;
 	}
 	
-	
+    public int getGenderIndex() {
+		return genderIndex;
+	}
+
+	public void setGenderIndex(int genderIndex) {
+		this.genderIndex = genderIndex;
+	}
+
+	public int getAgeRangeIndex() {
+		return ageRangeIndex;
+	}
+
+	public void setAgeRangeIndex(int ageRangeIndex) {
+		this.ageRangeIndex = ageRangeIndex;
+	}
+
+	public int getLanguageIndex() {
+		return languageIndex;
+	}
+
+	public void setLanguageIndex(int languageIndex) {
+		this.languageIndex = languageIndex;
+	}
+
+	public int getDialectIndex() {
+		return dialectIndex;
+	}
+
+	public void setDialectIndex(int dialectIndex) {
+		this.dialectIndex = dialectIndex;
+	}
+
+	public int getMicrophoneIndex() {
+		return microphoneIndex;
+	}
+
+	public void setMicrophoneIndex(int microphoneIndex) {
+		this.microphoneIndex = microphoneIndex;
+	}
+
     
 /*
     protected void saveLocal() 

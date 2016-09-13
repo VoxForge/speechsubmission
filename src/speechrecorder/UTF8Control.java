@@ -10,7 +10,6 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.ResourceBundle.Control;
 
-
 /*
  * see www.stackoverflow.com/questions/4659929/how-to-use-utf-8-in-resource-properties--with-resourcebundle
  */
