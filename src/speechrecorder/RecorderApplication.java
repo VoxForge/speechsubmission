@@ -54,7 +54,8 @@ public class RecorderApplication extends JFrame {
 		ConfigReader cr=null;
 		int languageIndex;
 		
-		// get default language bundle
+		// get default language bundle so can get list of language IDs and
+		// language names
     	messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", new Locale("en"), new UTF8Control() );
 		
         if  (args.length == 1) 
@@ -74,8 +75,10 @@ public class RecorderApplication extends JFrame {
     		try {
     			cr = new ConfigReader(CONFIGURATION_FILE);
     			languageIndex = cr.getInt("language",0);
-    			String languageString = convertLanguageInd2Lang(messages, languageIndex);
-    			language = extractLanguageID(languageString);
+    			String languageString = CapturePlayback.convertLanguageInd2Lang(messages, languageIndex);
+    			language = CapturePlayback.extractLanguageID(languageString);
+    			
+    			// update resource bundle with langages saved in config file
     	    	messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", new Locale(language), new UTF8Control() );
     		} catch (IOException e) {
     			currentLocale = new Locale("en");
@@ -117,29 +120,4 @@ public class RecorderApplication extends JFrame {
     {
     	new RecorderApplication(args);
     }
-    
-    
-	private String convertLanguageInd2Lang(ResourceBundle messages, int languageIndex)
-    { 
-		String result = "Error: invalid language id";
-		
-		String[] languageArr = convertLanguage2Array(messages, "languageSelection");
-		
-		if (languageIndex >= 0 && languageIndex < languageArr.length)
-		{
-			result = languageArr[languageIndex];
-		}
-		
-		return result;
-    }
-
-	private String[] convertLanguage2Array(ResourceBundle messages, String key) 
-    {
-       	return (messages.getString(key)).split("\\s*,\\s*");
-    }	
-    
-	private String extractLanguageID(String languageString) 
-	{ 
-		return languageString.split("\\s*-\\s*")[0];
-	}
 }

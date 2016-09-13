@@ -154,10 +154,57 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     ResourceBundle messages;
     Submission submission;
     Boolean rightToLeft = false;
-    Boolean firstTime = true;
+    //Boolean firstTime = true;
     
+
+	// static methods	
+    /**
+     * convert comma separated Language List string into a string array
+     * 
+     * @param key
+     * @return
+     */
+	public static String[] convertLanguage2Array(ResourceBundle messages, String key) 
+    {
+       	return (messages.getString(key)).split("\\s*,\\s*");
+    }	
+	
+    /**
+     * extracts two character Language ID from language string<br>
+     * e.g. EN - English - will extract 'EN'
+     * 
+     * @param languageString
+     * @return
+     */
+	public static String extractLanguageID(String languageString) 
+    { 
+		return languageString.split("\\s*-\\s*")[0];
+    }
+	
+    /**
+     * convert language index to language ID (e.g. 'en')
+     * 
+     * @param messages
+     * @param languageIndex
+     * @return
+     */
+	public static String convertLanguageInd2Lang(ResourceBundle messages, int languageIndex)
+    { 
+		String result = "Error: invalid language id";
+		
+		String[] languageArr = CapturePlayback.convertLanguage2Array(messages, "languageSelection");
+		
+		if (languageIndex >= 0 && languageIndex < languageArr.length)
+		{
+			result = languageArr[languageIndex];
+		}
+		
+		return result;
+    }
+	
     /**
      * constructor
+     * 
      * @param currentLocale
      * @param targetDirectory
      * @param destination
@@ -170,7 +217,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			File configuration_file
 		) 
 	{    	
-		//this.language = currentLocale.getLanguage();
 		this.language = messages.getLocale().getLanguage();
 		this.messages = messages;
     	this.targetDirectory = targetDirectory;
@@ -188,7 +234,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
 		this.configuration_file = configuration_file;
 		
-        //messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", currentLocale, new UTF8Control() );
         submission = new Submission(
         		this, 
         		language, 
@@ -210,7 +255,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		
         loadSettings();
 	}
-
+	
 	// methods
     /**
      * see http://stackoverflow.com/questions/14874613/how-to-replace-jpanel-with-another-jpanel
@@ -238,7 +283,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		removeAll();  //Removes all the components from this container
 
         messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", new Locale(language), new UTF8Control() );
-        Submission old_submission = submission;
+        //Submission old_submission = submission;
         submission = new Submission(
         		this, 
         		language, 
@@ -329,7 +374,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     { 
 		String result = "Error: invalid language id";
 		
-		String[] languageArr = convertLanguage2Array("languageSelection");
+		String[] languageArr = convertLanguage2Array(messages, "languageSelection");
 		
 		for (String langString : languageArr) {
 			String languageID = extractLanguageID(langString);
@@ -341,29 +386,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		
 		return result;
     }
-	
-    /**
-     * convert comma separated Language List string into a string array
-     * 
-     * @param key
-     * @return
-     */
-	private String[] convertLanguage2Array(String key) 
-    {
-       	return (messages.getString(key)).split("\\s*,\\s*");
-    }	
-	
-    /**
-     * extracts two character Language ID from language string<br>
-     * e.g. EN - English - will extract 'EN'
-     * 
-     * @param languageString
-     * @return
-     */
-	private String extractLanguageID(String languageString) 
-    { 
-		return languageString.split("\\s*-\\s*")[0];
-    }
+
 	
     /**
      * add language selector
@@ -380,13 +403,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 
         if (rightToLeft)
         {
-           	languagePanel.add( languageChooser = new JComboBox( convertLanguage2Array("languageSelection") ) ); 
+           	languagePanel.add( languageChooser = new JComboBox( convertLanguage2Array(messages, "languageSelection") ) ); 
         	languagePanel.add(new JLabel(messages.getString("languagePanelLabel")));       	
         }
         else
         {
            	languagePanel.add(new JLabel(messages.getString("languagePanelLabel")));       	
-           	languagePanel.add( languageChooser = new JComboBox( convertLanguage2Array("languageSelection") ) );
+           	languagePanel.add( languageChooser = new JComboBox( convertLanguage2Array(messages, "languageSelection") ) );
         }
         
         languageChooser.setSelectedItem( findLanguageDesc(language) );
@@ -398,7 +421,9 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 				System.out.println("languageString " + languageString);
 				
 				// on app startup, if language has been set, the "! firstTime" prevents an endless loop
-                if ( ! firstTime && ! languageString.equals(messages.getString("pleaseSelect")) )
+                //if ( ! firstTime && ! languageString.equals(messages.getString("pleaseSelect")) )
+                if ( ! languageString.equals(messages.getString("pleaseSelect")) )
+
                 {
                 	 language = extractLanguageID(languageString);
                      submission.setLanguageIndex(languageChooser.getSelectedIndex());
@@ -408,7 +433,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         			 restartApp();
                 }
                 
-                if (firstTime) { firstTime = false; }
+                //if (firstTime) { firstTime = false; }
 			}
     	});
         
@@ -552,7 +577,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      * @param key
      * @return
      */
-	private String[] convertMessage2Array(String key)
+	private String[] convertMessage2Array(ResourceBundle messages, String key)
     {
 		String [] result;
 		
@@ -599,13 +624,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         genderPanel.setLayout(new FlowLayout(FlowLayout.CENTER));  
         if (rightToLeft)
         {
-	        genderPanel.add(genderChooser = new JComboBox( convertMessage2Array("genderSelection")  ));
+	        genderPanel.add(genderChooser = new JComboBox( convertMessage2Array(messages, "genderSelection")  ));
         	genderPanel.add(new JLabel(messages.getString("genderPanelLabel")));
         }
         else
         {
 	        genderPanel.add(new JLabel(messages.getString("genderPanelLabel")));
-	        genderPanel.add(genderChooser = new JComboBox( convertMessage2Array("genderSelection") ));
+	        genderPanel.add(genderChooser = new JComboBox( convertMessage2Array(messages, "genderSelection") ));
         }
         genderChooser.setSelectedIndex(0);       
         genderChooser.addActionListener(new ActionListener(){
@@ -621,13 +646,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         ageRangePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         if (rightToLeft)
         {
-			ageRangePanel.add(ageRangeChooser = new JComboBox(convertMessage2Array("ageSelection")) );
+			ageRangePanel.add(ageRangeChooser = new JComboBox(convertMessage2Array(messages, "ageSelection")) );
 	       	ageRangePanel.add(new JLabel(messages.getString("ageRangePanelLabel")));
         }
         else
         {
         	ageRangePanel.add(new JLabel(messages.getString("ageRangePanelLabel")));
-			ageRangePanel.add(ageRangeChooser = new JComboBox(convertMessage2Array("ageSelection")) );
+			ageRangePanel.add(ageRangeChooser = new JComboBox(convertMessage2Array(messages, "ageSelection")) );
         }
         ageRangeChooser.setSelectedIndex(0);          
         ageRangeChooser.addActionListener(new ActionListener(){
@@ -643,13 +668,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         dialectPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         if (rightToLeft)
         {
-        	dialectPanel.add(dialectChooser = new JComboBox(convertMessage2Array("dialectSelection")));    
+        	dialectPanel.add(dialectChooser = new JComboBox(convertMessage2Array(messages, "dialectSelection")));    
         	dialectPanel.add(new JLabel(messages.getString("dialectPanelLabel")));
         }
         else
         {
         	dialectPanel.add(new JLabel(messages.getString("dialectPanelLabel")));
-        	dialectPanel.add(dialectChooser = new JComboBox(convertMessage2Array("dialectSelection")));
+        	dialectPanel.add(dialectChooser = new JComboBox(convertMessage2Array(messages, "dialectSelection")));
         }
         dialectChooser.setSelectedIndex(0);  
         dialectChooser.addActionListener(new ActionListener(){
@@ -665,13 +690,13 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         microphonePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         if (rightToLeft)
         {
-	        microphonePanel.add(microphoneChooser = new JComboBox(convertMessage2Array("microphoneSelection")));
+	        microphonePanel.add(microphoneChooser = new JComboBox(convertMessage2Array(messages, "microphoneSelection")));
 	        microphonePanel.add(new JLabel(messages.getString("microphonePanelLabel")));       
         }
         else
         {
         	microphonePanel.add(new JLabel(messages.getString("microphonePanelLabel")));
-	        microphonePanel.add(microphoneChooser = new JComboBox(convertMessage2Array("microphoneSelection"))); 
+	        microphonePanel.add(microphoneChooser = new JComboBox(convertMessage2Array(messages, "microphoneSelection"))); 
         }
         microphoneChooser.setSelectedIndex(0);  
         // microphoneChooser.setEditable(true); // user can add whatever they want ...
