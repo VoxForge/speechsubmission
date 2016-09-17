@@ -106,7 +106,7 @@ class Prompts  {
 		
 		if (Language.equalsIgnoreCase("EN")) { // english
 //			promptList = getPromptTextFile("prompts/englishPromptList.txt", 1223); // number of prompts needs to be exact or there might be an error on a roll-over
-			promptList = getPromptTextFile("en", "prompts/PromptList_en.txt", 798); // number of prompts needs to be exact or there might be an error on a roll-over
+			promptList = getPromptTextFile("en", "prompts/PromptList_en.txt", 1177); // number of prompts needs to be exact or there might be an error on a roll-over
 
 		} else if (Language.equalsIgnoreCase("nl")) { // dutch
 			promptList = getPromptTextFile("nl","prompts/PromptList_nl.txt", 947);
@@ -141,7 +141,7 @@ class Prompts  {
 		} else if (Language.equalsIgnoreCase("fa")) { // persian
 			promptList = getPromptTextFile("fa", "prompts/PromptList_fa.txt", 50);					
 		} else {
-	        System.err.println("WARNING getPromptTextFile error accessing prompt file for "+ Language + " using default English prompts");
+	        System.err.println("WARNING getPromptTextFile error accessing prompt file for ["+ Language + "]... using default English prompts");
 			promptList = englishPromptList;
 		}
 		

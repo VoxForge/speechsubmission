@@ -211,13 +211,14 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
      */
 	public CapturePlayback(
 			//Locale currentLocale,
+			String language,
 			ResourceBundle messages,
 			String targetDirectory, 
 			String destination,
 			File configuration_file
 		) 
 	{    	
-		this.language = messages.getLocale().getLanguage();
+		this.language = language;
 		this.messages = messages;
     	this.targetDirectory = targetDirectory;
         try 

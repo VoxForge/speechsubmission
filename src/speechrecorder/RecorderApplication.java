@@ -30,6 +30,7 @@ public class RecorderApplication extends JFrame {
    	String targetDirectory = ""; // blank target directory means current
     String destination = "http://read.voxforge1.org/r0_2_4b/javaUploadServer.php";
     Locale currentLocale;
+    String language="en";
     ResourceBundle messages;
     
     /**
@@ -47,7 +48,7 @@ public class RecorderApplication extends JFrame {
      */
 	public RecorderApplication(String[] args)
 	{
-	   	String language="en";
+	   	//String language="en";
         String country="US";
 
         currentLocale = null;
@@ -96,7 +97,7 @@ public class RecorderApplication extends JFrame {
 	
     public void init() {
    	
-    	theRecorder = new CapturePlayback(messages, targetDirectory, destination, CONFIGURATION_FILE ); 
+    	theRecorder = new CapturePlayback(language, messages, targetDirectory, destination, CONFIGURATION_FILE ); 
         getContentPane().add("Center", theRecorder);
     }
 
