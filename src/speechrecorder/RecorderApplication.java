@@ -25,7 +25,8 @@ import java.util.*;
 @SuppressWarnings("serial")
 public class RecorderApplication extends JFrame {
 	private static final File CONFIGURATION_FILE = new File(System.getProperty("user.home"), "VoxForge.properties");
-
+	int numPrompts = 10;
+	
     private CapturePlayback theRecorder;
    	String targetDirectory = ""; // blank target directory means current
     String destination = "http://read.voxforge1.org/r0_2_4b/javaUploadServer.php";
@@ -49,7 +50,7 @@ public class RecorderApplication extends JFrame {
 	public RecorderApplication(String[] args)
 	{
         String country="US";
-
+		
         currentLocale = null;
 		ConfigReader cr=null;
 		int languageIndex;
@@ -96,7 +97,7 @@ public class RecorderApplication extends JFrame {
 	
     public void init() {
    	
-    	theRecorder = new CapturePlayback(language, messages, targetDirectory, destination, CONFIGURATION_FILE ); 
+    	theRecorder = new CapturePlayback(language, messages, targetDirectory, destination, CONFIGURATION_FILE, numPrompts ); 
         getContentPane().add("Center", theRecorder);
     }
 

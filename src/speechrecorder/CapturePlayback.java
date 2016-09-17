@@ -209,7 +209,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			ResourceBundle messages,
 			String targetDirectory, 
 			String destination,
-			File configuration_file
+			File configuration_file,
+			int numPrompts
 		) 
 	{    	
 		this.language = language;
@@ -232,7 +233,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         submission = new Submission(
         		this, 
         		language, 
-        		3, 
+        		numPrompts, 
         		messages
         );
 		
