@@ -82,11 +82,7 @@ import speechrecorder.Playback;
 
 @SuppressWarnings("serial")
 public class CapturePlayback extends JPanel implements ActionListener, net.sf.postlet.PostletInterface {
-
-	//private static final File CONFIGURATION_FILE = new File(System.getProperty("user.home"), "VoxForge.properties");
 	File configuration_file;
-    //final int bufSize = 16384;
-    //public static final String fileType = "wav";
     public static final int samplingRate = 48000;// jre 1.4.2 only supports max of 44100
     public static final int samplingRateFormat = 16;
     public static final int numberChannels = 1;
@@ -154,8 +150,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     ResourceBundle messages;
     Submission submission;
     Boolean rightToLeft = false;
-    //Boolean firstTime = true;
-    
 
 	// static methods	
     /**
@@ -284,7 +278,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		removeAll();  //Removes all the components from this container
 
         messages = ResourceBundle.getBundle("speechrecorder/languages/MessagesBundle", new Locale(language), new UTF8Control() );
-        //Submission old_submission = submission;
         submission = new Submission(
         		this, 
         		language, 
@@ -306,18 +299,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         setVisible(true);
         
         loadSettings();
-        //restoreComboBoxIndices(old_submission);
     }	
-    
-    private void restoreComboBoxIndices(Submission submission) 
-    { 	
-		//languageChooser.setSelectedIndex( submission.getLanguageIndex() );
-		usernameTextField.setText( submission.getUserName() );
-		genderChooser.setSelectedIndex( submission.getGenderIndex() );    	
-		ageRangeChooser.setSelectedIndex( submission.getAgeRangeIndex() );
-		dialectChooser.setSelectedIndex( submission.getDialectIndex() );    	
-		microphoneChooser.setSelectedIndex( submission.getMicrophoneIndex() );
-    }
     
     /**
      * initialize arrays whose size is dependent on the number of prompts
@@ -343,16 +325,15 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     private void languageDependent(ResourceBundle messages) 
     { 	
 	    playback = new Playback(
-		    	this,
-		    	format,
-		    	submission.getNumberOfPrompts(),
-//                bufSize,
-                messages.getString("peakWarningLabel"),
-                messages.getString("sampleGraphFileLabel"),
-                messages.getString("sampleGraphLengthLabel"),
-                messages.getString("sampleGraphPositionLabel"),
-                messages.getString("playButton"),
-                messages.getString("stopButton")
+	    	this,
+	    	format,
+	    	submission.getNumberOfPrompts(),
+            messages.getString("peakWarningLabel"),
+            messages.getString("sampleGraphFileLabel"),
+            messages.getString("sampleGraphLengthLabel"),
+            messages.getString("sampleGraphPositionLabel"),
+            messages.getString("playButton"),
+            messages.getString("stopButton")
 	    );
 	    
 	    capture = new Capture(
@@ -420,11 +401,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 				String languageString = (String)languageChooser.getSelectedItem();
 				
 				System.out.println("languageString " + languageString);
-				
-				// on app startup, if language has been set, the "! firstTime" prevents an endless loop
-                //if ( ! firstTime && ! languageString.equals(messages.getString("pleaseSelect")) )
-                if ( ! languageString.equals(messages.getString("pleaseSelect")) )
 
+                if ( ! languageString.equals(messages.getString("pleaseSelect")) )
                 {
                 	 language = extractLanguageID(languageString);
                      submission.setLanguageIndex(languageChooser.getSelectedIndex());
@@ -433,8 +411,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                      
         			 restartApp();
                 }
-                
-                //if (firstTime) { firstTime = false; }
 			}
     	});
         
@@ -450,15 +426,11 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     private void addPromptInfo(JPanel userPanel) 
     { 
     	JPanel promptsContainer = new JPanel();
-	    
-    	//		############ Prompt container ####################################   
-
         promptsContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         int startPromptCount = 0;
         int promptsPerPane = submission.getNumberOfPrompts();
 	
-        //      ############ Prompts panel ####################################         
         JPanel promptsPanel = new JPanel(); 
         promptsPanel.setLayout(new BoxLayout(promptsPanel, BoxLayout.Y_AXIS));
         promptsPanel.setBorder(BorderFactory.createLineBorder (voxforgeColour, 3));
@@ -484,7 +456,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	        promptsPanel.add(promptPanelA[i]);  
         }
         
-		//############ Prompt container ####################################   	
         promptsContainer.add(promptsPanel);
 
         userPanel.add(promptsContainer);
@@ -539,7 +510,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         uploadTextPanel.add(new JLabel(messages.getString("uploadText")) ); 
         
         p2.add(uploadTextPanel);
-	//		############ Upload ####################################          
+        //		############ Upload ####################################          
         JPanel uploadButtonPanel = new JPanel();
         uploadButtonPanel.setBorder(new EmptyBorder(5,0,5,0));
         uploadB = addButton(messages.getString("uploadButtonLabel"), uploadButtonPanel, false); // upload all submissions
@@ -548,7 +519,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         //saveLocalB = addButton("save on your computer", uploadButtonPanel, false); // upload all submissions
         //p2.add(uploadButtonPanel);
            
-	// 		############ More Information Button ####################################          
+        // 		############ More Information Button ####################################          
         JPanel moreInfoButtonPanel = new JPanel();
         if (rightToLeft)
         {
@@ -561,7 +532,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	        moreInfoB = addButton(messages.getString("moreInfoButtonLabel"), moreInfoButtonPanel, true);     	 
         }
         p2.add(moreInfoButtonPanel);   
-// 		############ Disclaimer ####################################  
+        // 		############ Disclaimer ####################################  
         JPanel AboutPanel = new JPanel();
         AboutPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         JPanel AboutInnerPanel = new JPanel(); 
@@ -605,7 +576,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	private void addUserInfo(JPanel p2) 
     { 
         p2.setLayout(new BoxLayout(p2, BoxLayout.Y_AXIS));
-	// 		############ User name ####################################             
+        // 		############ User name ####################################             
         JPanel usernamePanel = new JPanel();
         usernamePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         if (rightToLeft)
@@ -620,7 +591,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
         }
         usernamePanel.add(new JLabel(messages.getString("usernamePanelText")));     
         p2.add(usernamePanel);
-    // 		############ Gender ####################################             
+        // 		############ Gender ####################################             
         JPanel genderPanel = new JPanel();
         genderPanel.setLayout(new FlowLayout(FlowLayout.CENTER));  
         if (rightToLeft)
@@ -642,7 +613,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                  }
         	});
         p2.add(genderPanel);
-	// 		############ Age Range ####################################             
+        // 		############ Age Range ####################################             
         JPanel ageRangePanel = new JPanel();
         ageRangePanel.setLayout(new FlowLayout(FlowLayout.CENTER)); 
         if (rightToLeft)
@@ -664,7 +635,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
                  }
         	});
         p2.add(ageRangePanel);
-	//      ############ Pronunciation Dialect ####################################       
+        //      ############ Pronunciation Dialect ####################################       
         JPanel dialectPanel = new JPanel();
         dialectPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         if (rightToLeft)
@@ -686,7 +657,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	            }
             });
         p2.add(dialectPanel);
-	//      ############ Microphone Type ####################################       
+        //      ############ Microphone Type ####################################       
         JPanel microphonePanel = new JPanel();
         microphonePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         if (rightToLeft)
@@ -788,7 +759,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 	    	saveLocal();
 	    }	   
 	    */ 
-//      ################### More Information #######################################     
+	    //      ################### More Information #######################################     
         else if (obj.equals(moreInfoB)) {
          	JTextArea textArea = new JTextArea(License.getLicense());
             textArea.setLineWrap(true);
@@ -801,7 +772,7 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
             JOptionPane.showMessageDialog(this, areaScrollPane, 
                     "More info on Copyright and GPL license", JOptionPane.PLAIN_MESSAGE);
         }
-//      ################### About ####################################### 
+	    //      ################### About ####################################### 
         else if (obj.equals(aboutB)) {
         	JTextArea textArea = new JTextArea(License.getVFLicense());
             textArea.setLineWrap(true);
@@ -1023,7 +994,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     public void saveSettings()
     {	
     	try {
-			//ConfigReader cr = new ConfigReader(CONFIGURATION_FILE);
 			ConfigReader cr = new ConfigReader(configuration_file);
 
 			cr.put("language", languageChooser.getSelectedIndex());
@@ -1031,8 +1001,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 			cr.put("age", ageRangeChooser.getSelectedIndex());
 			cr.put("dialect", dialectChooser.getSelectedIndex());
 			cr.put("microphone", microphoneChooser.getSelectedIndex());
-			//cr.put("username", usernameTextField.getText());
-			//System.out.println("username:" +  userName);
 			cr.put("username", submission.getUserName());	
 			System.out.println("username:" +  submission.getUserName());
 		} catch (Exception e) {
@@ -1050,21 +1018,12 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     {	
 		ConfigReader cr=null;
 		try {
-			//cr = new ConfigReader(CONFIGURATION_FILE);
 			cr = new ConfigReader(configuration_file);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// this fires an event when starting, which triggers a language change,
-		// which triggers a restart, which runs loadSetting, infinite loop...
-		//try {
-		//	languageChooser.setSelectedIndex(
-		//			cr.getInt("language",languageChooser.getSelectedIndex()));
-		//} catch (Exception e) { // to catch IndexOutOfBoundsException or any other exceptions
-		//	languageChooser.setSelectedIndex(-1); // -1 mean no selection			
-		//}
-		
+	
 		try {
 			genderChooser.setSelectedIndex(
 					cr.getInt("gender",genderChooser.getSelectedIndex()));
@@ -1094,8 +1053,6 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
 		}
 		
 		try {		
-			//usernameTextField.setText(
-			//		cr.getString("username", usernameTextField.getText()));
 			submission.setUserName( cr.getString("username", usernameTextField.getText()) );
 			usernameTextField.setText( submission.getUserName() );			
 		} catch (Exception e) {
@@ -1112,10 +1069,8 @@ public class CapturePlayback extends JPanel implements ActionListener, net.sf.po
     public String recInfoToString () {
 		String recInfo = "";
 		
-		// add recording information
 		recInfo = recInfo + "File Info:" + System.getProperty("line.separator");
 		recInfo = recInfo + System.getProperty("line.separator");
-		//recInfo = recInfo + "File type: " + fileType + System.getProperty("line.separator");
 		recInfo = recInfo + "File type: wav" + System.getProperty("line.separator");
 		recInfo = recInfo + "Sampling Rate: " + samplingRate + System.getProperty("line.separator");
 		recInfo = recInfo + "Sample rate format: " + samplingRateFormat + System.getProperty("line.separator");

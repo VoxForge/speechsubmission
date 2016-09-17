@@ -48,7 +48,6 @@ public class RecorderApplication extends JFrame {
      */
 	public RecorderApplication(String[] args)
 	{
-	   	//String language="en";
         String country="US";
 
         currentLocale = null;
