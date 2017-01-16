@@ -52,7 +52,7 @@ public class UTF8Control extends Control {
 		{
 			try 
 			{
-				// only this line chagned to make it read property files as UTF-8
+				// only this line changed to make it read property files as UTF-8
 				bundle = new PropertyResourceBundle( 
 						new InputStreamReader (stream, "UTF-8")
 				);

@@ -139,7 +139,9 @@ class Prompts  {
 		} else if (Language.equalsIgnoreCase("sq")) { // albanian
 			promptList = getPromptTextFile("sq", "prompts/PromptList_sq.txt", 56);			
 		} else if (Language.equalsIgnoreCase("fa")) { // persian
-			promptList = getPromptTextFile("fa", "prompts/PromptList_fa.txt", 50);					
+			promptList = getPromptTextFile("fa", "prompts/PromptList_fa.txt", 50);
+		} else if (Language.equalsIgnoreCase("zh")) { // persian
+			promptList = getPromptTextFile("zh", "prompts/PromptList_zh.txt", 50);			
 		} else {
 	        System.err.println("WARNING getPromptTextFile error accessing prompt file for ["+ Language + "]... using default English prompts");
 			promptList = englishPromptList;
