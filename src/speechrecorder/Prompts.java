@@ -1,6 +1,5 @@
 package speechrecorder;
 
-import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.io.*;
