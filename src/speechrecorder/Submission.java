@@ -113,7 +113,7 @@ public class Submission {
 		
 		totalBytes = saveOrUpload.createArchive(
 				progBar, 
-				language, 
+				language.toUpperCase(), 
 				userName, 
 				userDataToString(recInfo)
 		);    
@@ -252,7 +252,7 @@ public class Submission {
 		userData = userData + System.getProperty("line.separator");	
 		userData = userData + "Gender: " + gender + System.getProperty("line.separator");
 		userData = userData + "Age Range: " + ageRange + System.getProperty("line.separator"); 
-		userData = userData + "Language: " + language + System.getProperty("line.separator");	
+		userData = userData + "Language: " + language.toUpperCase() + System.getProperty("line.separator");	
 		userData = userData + "Pronunciation dialect: " + dialect + System.getProperty("line.separator");	
 		userData = userData + System.getProperty("line.separator");
 	
